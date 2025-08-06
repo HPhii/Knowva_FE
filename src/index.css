@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@theme {
+  /* Font */
+  --font-display: "Manrope", sans-serif;
+
+  --color-background: #ffffff; /* background color */
+
+  /* Blue */
+  --color-blue: #1f94e0;
+  --color-blue-hover: #007fd2;
+
+  /* Yellow */
+  --color-yellow: #ffcc00;
+  --color-yellow-hover: #e9bb00;
+
+  /* Red */
+  --color-red-text: #e01f1f;
+  --color-red-price-board: #ba0000;
+  --color-red-price-board-button: #ffaeae;
+  --color-red-price-board-button-hover: #ff8181;
+
+  /* Green */
+  --color-green-price-board: #008a20;
+  --color-green-price-board-button: #c1e3cd;
+  --color-green-price-board-button-hover: #b5d9b5;
+
+  /* Grey */
+  --color-grey-light: #f0f2f5;
+  --color-grey-dark: #dbe0e5;
+}
