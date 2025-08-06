@@ -3,5 +3,16 @@
   "login": "Login",
   "logout": "Logout",
   "gay": "Do you want to watch gay porn ?",
-  "title": "i love you"
+  "title": "i love you",
+  "header": {
+    "quizzes": "Quizzes",
+    "flashcards": "Flashcards",
+    "tests": "Tests",
+    "blog": "Blog",
+    "explore": "Explore",
+    "login": "Login",
+    "signup": "Sign up",
+    "logout": "Logout",
+    "userDetails": "User Details"
+  }
 }

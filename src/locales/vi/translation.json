@@ -3,5 +3,16 @@
   "login": "Đăng nhập",
   "logout": "Đăng xuất",
   "gay": "Bạn có muốn xem pỏn gay không ?",
-  "title": "anh yêu em"
+  "title": "anh yêu em",
+  "header": {
+    "quizzes": "Câu hỏi",
+    "flashcards": "Thẻ ghi nhớ",
+    "tests": "Bài kiểm tra",
+    "blog": "Blog",
+    "explore": "Khám phá",
+    "login": "Đăng nhập",
+    "signup": "Đăng ký",
+    "logout": "Đăng xuất",
+    "userDetails": "Thông tin người dùng"
+  }
 }

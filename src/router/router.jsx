@@ -12,12 +12,13 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "user", element: <UserDetails /> },
-      { path: "login", element: <Login /> },
-      { path: "signup", element: <Register /> },
+    
       // { path: "blog", element: <Blog /> },
       // { path: "contact", element: <Contact /> },
     ],
   },
+  { path: "login", element: <Login /> },
+  { path: "signup", element: <Register /> },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
   // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp
