@@ -16,8 +16,6 @@ const Header = () => {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
 
-  console.log("userInfo", userInfo);
-
   // Kiểm tra trạng thái đăng nhập khi component mount
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -62,11 +60,7 @@ const Header = () => {
   // Lấy initials từ tên user để hiển thị avatar
   const getInitials = (name) => {
     if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
+    return name.charAt(0).toUpperCase();
   };
 
   // Tạo dropdown menu items cho Ant Design
@@ -76,7 +70,7 @@ const Header = () => {
       label: (
         <Link to="/user" className="flex items-center text-[15px]">
           <UserOutlined className="mr-2" />
-          {t("header.userDetails")}
+          <p className="!mb-0 !mt-1">{t("header.userDetails")}</p>
         </Link>
       ),
     },
