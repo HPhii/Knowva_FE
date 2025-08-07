@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
@@ -11,7 +11,10 @@ import {
   Button,
   Typography,
   message,
+  Upload,
+  Avatar,
 } from "antd";
+import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
 const { Title, Paragraph } = Typography;
@@ -23,6 +26,10 @@ const EditProfile = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const uploadRef = useRef();
+  const fileInputRef = useRef();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,6 +42,10 @@ const EditProfile = () => {
           gender: res.data.gender || "MALE",
           email: res.data.email || "",
         });
+        // Set profile image if available
+        if (res.data.avatarUrl) {
+          setImageUrl(res.data.avatarUrl);
+        }
       } catch (err) {
         setError(t("loadUserError"));
       }
@@ -42,6 +53,60 @@ const EditProfile = () => {
     fetchUser();
     // eslint-disable-next-line
   }, []);
+
+  const handleImageUpload = async (file) => {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error(
+        t("imageTypeError") || "You can only upload JPG/PNG files!"
+      );
+      return false;
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error(t("imageSizeError") || "Image must be smaller than 2MB!");
+      return false;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "SDN_Blog");
+      formData.append("cloud_name", "dejilsup7");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dejilsup7/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const result = await response.json();
+      setImageUrl(result.secure_url);
+      message.success(
+        t("imageUploadSuccess") || "Image uploaded successfully!"
+      );
+    } catch (err) {
+      console.error("Upload error:", err);
+      message.error(t("imageUploadError") || "Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+    return false; // Prevent default upload behavior
+  };
+
+  const uploadProps = {
+    name: "image",
+    showUploadList: false,
+    beforeUpload: handleImageUpload,
+    accept: "image/*",
+  };
 
   const handleFinish = async (values) => {
     setLoading(true);
@@ -57,6 +122,7 @@ const EditProfile = () => {
         gender: values.gender,
         email: values.email,
         username: values.fullName,
+        avatarUrl: imageUrl,
       });
       message.success(
         t("updateProfileSuccess") || "Profile updated successfully!"
@@ -79,23 +145,7 @@ const EditProfile = () => {
         style={{ borderRadius: 24 }}
         bodyStyle={{ padding: 32 }}
       >
-        <div className="flex flex-col items-center mb-8">
-          <div className="bg-[var(--color-blue)] rounded-full p-3 mb-3 shadow-md">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15.232 5.232a3 3 0 1 1 4.243 4.243L7.5 21H3v-4.5z" />
-              <path d="M16 7l1 1" />
-            </svg>
-          </div>
+        <div className="flex flex-col items-center mb-5">
           <Title
             level={2}
             style={{
@@ -106,14 +156,56 @@ const EditProfile = () => {
           >
             {t("editProfile")}
           </Title>
-          <Paragraph
-            style={{ color: "#64748b", textAlign: "center", margin: 0 }}
-          >
-            {t("editProfileDesc") ||
-              "Update your personal information to keep your account up to date."}
-          </Paragraph>
         </div>
         {error && <div className="text-red-500 mb-2 text-center">{error}</div>}
+
+        {/* Profile Image Upload Section */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative mb-4">
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              }}
+            >
+              <Avatar
+                size={100}
+                src={imageUrl || undefined}
+                icon={!imageUrl ? <UserOutlined /> : undefined}
+                className="relative"
+              />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black p-[32px] opacity-0 hover:opacity-30 rounded-[100px]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="35"
+                  height="35"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="#e3e3e3"
+                    d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3"
+                  />
+                </svg>
+              </div>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  await handleImageUpload(file);
+                  e.target.value = ""; // reset input so same file can be selected again
+                }
+              }}
+            />
+          </div>
+        </div>
+
         <Form
           form={form}
           layout="vertical"
@@ -181,16 +273,18 @@ const EditProfile = () => {
             >
               {t("cancel") || "Cancel"}
             </Button>
-            <Button
-              type="primary"
-              size="large"
-              className="w-full md:w-auto bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] border-none"
-              htmlType="submit"
-              loading={loading}
-              style={{ background: "var(--color-blue)", border: "none" }}
-            >
-              {t("save") || "Save"}
-            </Button>
+            <div>
+              <Button
+                type="primary"
+                size="large"
+                className="w-full md:w-auto !bg-[var(--color-blue)] hover:!bg-[var(--color-blue-hover)] !border-none"
+                htmlType="submit"
+                loading={loading}
+                style={{ background: "var(--color-blue)", border: "none" }}
+              >
+                {t("save") || "Save"}
+              </Button>
+            </div>
           </div>
         </Form>
       </Card>

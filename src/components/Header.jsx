@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Dropdown } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { isLoggedIn, getUserInfo, clearLoginData } from "../utils/auth";
+import api from "../config/axios";
 import logoImage from "../assets/images/logo_no_text.png";
 
 // --- HEADER COMPONENT ---
@@ -16,15 +17,25 @@ const Header = () => {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
 
-  // Kiểm tra trạng thái đăng nhập khi component mount
+  console.log("userInfo", userInfo);
+
+  // Kiểm tra trạng thái đăng nhập và fetch user data khi component mount
   useEffect(() => {
-    const checkLoginStatus = () => {
+    const checkLoginStatus = async () => {
       const loggedIn = isLoggedIn();
       setUserLoggedIn(loggedIn);
 
       if (loggedIn) {
-        const user = getUserInfo();
-        setUserInfo(user);
+        try {
+          // Fetch user data from API
+          const response = await api.get("/users/me");
+          setUserInfo(response.data);
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+          // Fallback to localStorage data if API fails
+          const user = getUserInfo();
+          setUserInfo(user);
+        }
       }
     };
 
@@ -190,11 +201,19 @@ const Header = () => {
               trigger={["click"]}
             >
               <button className="cursor-pointer flex items-center space-x-2 hover:bg-gray-100 rounded-full p-2 transition-colors duration-200">
-                <div className="w-8 h-8 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold">
-                  {getInitials(userInfo?.name || userInfo?.username)}
+                <div className="w-8 h-8 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
+                  {userInfo?.avatarUrl ? (
+                    <img
+                      src={userInfo.avatarUrl}
+                      alt={userInfo?.fullName || userInfo?.username || "User"}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    getInitials(userInfo?.fullName || userInfo?.username)
+                  )}
                 </div>
                 <span className="hidden sm:block text-[#000] font-medium">
-                  {userInfo?.name || userInfo?.username || "User"}
+                  {userInfo?.fullName || userInfo?.username || "User"}
                 </span>
                 {/* Dropdown arrow */}
                 <svg
@@ -222,7 +241,7 @@ const Header = () => {
               </button>
             </Link>
             <Link to="/signup">
-              <div className="cursor-pointer bg-[#00A9E7] text-[#fff] py-2 px-4 rounded-full hover:bg-[#0095cc] transition-transform duration-200 hover:scale-105 text-base">
+              <div className="cursor-pointer bg-[var(--color-blue)] text-[#fff] py-2 px-4 rounded-full hover:bg-[var(--color-blue-hover)] transition-transform duration-200 hover:scale-105 text-base">
                 {t("header.signup")}
               </div>
             </Link>

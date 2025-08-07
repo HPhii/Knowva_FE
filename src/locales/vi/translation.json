@@ -99,6 +99,9 @@
   "flashcardAttempts": "Lượt học Flashcard",
   "quizAttempts": "Lượt làm Quiz",
   "noVIP": "Không có VIP",
+  "editProfile": "Chỉnh sửa hồ sơ",
+  "cancel": "Hủy",
+  "save": "Lưu",
   "footer": {
     "brand": "KnowVa",
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
@@ -125,6 +128,5 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "linkedin": "LinkedIn"
-  },
-  "editProfile": "Chỉnh sửa hồ sơ"
+  }
 }

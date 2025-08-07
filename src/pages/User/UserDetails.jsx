@@ -92,11 +92,21 @@ const UserDetails = () => {
         <div className="md:relative bg-white border-2 border-gray-200 rounded-xl p-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             <div className="flex-shrink-0">
-              <div className="w-24 h-24 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white text-5xl font-bold">
-                {userData?.fullName
-                  ? userData?.fullName.charAt(0).toUpperCase()
-                  : "U"}
-              </div>
+              {userData?.avatarUrl ? (
+                <div className="w-24 h-24 rounded-full overflow-hidden">
+                  <img
+                    src={userData.avatarUrl}
+                    alt={userData.fullName || "User"}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-24 h-24 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white text-5xl font-bold">
+                  {userData?.fullName
+                    ? userData?.fullName.charAt(0).toUpperCase()
+                    : "U"}
+                </div>
+              )}
             </div>
             <div className="ButtonEditProfile md:absolute right-[-1.4%] top-[10%] text-white">
               <button
