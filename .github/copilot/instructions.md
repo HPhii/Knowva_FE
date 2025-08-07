@@ -224,6 +224,92 @@ Always design for mobile screens first, then scale up for larger screens using T
   </aside>
 </div>
 ```
+---
+
+### 5. Internationalization (i18n) – Required for All UI
+
+All user-facing text must support internationalization using `react-i18next`. **Never hardcode any string** in JSX or component logic.
+
+#### 5.1. Text Handling
+
+* Always use the `useTranslation` hook:
+
+  ```js
+  import { useTranslation } from "react-i18next";
+
+  const { t } = useTranslation();
+  <button>{t("login.loginButton")}</button>;
+  ```
+* Do not hardcode English, Vietnamese, or any language directly in JSX.
+
+#### 5.2. Localization Files
+
+* Add all new translation keys and values to both:
+
+    * `src/locales/en/translation.json`
+    * `src/locales/vi/translation.json`
+
+* Keep translation keys semantic and consistent. For example:
+
+  ```json
+  // en.json
+  {
+    "login": {
+      "googleButton": "Continue with Google"
+    }
+  }
+
+  // vi.json
+  {
+    "login": {
+      "googleButton": "Đăng nhập bằng Google"
+    }
+  }
+  ```
+
+#### 5.3. UI Modification Rules
+
+Whenever adding or modifying any of the following:
+
+* A **new button**, **label**, **form field**, or **helper text**
+* A **page**, **component**, or **modal**
+
+You must:
+
+1. Wrap all new visible text with `t("...")`.
+2. Update `en.json` and `vi.json` accordingly.
+3. Ensure UI is language switchable using the current `i18n.changeLanguage(...)` mechanism.
+
+#### 5.4. Example: Google Login Button
+
+When replicating the "Login with Google" button from the Login page into the Sign Up page:
+
+* Reuse the same `<GoogleLogin />` setup.
+* Wrap any new helper or instruction text in `t(...)`.
+* Add translations:
+
+  ```json
+  // en.json
+  "signup": {
+    "googleButton": "Sign up with Google"
+  }
+
+  // vi.json
+  "signup": {
+    "googleButton": "Đăng ký bằng Google"
+  }
+  ```
+
+---
+
+### ✅ Summary
+
+> When building or editing UI components:
+>
+> * ❌ Never hardcode strings
+> * ✅ Always use `t(...)`
+> * ✅ Update both `en.json` and `vi.json`
+> * ✅ Maintain semantic key naming under the correct section (`login`, `signup`, `profile`, etc.)
 
 -----
 
