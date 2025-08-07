@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import loginIllustration from '../../assets/images/login.png';
 import api from '../../config/axios';
 import { saveLoginData } from '../../utils/auth';
+import { getLoginErrorMessage } from '../../utils/errorMessages';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,15 +29,11 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     const { email, password } = formData;
     const payload = { email, password };
     
     try {
-      console.log('Sending login request to:', 'https://api.knowva.me/api/login');
-      console.log('With payload:', payload);
-      
-      // Sử dụng URL trực tiếp thay vì qua axios config
       const response = await fetch('https://api.knowva.me/api/login', {
         method: 'POST',
         headers: {
@@ -44,40 +41,38 @@ const Login = () => {
         },
         body: JSON.stringify(payload),
       });
-      
-      const data = await response.json();
-      
+  
+      const contentType = response.headers.get('content-type');
+  
+      let data;
+  
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(text || 'Unexpected error occurred');
+      }
+  
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
       }
-      
-      console.log('Login successful:', data);
-      
-      // Lưu tất cả thông tin trả về vào localStorage
+  
+      // Lưu dữ liệu nếu đăng nhập thành công
       const savedSuccessfully = saveLoginData(data);
-      
       if (savedSuccessfully) {
-        console.log('All login data saved to localStorage successfully');
-        console.log('Saved data includes:', {
-          token: data.token || data.accessToken || data.access_token,
-          user: data.user,
-          loginTime: new Date().toISOString(),
-          fullResponse: data
-        });
-      } else {
-        console.error('Failed to save login data to localStorage');
+        console.log('Login data saved successfully');
       }
-      
-      // Chuyển về trang home
+  
       navigate('/');
       
     } catch (err) {
       console.error('Login failed:', err);
-      setError(err.message || 'Login failed. Please try again.');
+      setError(getLoginErrorMessage(err));
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -158,18 +153,20 @@ const Login = () => {
                 {/* Error Message */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-red-600 text-sm text-center">{error}</p>
+                    <p className="!mb-0 text-red-600 text-sm text-center">{error}</p>
                   </div>
                 )}
 
                 {/* Login Button */}
+                <div className='text-[#fff]'>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Logging in...' : 'Login'}
                 </button>
+                </div>
               </form>
 
               {/* Divider */}

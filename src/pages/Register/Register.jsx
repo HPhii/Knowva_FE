@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import loginIllustration from '../../assets/images/login.png';
 import api from '../../config/axios';
+import { getRegisterErrorMessage } from '../../utils/errorMessages';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -52,19 +53,7 @@ const handleSubmit = async (e) => {
     console.error('Error status:', err.response?.status);
     console.error('Error data:', err.response?.data);
     
-    // Hiển thị thông tin lỗi chi tiết hơn
-    let errorMessage = 'Something went wrong';
-    if (err.response?.data?.message) {
-      errorMessage = err.response.data.message;
-    } else if (err.response?.data?.error) {
-      errorMessage = err.response.data.error;
-    } else if (err.response?.data) {
-      errorMessage = JSON.stringify(err.response.data);
-    } else if (err.message) {
-      errorMessage = err.message;
-    }
-    
-    setError(errorMessage);
+    setError(getRegisterErrorMessage(err));
   } finally {
     setLoading(false);
   }
@@ -152,6 +141,7 @@ const handleSubmit = async (e) => {
 
                 {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
+                <div className='text-[#fff]'>
                 <button
                   type="submit"
                   disabled={loading}
@@ -159,6 +149,7 @@ const handleSubmit = async (e) => {
                 >
                   {loading ? 'Signing up...' : 'Sign up'}
                 </button>
+                </div>
               </form>
 
               {/* ...Phần còn lại của component không đổi... */}
