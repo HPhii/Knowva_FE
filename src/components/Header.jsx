@@ -107,7 +107,7 @@ const Header = () => {
         {/* Public navigation links */}
         <nav className="h-full hidden lg:flex items-center ml-4 pl-6">
           {/* Quizzes */}
-          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[#00A9E7] px-8">
+          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/quizzes"
               className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
@@ -117,7 +117,7 @@ const Header = () => {
           </div>
 
           {/* Flashcards */}
-          <div className=" cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[#00A9E7] px-8">
+          <div className=" cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/flashcards"
               className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
@@ -127,7 +127,7 @@ const Header = () => {
           </div>
 
           {/* Tests */}
-          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[#00A9E7] px-8">
+          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/tests"
               className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
@@ -137,7 +137,7 @@ const Header = () => {
           </div>
 
           {/* Blog */}
-          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[#00A9E7] px-8">
+          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/blog"
               className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
@@ -147,7 +147,7 @@ const Header = () => {
           </div>
 
           {/* Explore */}
-          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[#00A9E7] px-8">
+          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/Explore"
               className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
@@ -190,7 +190,7 @@ const Header = () => {
               trigger={["click"]}
             >
               <button className="cursor-pointer flex items-center space-x-2 hover:bg-gray-100 rounded-full p-2 transition-colors duration-200">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-8 h-8 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white font-bold">
                   {getInitials(userInfo?.name || userInfo?.username)}
                 </div>
                 <span className="hidden sm:block text-[#000] font-medium">

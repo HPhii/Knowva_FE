@@ -62,26 +62,35 @@ const Login = () => {
             <div className="max-w-md mx-auto">
               {/* Language Switcher */}
               <div className="flex justify-end mb-4">
-                <button
-                  className={`px-3 py-1 rounded-l ${
-                    i18n.language === "en"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200"
-                  }`}
-                  onClick={() => i18n.changeLanguage("en")}
+                <div
+                  className={`${i18n.language === "en" ? "text-[#fff]" : ""}`}
                 >
-                  EN
-                </button>
-                <button
-                  className={`px-3 py-1 rounded-r ${
-                    i18n.language === "vi"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200"
-                  }`}
-                  onClick={() => i18n.changeLanguage("vi")}
+                  <button
+                    className={`px-3 py-1 rounded-l ${
+                      i18n.language === "en"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => i18n.changeLanguage("en")}
+                  >
+                    EN
+                  </button>
+                </div>
+
+                <div
+                  className={`${i18n.language === "vi" ? "text-[#fff]" : ""}`}
                 >
-                  VI
-                </button>
+                  <button
+                    className={`px-3 py-1 rounded-r ${
+                      i18n.language === "vi"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => i18n.changeLanguage("vi")}
+                  >
+                    VI
+                  </button>
+                </div>
               </div>
               <h1 className="text-3xl font-bold text-gray-800 mb-8">
                 {t("login.title")}
