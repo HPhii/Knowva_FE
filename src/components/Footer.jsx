@@ -52,11 +52,6 @@ const Footer = () => {
               <h4 className="text-lg font-bold text-white mb-6">Customers</h4>
               <ul className="space-y-3">
                 <li>
-                  <Link to="/product" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Product
-                  </Link>
-                </li>
-                <li>
                   <Link to="/pricing" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     Pricing
                   </Link>
@@ -69,11 +64,6 @@ const Footer = () => {
                 <li>
                   <Link to="/documentation" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     Documentation
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/tutorials" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Tutorials
                   </Link>
                 </li>
               </ul>
@@ -89,11 +79,6 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/careers" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Careers
-                  </Link>
-                </li>
-                <li>
                   <Link to="/contact" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     Contact us
                   </Link>
@@ -101,11 +86,6 @@ const Footer = () => {
                 <li>
                   <Link to="/blog" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/press" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Press
                   </Link>
                 </li>
               </ul>
@@ -128,16 +108,6 @@ const Footer = () => {
                 <li>
                   <Link to="/cookies" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
                     Cookie Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/security" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Security
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/accessibility" className="text-gray-300 hover:text-white transition-colors duration-200 text-sm">
-                    Accessibility
                   </Link>
                 </li>
               </ul>

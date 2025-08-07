@@ -4,6 +4,19 @@ import Home from "../pages/Home/Home";
 import UserDetails from "../pages/User/UserDetails";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
+import Explore from "../pages/Explore/Explore";
+import Quiz from "../pages/Quiz/Quiz";
+import Flashcard from "../pages/Flashcard/Flashcard";
+import Test from "../pages/Test/Test";
+import Pricing from "../pages/Pricing/Pricing";
+import Support from "../pages/Support/Support";
+import About from "../pages/About/About";
+import Contact from "../pages/Contact/Contact";
+import Blog from "../pages/Blog/Blog";
+import Terms from "../pages/Terms/Terms";
+import Privacy from "../pages/Privacy/Privacy";
+import Documentation from "../pages/Documentation/Documentation";
+import Cookies from "../pages/Cookies/Cookies";
 
 const router = createBrowserRouter([
   {
@@ -12,8 +25,20 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "user", element: <UserDetails /> },
-    
-      // { path: "blog", element: <Blog /> },
+      { path: "explore", element: <Explore /> },
+      { path: "quizzes", element: <Quiz /> },
+      { path: "flashcards", element: <Flashcard /> },
+      { path: "tests", element: <Test /> },
+      { path: "pricing", element: <Pricing /> },
+      { path: "support", element: <Support /> },
+                     { path: "about", element: <About /> },
+               { path: "contact", element: <Contact /> },
+               { path: "blog", element: <Blog /> },
+               { path: "terms", element: <Terms /> },
+               { path: "privacy", element: <Privacy /> },
+               { path: "documentation", element: <Documentation /> },
+               { path: "cookies", element: <Cookies /> },
+      // 
       // { path: "contact", element: <Contact /> },
     ],
   },
