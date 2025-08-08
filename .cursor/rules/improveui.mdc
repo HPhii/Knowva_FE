@@ -235,6 +235,93 @@ const DocumentCard = ({ document }) => {
 
 export default DocumentCard;
 ```
+---
+
+## Internationalization (i18n) & Language Support
+
+### ✅ General Rules
+
+* **All user-facing text must use `react-i18next`.**
+* **Do NOT hardcode any strings.** Always use the `t()` function.
+* Every component must support **at least two languages**: English (`en.json`) and Vietnamese (`vi.json`).
+* **Never skip localization** even for placeholder text, tooltips, alt text, or button labels.
+
+### ✅ Usage Pattern
+
+```jsx
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation();
+
+<button>{t("signup.googleButton")}</button>
+```
+
+### ✅ Translation File Updates
+
+When adding any **new UI element**, you must:
+
+1. Add the required key-value entries to both `src/locales/en.json` and `src/locales/vi.json`.
+2. Group keys semantically (e.g., under `login`, `signup`, `profile`, etc.)
+3. Keep keys consistent across both files.
+
+**Example – `en.json`:**
+
+```json
+{
+  "signup": {
+    "googleButton": "Sign up with Google"
+  }
+}
+```
+
+**Example – `vi.json`:**
+
+```json
+{
+  "signup": {
+    "googleButton": "Đăng ký bằng Google"
+  }
+}
+```
+
+### ✅ When to Apply
+
+This rule applies **every time** you:
+
+* Add a **button**, **label**, **modal**, **tooltip**, or any UI text
+* Create a **form**, **page**, or **component**
+* Add onboarding steps, empty states, alerts, or notifications
+
+---
+
+## Cursor Placement & UX
+
+When rendering components involving input fields or modals:
+
+* Ensure input elements **autofocus the cursor** only when necessary (e.g., login email field).
+* Do **not** automatically focus the cursor on components that are rendered conditionally or within modals unless it's the primary interaction.
+* Use `autoFocus` attribute thoughtfully:
+
+  ```jsx
+  <input
+    type="email"
+    autoFocus
+    className="..."
+    placeholder={t("login.emailPlaceholder")}
+  />
+  ```
+
+---
+
+> 🔁 **In summary:**
+> If you **add a new UI**, you must:
+>
+> * Use `t()` for all text
+> * Update both `en.json` and `vi.json`
+> * Keep key names clean and consistent
+> * Use proper cursor focus behavior for inputs
+
+---
 
 ```
 ```
