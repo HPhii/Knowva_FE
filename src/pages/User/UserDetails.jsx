@@ -13,6 +13,14 @@ const UserDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+
+    const loginResponse = localStorage.getItem("loginResponse");
+    if (!loginResponse) {
+      navigate("/login");
+    }
+
     const fetchUserData = async () => {
       try {
         setLoading(true);
@@ -28,7 +36,7 @@ const UserDetails = () => {
     };
     fetchUserData();
     // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   const onEditProfileClick = () => {
     const loginResponse = JSON.parse(localStorage.getItem("loginResponse"));

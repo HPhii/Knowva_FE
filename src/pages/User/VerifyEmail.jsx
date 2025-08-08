@@ -18,8 +18,27 @@ const VerifyEmail = () => {
   const [verifying, setVerifying] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]);
-  const [seconds, setSeconds] = useState(0);
-  const [isDisableSendOtp, setIsDisableSendOtp] = useState(false);
+  const [seconds, setSeconds] = useState(() => {
+    // Khôi phục thời gian countdown từ localStorage
+    const savedCountdown = localStorage.getItem("verifyEmailCountdown");
+    if (savedCountdown) {
+      const { endTime } = JSON.parse(savedCountdown);
+      const now = Date.now();
+      const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+      return remaining > 0 ? remaining : 0;
+    }
+    return 0;
+  });
+  const [isDisableSendOtp, setIsDisableSendOtp] = useState(() => {
+    // Kiểm tra xem có đang trong thời gian countdown không
+    const savedCountdown = localStorage.getItem("verifyEmailCountdown");
+    if (savedCountdown) {
+      const { endTime } = JSON.parse(savedCountdown);
+      const now = Date.now();
+      return endTime - now > 0;
+    }
+    return false;
+  });
   const [error, setError] = useState("");
   // Check verified status from localStorage
   const [isVerified, setIsVerified] = useState(() => {
@@ -28,9 +47,6 @@ const VerifyEmail = () => {
     );
     return loginResponse.isVerified === true;
   });
-
-  // console.log("seconds: ", seconds);
-  // console.log("is send otp: ", isDisableSendOtp);
 
   // Focus vào ô đầu tiên khi component mount
   useEffect(() => {
@@ -43,10 +59,26 @@ const VerifyEmail = () => {
     let timer;
     if (seconds > 0) {
       timer = setInterval(() => {
-        setSeconds((prev) => prev - 1);
+        setSeconds((prev) => {
+          const newSeconds = prev - 1;
+          // Lưu thời gian countdown vào localStorage
+          if (newSeconds > 0) {
+            const endTime = Date.now() + newSeconds * 1000;
+            localStorage.setItem(
+              "verifyEmailCountdown",
+              JSON.stringify({ endTime })
+            );
+          } else {
+            // Xóa countdown khi hết thời gian
+            localStorage.removeItem("verifyEmailCountdown");
+          }
+          return newSeconds;
+        });
       }, 1000);
     } else {
       setIsDisableSendOtp(false);
+      // Xóa countdown khi hết thời gian
+      localStorage.removeItem("verifyEmailCountdown");
     }
     return () => clearInterval(timer);
   }, [seconds]);
@@ -67,6 +99,11 @@ const VerifyEmail = () => {
       await api.post(`/send-verify-otp?email=${encodeURIComponent(userEmail)}`);
       setSeconds(60);
       setIsDisableSendOtp(true);
+
+      // Lưu thời gian bắt đầu countdown vào localStorage
+      const endTime = Date.now() + 60 * 1000;
+      localStorage.setItem("verifyEmailCountdown", JSON.stringify({ endTime }));
+
       message.success(t("verifyEmail.resendSuccess"));
     } catch (err) {
       console.error("Send OTP error:", err);
@@ -193,7 +230,7 @@ const VerifyEmail = () => {
                 textAlign: "center",
               }}
             >
-              {t("verifyComplete.title")}
+              {t("verifyEmail.alreadyVerified")}
             </Title>
             <Paragraph
               style={{
@@ -203,15 +240,16 @@ const VerifyEmail = () => {
                 marginBottom: 24,
               }}
             >
-              {t("verifyComplete.description")}
+              {t("verifyEmail.alreadyVerifiedDesc")}
             </Paragraph>
+
             <Button
               type="primary"
               size="large"
               className="w-full !bg-[var(--color-blue)] hover:!bg-[var(--color-blue-hover)] !border-none mt-4"
-              onClick={() => navigate("/")}
+              onClick={() => navigate(-1)}
             >
-              {t("verifyComplete.goToHome")}
+              {t("verifyEmail.goBack")}
             </Button>
           </div>
         ) : (

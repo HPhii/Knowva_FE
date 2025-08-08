@@ -7,6 +7,7 @@ import Register from "../pages/Register/Register";
 import EditProfile from "../pages/User/EditProfile";
 import VerifyEmail from "../pages/User/VerifyEmail";
 import VerifyComplete from "../pages/User/VerifyComplete";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
   },
   { path: "login", element: <Login /> },
   { path: "signup", element: <Register /> },
+  { path: "forgot-password", element: <ForgotPassword /> },
   { path: "verify-email", element: <VerifyEmail /> },
   { path: "verify-complete", element: <VerifyComplete /> },
   // { path: "/login", element: <Login /> },

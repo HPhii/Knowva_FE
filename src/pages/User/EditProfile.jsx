@@ -34,8 +34,20 @@ const EditProfile = () => {
   const fileInputRef = useRef();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const checkVerificationAndFetchUser = async () => {
       try {
+        // Check if user is verified first
+        const loginResponse = JSON.parse(
+          localStorage.getItem("loginResponse") || "{}"
+        );
+
+        if (!loginResponse.isVerified) {
+          // Show verification modal first
+          setShowVerifyModal(true);
+          return;
+        }
+
+        // If verified, fetch user data
         const res = await api.get("/users/me");
         form.setFieldsValue({
           fullName: res.data.fullName || "",
@@ -52,9 +64,9 @@ const EditProfile = () => {
         setError(t("loadUserError"));
       }
     };
-    fetchUser();
+    checkVerificationAndFetchUser();
     // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   const handleImageUpload = async (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -123,7 +135,14 @@ const EditProfile = () => {
       message.success(
         t("updateProfileSuccess") || "Profile updated successfully!"
       );
+
+      // Navigate to user details page first
       navigate("/user");
+
+      // Then reload the user details page to get fresh data
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (err) {
       if (
         err.response.data === "Email verification required for this action."
@@ -292,7 +311,10 @@ const EditProfile = () => {
       </Card>
       <RequireEmailVerificationModal
         open={showVerifyModal}
-        onCancel={() => setShowVerifyModal(false)}
+        onCancel={() => {
+          setShowVerifyModal(false);
+          navigate("/user");
+        }}
       />
     </div>
   );

@@ -12,7 +12,9 @@ const handleBefore = (config) => {
   if (
     token &&
     !config.url.includes("/register") &&
-    !config.url.includes("/login")
+    !config.url.includes("/login") &&
+    !config.url.includes("/send-reset-otp") &&
+    !config.url.includes("/reset-password")
   ) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }

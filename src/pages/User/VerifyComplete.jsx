@@ -31,7 +31,7 @@ const VerifyComplete = () => {
             >
               <g
                 fill="none"
-                stroke="#000"
+                stroke="#008a20"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
@@ -65,16 +65,18 @@ const VerifyComplete = () => {
             </svg>
           </div>
 
-          <Title
-            level={2}
-            style={{
-              color: "#000000",
-              marginBottom: 16,
-              textAlign: "center",
-            }}
-          >
-            {t("verifyComplete.title")}
-          </Title>
+          <div className="mt-5">
+            <Title
+              level={2}
+              style={{
+                color: "#008a20",
+                marginBottom: 16,
+                textAlign: "center",
+              }}
+            >
+              {t("verifyComplete.title")}
+            </Title>
+          </div>
 
           <Paragraph
             style={{
