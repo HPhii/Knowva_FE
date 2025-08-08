@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
+import { useNavigate } from "react-router-dom";
 
 const UserDetails = () => {
   const { t, i18n } = useTranslation();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -16,6 +18,7 @@ const UserDetails = () => {
         const response = await api.get("/users/me");
         setUserData(response.data);
       } catch (err) {
+        console.log("error: ", err);
         setError(t("loadUserError"));
       } finally {
         setLoading(false);
@@ -80,20 +83,58 @@ const UserDetails = () => {
   return (
     <div className="min-h-screen bg-white">
       <main className="max-w-6xl mx-auto px-8 py-12">
-        <div className="mb-8">
+        <div className="mb-8 flex justify-between items-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             {t("userDetails")}
           </h1>
         </div>
         {/* User Profile Card */}
-        <div className="bg-white border-2 border-gray-200 rounded-xl p-8 mb-8">
+        <div className="md:relative bg-white border-2 border-gray-200 rounded-xl p-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             <div className="flex-shrink-0">
-              <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center text-white text-5xl font-bold">
-                {userData?.fullName
-                  ? userData?.fullName.charAt(0).toUpperCase()
-                  : "U"}
-              </div>
+              {userData?.avatarUrl ? (
+                <div className="w-24 h-24 rounded-full overflow-hidden">
+                  <img
+                    src={userData.avatarUrl}
+                    alt={userData.fullName || "User"}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-24 h-24 bg-[var(--color-blue)] rounded-full flex items-center justify-center text-white text-5xl font-bold">
+                  {userData?.fullName
+                    ? userData?.fullName.charAt(0).toUpperCase()
+                    : "U"}
+                </div>
+              )}
+            </div>
+            <div className="ButtonEditProfile md:absolute right-[-1.4%] top-[10%] text-white">
+              <button
+                className="bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] px-4 py-2 rounded-lg transition-colors"
+                onClick={() => navigate("/user/edit")}
+              >
+                <div className="flex">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    className="mr-1.5"
+                  >
+                    <g
+                      fill="none"
+                      stroke="#fff"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    >
+                      <path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" />
+                      <path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3" />
+                    </g>
+                  </svg>
+                  {t("editProfile")}
+                </div>
+              </button>
             </div>
             <div className="flex-1 text-center md:text-left">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -114,7 +155,7 @@ const UserDetails = () => {
                 </div>
                 <div>
                   <span className="text-gray-500">{t("status")}:</span>
-                  <p className="font-medium text-blue-600">
+                  <p className="font-medium text-[var(--color-blue)]">
                     {userData.vipDaysLeft ? t("vipMember") : t("freeUser")}
                   </p>
                 </div>
