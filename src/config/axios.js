@@ -8,7 +8,6 @@ const api = axios.create({
 // 1 hanh dong j do trc khi call api
 const handleBefore = (config) => {
   const token = localStorage.getItem("token");
-  console.log("token", token);
   // Chỉ gửi Authorization header nếu có token và không phải register/login
   if (
     token &&

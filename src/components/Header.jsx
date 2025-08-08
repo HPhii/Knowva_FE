@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "antd";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined, MailOutlined } from "@ant-design/icons";
 import { isLoggedIn, getUserInfo, clearLoginData } from "../utils/auth";
 import api from "../config/axios";
 import logoImage from "../assets/images/logo_no_text.png";
@@ -82,6 +82,15 @@ const Header = () => {
         <Link to="/user" className="flex items-center text-[15px]">
           <UserOutlined className="mr-2" />
           <p className="!mb-0 !mt-1">{t("header.userDetails")}</p>
+        </Link>
+      ),
+    },
+    {
+      key: "verifyEmail",
+      label: (
+        <Link to="/verify-email" className="flex items-center text-[15px]">
+          <MailOutlined className="mr-2" />
+          <p className="!mb-0 !mt-1">{t("header.verifyEmail")}</p>
         </Link>
       ),
     },

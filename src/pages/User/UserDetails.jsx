@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
 import { useNavigate } from "react-router-dom";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 
 const UserDetails = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +29,15 @@ const UserDetails = () => {
     fetchUserData();
     // eslint-disable-next-line
   }, []);
+
+  const onEditProfileClick = () => {
+    const loginResponse = JSON.parse(localStorage.getItem("loginResponse"));
+    if (loginResponse && loginResponse.isVerified) {
+      navigate("/user/edit");
+    } else {
+      setShowVerifyModal(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -108,10 +119,10 @@ const UserDetails = () => {
                 </div>
               )}
             </div>
-            <div className="ButtonEditProfile md:absolute right-[-1.4%] top-[10%] text-white">
+            <div className="md:absolute right-[-1.4%] top-[10%] text-white">
               <button
                 className="bg-[var(--color-blue)] hover:bg-[var(--color-blue-hover)] px-4 py-2 rounded-lg transition-colors"
-                onClick={() => navigate("/user/edit")}
+                onClick={() => onEditProfileClick()}
               >
                 <div className="flex">
                   <svg
@@ -252,6 +263,10 @@ const UserDetails = () => {
           </div>
         </div>
       </main>
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => setShowVerifyModal(false)}
+      />
     </div>
   );
 };

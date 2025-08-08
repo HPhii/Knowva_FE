@@ -8,7 +8,8 @@
     "login": "Đăng nhập",
     "signup": "Đăng ký",
     "logout": "Đăng xuất",
-    "userDetails": "Thông tin người dùng"
+    "userDetails": "Thông tin người dùng",
+    "verifyEmail": "Xác thực Email"
   },
   "login": {
     "title": "Đăng nhập",
@@ -43,6 +44,7 @@
     "illustrationAlt": "Minh họa đăng ký"
   },
   "error": {
+    "emailVerificationRequired": "Bạn cần xác thực tài khoản để thực hiện hành động này.",
     "failedToFetch": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.",
     "incorrectEmailOrPassword": "Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.",
     "userNotFound": "Không tìm thấy tài khoản. Vui lòng kiểm tra email.",
@@ -69,7 +71,8 @@
     "conflict": "Xung đột dữ liệu. Vui lòng thử lại.",
     "tooManyRequests": "Quá nhiều yêu cầu. Vui lòng thử lại sau.",
     "tooManyLoginAttempts": "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau 5 phút.",
-    "invalidRegistration": "Thông tin đăng ký không hợp lệ. Vui lòng kiểm tra lại."
+    "invalidRegistration": "Thông tin đăng ký không hợp lệ. Vui lòng kiểm tra lại.",
+    "updateProfileError": "Không thể cập nhật hồ sơ. Vui lòng thử lại."
   },
   "userDetails": "Chi tiết người dùng",
   "loadingUserInfo": "Đang tải thông tin người dùng...",
@@ -102,6 +105,28 @@
   "editProfile": "Chỉnh sửa hồ sơ",
   "cancel": "Hủy",
   "save": "Lưu",
+  "male": "Nam",
+  "female": "Nữ",
+  "other": "Khác",
+  "verifyEmail": {
+    "title": "Xác thực Email của bạn",
+    "description": "Vui lòng kiểm tra email và nhấp vào liên kết xác thực để kích hoạt tài khoản.",
+    "sendButton": "Gửi Mã OTP",
+    "resendSuccess": "Email xác thực đã được gửi thành công!",
+    "resendError": "Không thể gửi email xác thực. Vui lòng thử lại.",
+    "backToHome": "Về trang chủ",
+    "enterOtp": "Nhập mã xác thực 6 số đã được gửi đến email của bạn",
+    "verifyOtp": "Xác thực Email",
+    "invalidOtp": "Vui lòng nhập mã 6 số hợp lệ",
+    "verificationSuccess": "Email đã được xác thực thành công!",
+    "verificationError": "Mã xác thực không đúng. Vui lòng thử lại.",
+    "failedToVerify": "Xác thực tài khoản thất bại, vui lòng thử lại sau."
+  },
+  "verifyComplete": {
+    "title": "Xác thực Email thành công!",
+    "description": "Email của bạn đã được xác thực. Bây giờ bạn có thể truy cập tất cả tính năng của ứng dụng.",
+    "goToHome": "Về trang chủ"
+  },
   "footer": {
     "brand": "KnowVa",
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",

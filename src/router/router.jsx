@@ -5,6 +5,8 @@ import UserDetails from "../pages/User/UserDetails";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import EditProfile from "../pages/User/EditProfile";
+import VerifyEmail from "../pages/User/VerifyEmail";
+import VerifyComplete from "../pages/User/VerifyComplete";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,8 @@ const router = createBrowserRouter([
   },
   { path: "login", element: <Login /> },
   { path: "signup", element: <Register /> },
+  { path: "verify-email", element: <VerifyEmail /> },
+  { path: "verify-complete", element: <VerifyComplete /> },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
   // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
@@ -26,6 +27,7 @@ const EditProfile = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const uploadRef = useRef();
@@ -101,13 +103,6 @@ const EditProfile = () => {
     return false; // Prevent default upload behavior
   };
 
-  const uploadProps = {
-    name: "image",
-    showUploadList: false,
-    beforeUpload: handleImageUpload,
-    accept: "image/*",
-  };
-
   const handleFinish = async (values) => {
     setLoading(true);
     setError(null);
@@ -121,6 +116,7 @@ const EditProfile = () => {
           : "",
         gender: values.gender,
         email: values.email,
+        emailVerified: me.data.emailVerified,
         username: values.fullName,
         avatarUrl: imageUrl,
       });
@@ -129,7 +125,13 @@ const EditProfile = () => {
       );
       navigate("/user");
     } catch (err) {
-      setError(t("updateProfileError") || "Update failed");
+      if (
+        err.response.data === "Email verification required for this action."
+      ) {
+        setShowVerifyModal(true);
+      } else {
+        setError(t("error.updateProfileError") || "Update failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -288,6 +290,10 @@ const EditProfile = () => {
           </div>
         </Form>
       </Card>
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => setShowVerifyModal(false)}
+      />
     </div>
   );
 };
