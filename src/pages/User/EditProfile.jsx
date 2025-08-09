@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
@@ -26,14 +27,27 @@ const EditProfile = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const uploadRef = useRef();
   const fileInputRef = useRef();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const checkVerificationAndFetchUser = async () => {
       try {
+        // Check if user is verified first
+        const loginResponse = JSON.parse(
+          localStorage.getItem("loginResponse") || "{}"
+        );
+
+        if (!loginResponse.isVerified) {
+          // Show verification modal first
+          setShowVerifyModal(true);
+          return;
+        }
+
+        // If verified, fetch user data
         const res = await api.get("/users/me");
         form.setFieldsValue({
           fullName: res.data.fullName || "",
@@ -50,9 +64,9 @@ const EditProfile = () => {
         setError(t("loadUserError"));
       }
     };
-    fetchUser();
+    checkVerificationAndFetchUser();
     // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   const handleImageUpload = async (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -101,13 +115,6 @@ const EditProfile = () => {
     return false; // Prevent default upload behavior
   };
 
-  const uploadProps = {
-    name: "image",
-    showUploadList: false,
-    beforeUpload: handleImageUpload,
-    accept: "image/*",
-  };
-
   const handleFinish = async (values) => {
     setLoading(true);
     setError(null);
@@ -121,15 +128,29 @@ const EditProfile = () => {
           : "",
         gender: values.gender,
         email: values.email,
+        emailVerified: me.data.emailVerified,
         username: values.fullName,
         avatarUrl: imageUrl,
       });
       message.success(
         t("updateProfileSuccess") || "Profile updated successfully!"
       );
+
+      // Navigate to user details page first
       navigate("/user");
+
+      // Then reload the user details page to get fresh data
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (err) {
-      setError(t("updateProfileError") || "Update failed");
+      if (
+        err.response.data === "Email verification required for this action."
+      ) {
+        setShowVerifyModal(true);
+      } else {
+        setError(t("error.updateProfileError") || "Update failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -288,6 +309,13 @@ const EditProfile = () => {
           </div>
         </Form>
       </Card>
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => {
+          setShowVerifyModal(false);
+          navigate("/user");
+        }}
+      />
     </div>
   );
 };
