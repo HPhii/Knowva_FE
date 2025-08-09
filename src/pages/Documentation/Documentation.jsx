@@ -6,64 +6,44 @@ const Documentation = () => {
 
   const documentationSections = [
     {
-      title: 'Getting Started',
-      description: 'Learn the basics of using KnowVa',
+      title: t('documentation.sections.gettingStarted.title'),
+      description: t('documentation.sections.gettingStarted.description'),
       icon: (
         <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
-      articles: [
-        'Quick Start Guide',
-        'Creating Your First Account',
-        'Understanding the Dashboard',
-        'Basic Navigation'
-      ]
+      articles: t('documentation.sections.gettingStarted.articles', { returnObjects: true })
     },
     {
-      title: 'Flashcards',
-      description: 'Master flashcard creation and management',
+      title: t('documentation.sections.flashcards.title'),
+      description: t('documentation.sections.flashcards.description'),
       icon: (
         <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
-      articles: [
-        'Creating Flashcard Sets',
-        'Adding Cards from Images',
-        'Organizing Your Cards',
-        'Study Techniques'
-      ]
+      articles: t('documentation.sections.flashcards.articles', { returnObjects: true })
     },
     {
-      title: 'Quizzes',
-      description: 'Generate and take quizzes effectively',
+      title: t('documentation.sections.quizzes.title'),
+      description: t('documentation.sections.quizzes.description'),
       icon: (
         <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      articles: [
-        'Generating Quizzes from Content',
-        'Customizing Quiz Settings',
-        'Taking Quizzes',
-        'Reviewing Results'
-      ]
+      articles: t('documentation.sections.quizzes.articles', { returnObjects: true })
     },
     {
-      title: 'Tests',
-      description: 'Create comprehensive assessments',
+      title: t('documentation.sections.tests.title'),
+      description: t('documentation.sections.tests.description'),
       icon: (
         <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
       ),
-      articles: [
-        'Creating Test Assessments',
-        'Question Types Available',
-        'Test Configuration',
-        'Grading and Analytics'
-      ]
+      articles: t('documentation.sections.tests.articles', { returnObjects: true })
     }
   ];
 

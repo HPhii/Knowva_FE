@@ -242,12 +242,15 @@
       "exportMaterials": "Tôi có thể xuất tài liệu học tập không?"
     }
   },
+  "__comment_blog": "=== Dịch Blog ===",
   "blog": {
     "title": "Blog KnowVa",
     "subtitle": "Thông tin chi tiết, mẹo và câu chuyện về học tập, công nghệ và tương lai của giáo dục.",
     "newsletterTitle": "Cập Nhật",
     "newsletterSubtitle": "Nhận những thông tin chi tiết mới nhất về học tập, công nghệ và giáo dục được gửi đến hộp thư của bạn.",
     "subscribe": "Đăng Ký",
+    "emptyTitle": "Chưa có bài viết",
+    "emptySubtitle": "Chúng tôi đang chuẩn bị nội dung chất lượng. Vui lòng quay lại sau.",
     "emailPlaceholder": "Nhập email của bạn",
     "readMore": "Đọc Thêm →",
     "categories": {
@@ -302,6 +305,7 @@
       }
     }
   },
+  "__comment_privacy": "=== Dịch Chính Sách Bảo Mật ===",
   "terms": {
     "title": "Điều Khoản & Điều Kiện",
     "lastUpdated": "Cập nhật lần cuối: 15 tháng 3 năm 2024",
@@ -339,15 +343,55 @@
     "title": "Chính Sách Bảo Mật",
     "lastUpdated": "Cập nhật lần cuối: 15 tháng 3 năm 2024",
     "infoCollectionTitle": "1. Thông Tin Chúng Tôi Thu Thập",
+    "infoCollectionText": "Chúng tôi thu thập thông tin bạn cung cấp trực tiếp cho chúng tôi, chẳng hạn khi bạn tạo tài khoản, tải lên nội dung hoặc liên hệ hỗ trợ. Điều này có thể bao gồm:",
+    "infoCollectionItems": [
+      "Tên, email và thông tin liên hệ khác",
+      "Thông tin đăng nhập và hồ sơ tài khoản",
+      "Nội dung bạn tải lên, bao gồm tài liệu học tập và tệp",
+      "Dữ liệu sử dụng và tương tác với dịch vụ",
+      "Thông tin thiết bị và địa chỉ IP"
+    ],
     "infoUseTitle": "2. Cách Chúng Tôi Sử Dụng Thông Tin Của Bạn",
+    "infoUseText": "Chúng tôi sử dụng thông tin thu thập được để:",
+    "infoUseItems": [
+      "Cung cấp, duy trì và cải thiện dịch vụ",
+      "Xử lý giao dịch và gửi thông tin liên quan",
+      "Gửi thông báo kỹ thuật, cập nhật và hỗ trợ",
+      "Phản hồi bình luận và câu hỏi của bạn",
+      "Phát triển sản phẩm và dịch vụ mới",
+      "Ngăn chặn gian lận và lạm dụng"
+    ],
     "infoSharingTitle": "3. Chia Sẻ Thông Tin",
+    "infoSharingText": "Chúng tôi không bán, trao đổi hay chuyển giao thông tin cá nhân của bạn cho bên thứ ba nếu không có sự đồng ý của bạn, trừ các trường hợp sau:",
+    "infoSharingItems": [
+      "Khi có sự đồng ý rõ ràng của bạn",
+      "Để tuân thủ nghĩa vụ pháp lý",
+      "Để bảo vệ quyền lợi và an toàn của chúng tôi",
+      "Với các nhà cung cấp dịch vụ hỗ trợ vận hành"
+    ],
     "dataSecurityTitle": "4. Bảo Mật Dữ Liệu",
+    "dataSecurityText": "Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức phù hợp để bảo vệ thông tin cá nhân của bạn trước truy cập, thay đổi, tiết lộ hoặc phá hủy trái phép. Tuy nhiên, không có phương thức truyền tải nào qua internet đảm bảo 100% an toàn.",
     "yourRightsTitle": "5. Quyền Của Bạn",
+    "yourRightsText": "Bạn có quyền:",
+    "yourRightsItems": [
+      "Truy cập và cập nhật thông tin cá nhân",
+      "Yêu cầu xóa dữ liệu",
+      "Từ chối nhận thông tin tiếp thị",
+      "Xuất dữ liệu ở định dạng có thể di chuyển",
+      "Gửi khiếu nại đến cơ quan giám sát"
+    ],
     "cookiesTrackingTitle": "6. Cookie và Theo Dõi",
+    "cookiesTrackingText": "Chúng tôi sử dụng cookie và công nghệ tương tự để nâng cao trải nghiệm, phân tích hành vi sử dụng và cá nhân hóa nội dung. Bạn có thể kiểm soát cookie trong cài đặt trình duyệt.",
     "childrenPrivacyTitle": "7. Bảo Mật Trẻ Em",
+    "childrenPrivacyText": "Dịch vụ của chúng tôi không dành cho trẻ em dưới 13 tuổi. Chúng tôi không cố ý thu thập thông tin cá nhân từ trẻ em dưới 13 tuổi. Nếu bạn tin rằng chúng tôi đã thu thập thông tin như vậy, vui lòng liên hệ ngay.",
     "internationalTransfersTitle": "8. Chuyển Giao Quốc Tế",
+    "internationalTransfersText": "Thông tin của bạn có thể được chuyển và xử lý ở các quốc gia khác. Chúng tôi đảm bảo có các biện pháp bảo vệ phù hợp để bảo vệ dữ liệu theo chính sách này.",
     "changesPolicyTitle": "9. Thay Đổi Chính Sách Này",
-    "contactUsTitle": "10. Liên Hệ Chúng Tôi"
+    "changesPolicyText": "Chúng tôi có thể cập nhật Chính sách Bảo mật theo thời gian. Chúng tôi sẽ thông báo bằng cách đăng chính sách mới trên trang này và cập nhật ngày 'Cập nhật lần cuối'.",
+    "contactUsTitle": "10. Liên Hệ Chúng Tôi",
+    "contactUsText": "Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này, vui lòng liên hệ với chúng tôi tại:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
   },
   "documentation": {
     "title": "Tài Liệu",
@@ -363,7 +407,50 @@
     "examplesDescription": "Ví dụ mã và hướng dẫn",
     "videoTitle": "Hướng Dẫn Video",
     "videoSubtitle": "Xem hướng dẫn từng bước để làm chủ các tính năng KnowVa một cách nhanh chóng.",
-    "watchVideos": "Xem Video"
+    "watchVideos": "Xem Video",
+    "__comment_sections": "=== Tài Liệu: Danh sách các mục ===",
+    "sections": {
+      "gettingStarted": {
+        "title": "Bắt đầu",
+        "description": "Học những điều cơ bản khi sử dụng KnowVa",
+        "articles": [
+          "Hướng dẫn nhanh",
+          "Tạo tài khoản đầu tiên",
+          "Tìm hiểu bảng điều khiển",
+          "Điều hướng cơ bản"
+        ]
+      },
+      "flashcards": {
+        "title": "Flashcard",
+        "description": "Thành thạo việc tạo và quản lý flashcard",
+        "articles": [
+          "Tạo bộ flashcard",
+          "Thêm thẻ từ hình ảnh",
+          "Tổ chức thẻ của bạn",
+          "Kỹ thuật học tập"
+        ]
+      },
+      "quizzes": {
+        "title": "Quiz",
+        "description": "Tạo và làm quiz hiệu quả",
+        "articles": [
+          "Tạo quiz từ nội dung",
+          "Tùy chỉnh cài đặt quiz",
+          "Làm quiz",
+          "Xem lại kết quả"
+        ]
+      },
+      "tests": {
+        "title": "Bài kiểm tra",
+        "description": "Tạo bài đánh giá toàn diện",
+        "articles": [
+          "Tạo bài kiểm tra",
+          "Các loại câu hỏi hỗ trợ",
+          "Cấu hình bài kiểm tra",
+          "Chấm điểm và phân tích"
+        ]
+      }
+    }
   },
   "cookies": {
     "title": "Chính Sách Cookie",

@@ -242,12 +242,15 @@
       "exportMaterials": "Can I export my study materials?"
     }
   },
+  "__comment_blog": "=== Blog Page Translations ===",
   "blog": {
     "title": "KnowVa Blog",
     "subtitle": "Insights, tips, and stories about learning, technology, and the future of education.",
     "newsletterTitle": "Stay Updated",
     "newsletterSubtitle": "Get the latest insights on learning, technology, and education delivered to your inbox.",
     "subscribe": "Subscribe",
+    "emptyTitle": "No posts yet",
+    "emptySubtitle": "We’re working on great content. Please check back soon.",
     "emailPlaceholder": "Enter your email",
     "readMore": "Read More →",
     "categories": {
@@ -302,6 +305,7 @@
       }
     }
   },
+  "__comment_privacy": "=== Privacy Page Translations ===",
   "terms": {
     "title": "Terms & Conditions",
     "lastUpdated": "Last updated: March 15, 2024",
@@ -339,15 +343,55 @@
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: March 15, 2024",
     "infoCollectionTitle": "1. Information We Collect",
+    "infoCollectionText": "We collect information you provide directly to us, such as when you create an account, upload content, or contact us for support. This may include:",
+    "infoCollectionItems": [
+      "Name, email address, and other contact information",
+      "Account credentials and profile information",
+      "Content you upload, including study materials and files",
+      "Usage data and interaction with our services",
+      "Device information and IP addresses"
+    ],
     "infoUseTitle": "2. How We Use Your Information",
+    "infoUseText": "We use the information we collect to:",
+    "infoUseItems": [
+      "Provide, maintain, and improve our services",
+      "Process your transactions and send related information",
+      "Send technical notices, updates, and support messages",
+      "Respond to your comments and questions",
+      "Develop new products and services",
+      "Protect against fraud and abuse"
+    ],
     "infoSharingTitle": "3. Information Sharing",
+    "infoSharingText": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following circumstances:",
+    "infoSharingItems": [
+      "With your explicit consent",
+      "To comply with legal obligations",
+      "To protect our rights and safety",
+      "With service providers who assist in our operations"
+    ],
     "dataSecurityTitle": "4. Data Security",
+    "dataSecurityText": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.",
     "yourRightsTitle": "5. Your Rights",
+    "yourRightsText": "You have the right to:",
+    "yourRightsItems": [
+      "Access and update your personal information",
+      "Request deletion of your data",
+      "Opt out of marketing communications",
+      "Export your data in a portable format",
+      "Lodge a complaint with supervisory authorities"
+    ],
     "cookiesTrackingTitle": "6. Cookies and Tracking",
+    "cookiesTrackingText": "We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content. You can control cookie settings through your browser preferences.",
     "childrenPrivacyTitle": "7. Children's Privacy",
+    "childrenPrivacyText": "Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.",
     "internationalTransfersTitle": "8. International Transfers",
+    "internationalTransfersText": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this policy.",
     "changesPolicyTitle": "9. Changes to This Policy",
-    "contactUsTitle": "10. Contact Us"
+    "changesPolicyText": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the 'Last updated' date.",
+    "contactUsTitle": "10. Contact Us",
+    "contactUsText": "If you have any questions about this Privacy Policy, please contact us at:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Address: 123 Innovation Drive, San Francisco, CA 94105"
   },
   "documentation": {
     "title": "Documentation",
@@ -363,7 +407,50 @@
     "examplesDescription": "Code examples and tutorials",
     "videoTitle": "Video Tutorials",
     "videoSubtitle": "Watch step-by-step tutorials to master KnowVa features quickly.",
-    "watchVideos": "Watch Videos"
+    "watchVideos": "Watch Videos",
+    "__comment_sections": "=== Documentation Page: Sections list ===",
+    "sections": {
+      "gettingStarted": {
+        "title": "Getting Started",
+        "description": "Learn the basics of using KnowVa",
+        "articles": [
+          "Quick Start Guide",
+          "Creating Your First Account",
+          "Understanding the Dashboard",
+          "Basic Navigation"
+        ]
+      },
+      "flashcards": {
+        "title": "Flashcards",
+        "description": "Master flashcard creation and management",
+        "articles": [
+          "Creating Flashcard Sets",
+          "Adding Cards from Images",
+          "Organizing Your Cards",
+          "Study Techniques"
+        ]
+      },
+      "quizzes": {
+        "title": "Quizzes",
+        "description": "Generate and take quizzes effectively",
+        "articles": [
+          "Generating Quizzes from Content",
+          "Customizing Quiz Settings",
+          "Taking Quizzes",
+          "Reviewing Results"
+        ]
+      },
+      "tests": {
+        "title": "Tests",
+        "description": "Create comprehensive assessments",
+        "articles": [
+          "Creating Test Assessments",
+          "Question Types Available",
+          "Test Configuration",
+          "Grading and Analytics"
+        ]
+      }
+    }
   },
   "cookies": {
     "title": "Cookie Policy",
