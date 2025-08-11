@@ -61,6 +61,11 @@ export const getErrorMessage = (error) => {
     { match: "Not found", key: "error.notFound" },
     { match: "Conflict", key: "error.conflict" },
     { match: "Too many requests", key: "error.tooManyRequests" },
+    //update profile errors
+    {
+      match: "Email verification required for this action.",
+      key: "error.emailVerificationRequired",
+    },
   ];
 
   for (const { match, key } of errorMappings) {

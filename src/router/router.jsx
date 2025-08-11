@@ -17,6 +17,11 @@ import Terms from "../pages/Terms/Terms";
 import Privacy from "../pages/Privacy/Privacy";
 import Documentation from "../pages/Documentation/Documentation";
 import Cookies from "../pages/Cookies/Cookies";
+import EditProfile from "../pages/User/EditProfile";
+import VerifyEmail from "../pages/User/VerifyEmail";
+import VerifyComplete from "../pages/User/VerifyComplete";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+
 
 const router = createBrowserRouter([
   {
@@ -31,19 +36,25 @@ const router = createBrowserRouter([
       { path: "tests", element: <Test /> },
       { path: "pricing", element: <Pricing /> },
       { path: "support", element: <Support /> },
-                     { path: "about", element: <About /> },
-               { path: "contact", element: <Contact /> },
-               { path: "blog", element: <Blog /> },
-               { path: "terms", element: <Terms /> },
-               { path: "privacy", element: <Privacy /> },
-               { path: "documentation", element: <Documentation /> },
-               { path: "cookies", element: <Cookies /> },
+      { path: "about", element: <About /> },
+      { path: "contact", element: <Contact /> },
+      { path: "blog", element: <Blog /> },
+      { path: "terms", element: <Terms /> },
+      { path: "privacy", element: <Privacy /> },
+      { path: "documentation", element: <Documentation /> },
+      { path: "cookies", element: <Cookies /> },
       // 
+      { path: "user/edit", element: <EditProfile /> },
+
+      // { path: "blog", element: <Blog /> },
       // { path: "contact", element: <Contact /> },
     ],
   },
   { path: "login", element: <Login /> },
   { path: "signup", element: <Register /> },
+  { path: "forgot-password", element: <ForgotPassword /> },
+  { path: "verify-email", element: <VerifyEmail /> },
+  { path: "verify-complete", element: <VerifyComplete /> },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
   // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp
