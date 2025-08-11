@@ -11,6 +11,17 @@
     "userDetails": "Thông tin người dùng",
     "verifyEmail": "Xác thực Email"
   },
+  "upload": {
+    "createStudyMaterials": "Tạo tài liệu học tập từ bài giảng của bạn",
+    "description": "Tải lên hình ảnh hoặc PDF của slide bài giảng để tạo ra ghi chú học tập ngắn gọn, dễ hiểu.",
+    "dragDrop": "Kéo và thả file vào đây",
+    "orClick": "hoặc click để tải lên",
+    "chooseFile": "Chọn file",
+    "uploadingFiles": "Đang tải lên file",
+    "of": "trên",
+    "filesUploaded": "file đã tải lên",
+    "startCreating": "Bắt đầu tạo"
+  },
   "login": {
     "title": "Đăng nhập",
     "email": "Email",
@@ -74,6 +85,412 @@
     "tooManyLoginAttempts": "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau 5 phút.",
     "invalidRegistration": "Thông tin đăng ký không hợp lệ. Vui lòng kiểm tra lại.",
     "updateProfileError": "Không thể cập nhật hồ sơ. Vui lòng thử lại."
+  },
+  "about": {
+    "heroTitle": "Cách mạng hóa học tập thông qua AI",
+    "heroSubtitle": "KnowVa có sứ mệnh làm cho việc học trở nên hiệu quả, hấp dẫn và dễ tiếp cận hơn thông qua các công cụ học tập thông minh được hỗ trợ bởi trí tuệ nhân tạo.",
+    "missionTitle": "Sứ mệnh của chúng tôi",
+    "missionText": "Chúng tôi tin rằng mọi học sinh đều xứng đáng được tiếp cận với các công cụ học tập cá nhân hóa, hiệu quả. Bằng cách kết hợp sức mạnh của trí tuệ nhân tạo với các phương pháp giáo dục đã được chứng minh, chúng tôi tạo ra các tài liệu học tập thích ứng với phong cách và nhu cầu học tập của từng cá nhân.",
+    "missionText2": "Từ flashcard ghi nhớ những gì bạn gặp khó khăn đến quiz thích ứng với trình độ kiến thức của bạn, KnowVa biến việc học thụ động thành trải nghiệm học tập chủ động, hấp dẫn.",
+    "valuesTitle": "Giá trị của chúng tôi",
+    "values": {
+      "innovation": "Đổi mới trong giáo dục",
+      "accessibility": "Tiếp cận cho tất cả",
+      "dataDriven": "Học tập dựa trên dữ liệu",
+      "privacy": "Quyền riêng tư & Bảo mật người dùng"
+    },
+    "statsTitle": "KnowVa qua các con số",
+    "stats": {
+      "activeUsers": "Người dùng hoạt động",
+      "flashcardsCreated": "Flashcard đã tạo",
+      "quizzesGenerated": "Quiz đã tạo",
+      "userSatisfaction": "Sự hài lòng của người dùng"
+    },
+    "teamTitle": "Gặp gỡ đội ngũ của chúng tôi",
+    "teamSubtitle": "Những cá nhân đam mê đứng sau KnowVa, những người tận tâm chuyển đổi giáo dục thông qua công nghệ.",
+    "team": {
+      "sarah": {
+        "name": "Sarah Johnson",
+        "role": "CEO & Người sáng lập",
+        "bio": "Cựu nhà giáo dục với hơn 10 năm kinh nghiệm trong EdTech"
+      },
+      "michael": {
+        "name": "Michael Chen",
+        "role": "CTO",
+        "bio": "Chuyên gia AI/ML tập trung vào công nghệ giáo dục"
+      },
+      "emily": {
+        "name": "Emily Rodriguez",
+        "role": "Trưởng phòng Sản phẩm",
+        "bio": "Chiến lược gia sản phẩm đam mê trải nghiệm người dùng"
+      }
+    },
+    "storyTitle": "Câu chuyện của chúng tôi",
+    "storyText": "Trong môi trường học tập hiện đại, sinh viên phải tiếp nhận rất nhiều tài liệu trực quan như slide, sơ đồ, và bản chụp ghi chú. Dù hình ảnh là một cách học hiệu quả, việc chuyển chúng thành công cụ ôn tập như flashcard hay quiz lại mất nhiều thời gian và công sức. KnowVa ra đời từ chính nhu cầu đó – một giải pháp được tạo ra bởi sinh viên, cho sinh viên.",
+    "storyText2": "Chúng tôi thấu hiểu khó khăn trong việc tự tay chuyển tài liệu hình ảnh thành nội dung ôn tập. Vì vậy, KnowVa được phát triển nhằm giúp việc học trở nên thông minh, nhanh chóng và tiện lợi hơn. Ứng dụng sử dụng công nghệ hiện đại để trích xuất kiến thức từ hình ảnh học tập và hỗ trợ người dùng tạo flashcard, quiz một cách dễ dàng.",
+    "storyText3": "Sứ mệnh của chúng tôi rất rõ ràng: giúp người học ghi nhớ tốt hơn, ôn luyện hiệu quả hơn, và làm chủ quá trình tự học – đặc biệt trong bối cảnh giáo dục ngày càng chú trọng đến khả năng tự học. Với KnowVa, chúng tôi không chỉ tạo ra một công cụ – mà là định hình lại cách sinh viên học từ hình ảnh."
+  },
+  "pricing": {
+    "title": "Chọn Gói Của Bạn",
+    "subtitle": "Chọn gói hoàn hảo cho nhu cầu học tập của bạn. Bắt đầu miễn phí và nâng cấp bất cứ lúc nào.",
+    "faqTitle": "Câu Hỏi Thường Gặp",
+    "mostPopular": "Phổ Biến Nhất",
+    "getStarted": "Bắt Đầu",
+    "getVIP": "Lấy VIP",
+    "regular": "Thường",
+    "vip": "VIP",
+    "perMonth": "/tháng",
+    "features": {
+      "upTo50Flashcards": "Tối đa 50 flashcard mỗi bộ",
+      "basicQuizGeneration": "Tạo quiz cơ bản",
+      "standardTestCreation": "Tạo bài kiểm tra chuẩn",
+      "emailSupport": "Hỗ trợ qua email",
+      "basicAnalytics": "Phân tích cơ bản",
+      "2GBStorage": "2GB lưu trữ",
+      "unlimitedFlashcards": "Flashcard không giới hạn",
+      "advancedAIQuiz": "Tạo quiz AI nâng cao",
+      "premiumTestCreation": "Tạo bài kiểm tra cao cấp",
+      "prioritySupport": "Hỗ trợ ưu tiên",
+      "advancedAnalytics": "Phân tích nâng cao",
+      "10GBStorage": "10GB lưu trữ",
+      "customBranding": "Tùy chỉnh thương hiệu",
+      "apiAccess": "Truy cập API"
+    },
+    "faq": {
+      "changePlanTitle": "Tôi có thể thay đổi gói bất cứ lúc nào không?",
+      "changePlanAnswer": "Có, bạn có thể nâng cấp hoặc hạ cấp gói của mình bất cứ lúc nào. Thay đổi sẽ được áp dụng trong chu kỳ thanh toán tiếp theo.",
+      "freeTrialTitle": "Có dùng thử miễn phí không?",
+      "freeTrialAnswer": "Chúng tôi cung cấp dùng thử miễn phí 7 ngày cho tất cả các gói. Không cần thẻ tín dụng để bắt đầu dùng thử.",
+      "paymentMethodsTitle": "Bạn chấp nhận phương thức thanh toán nào?",
+      "paymentMethodsAnswer": "Chúng tôi chấp nhận tất cả thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói hàng năm."
+    }
+  },
+  "support": {
+    "title": "Trung Tâm Hỗ Trợ",
+    "subtitle": "Tìm câu trả lời cho câu hỏi của bạn và nhận sự trợ giúp với KnowVa.",
+    "contactTitle": "Vẫn Cần Trợ Giúp?",
+    "contactSubtitle": "Đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp bạn với mọi câu hỏi hoặc vấn đề.",
+    "searchPlaceholder": "Tìm kiếm trợ giúp...",
+    "gettingStarted": {
+      "title": "Bắt Đầu",
+      "description": "Học những điều cơ bản về sử dụng KnowVa",
+      "article1": "Cách tạo bộ flashcard đầu tiên của bạn",
+      "article2": "Hiểu quy trình tạo quiz",
+      "article3": "Thiết lập tài khoản của bạn",
+      "article4": "Điều hướng bảng điều khiển"
+    },
+    "accountBilling": {
+      "title": "Tài Khoản & Thanh Toán",
+      "description": "Quản lý tài khoản và đăng ký của bạn",
+      "article1": "Cập nhật thông tin thanh toán của bạn",
+      "article2": "Thay đổi gói đăng ký của bạn",
+      "article3": "Hủy đăng ký của bạn",
+      "article4": "Tải xuống dữ liệu của bạn"
+    },
+    "featuresTools": {
+      "title": "Tính Năng & Công Cụ",
+      "description": "Làm chủ tất cả tính năng KnowVa",
+      "article1": "Kỹ thuật flashcard nâng cao",
+      "article2": "Tùy chỉnh cài đặt quiz",
+      "article3": "Sử dụng tính năng AI",
+      "article4": "Xuất tài liệu học tập của bạn"
+    },
+    "troubleshooting": {
+      "title": "Khắc Phục Sự Cố",
+      "description": "Giải quyết các vấn đề và sự cố thường gặp",
+      "article1": "Vấn đề tải lên tệp",
+      "article2": "Vấn đề hiệu suất",
+      "article3": "Khó khăn đăng nhập",
+      "article4": "Lỗi đồng bộ hóa dữ liệu"
+    },
+    "emailSupport": {
+      "title": "Hỗ Trợ Email",
+      "email": "support@knowva.com",
+      "responseTime": "Phản hồi trong vòng 24 giờ"
+    },
+    "liveChat": {
+      "title": "Trò Chuyện Trực Tuyến",
+      "availability": "Có sẵn 24/7",
+      "responseTime": "Phản hồi tức thì"
+    },
+    "documentation": {
+      "title": "Tài Liệu",
+      "description": "Hướng dẫn toàn diện",
+      "tutorials": "Hướng dẫn từng bước"
+    }
+  },
+  "contact": {
+    "title": "Liên Hệ",
+    "subtitle": "Có câu hỏi hoặc phản hồi? Chúng tôi rất muốn nghe từ bạn. Gửi tin nhắn cho chúng tôi và chúng tôi sẽ phản hồi sớm nhất có thể.",
+    "formTitle": "Gửi Tin Nhắn Cho Chúng Tôi",
+    "name": "Tên",
+    "email": "Email",
+    "subject": "Tiêu đề",
+    "message": "Tin nhắn",
+    "sendMessage": "Gửi Tin Nhắn",
+    "infoTitle": "Thông Tin Liên Hệ",
+    "faqTitle": "Câu Hỏi Nhanh?",
+    "address": "Địa chỉ",
+    "phone": "Điện thoại",
+    "contactEmail": "contact@knowva.com",
+    "supportEmail": "support@knowva.com",
+    "addressLine1": "123 Innovation Drive",
+    "addressLine2": "San Francisco, CA 94105",
+    "addressLine3": "United States",
+    "phoneNumber": "+1 (555) 123-4567",
+    "phoneHours": "Thứ 2-Thứ 6 9AM-6PM PST",
+    "faqLinks": {
+      "getStarted": "Làm thế nào để bắt đầu với KnowVa?",
+      "pricingPlans": "Các gói giá của bạn là gì?",
+      "resetPassword": "Làm thế nào để đặt lại mật khẩu?",
+      "exportMaterials": "Tôi có thể xuất tài liệu học tập không?"
+    }
+  },
+  "__comment_blog": "=== Dịch Blog ===",
+  "blog": {
+    "title": "Blog KnowVa",
+    "subtitle": "Thông tin chi tiết, mẹo và câu chuyện về học tập, công nghệ và tương lai của giáo dục.",
+    "newsletterTitle": "Cập Nhật",
+    "newsletterSubtitle": "Nhận những thông tin chi tiết mới nhất về học tập, công nghệ và giáo dục được gửi đến hộp thư của bạn.",
+    "subscribe": "Đăng Ký",
+    "emptyTitle": "Chưa có bài viết",
+    "emptySubtitle": "Chúng tôi đang chuẩn bị nội dung chất lượng. Vui lòng quay lại sau.",
+    "emailPlaceholder": "Nhập email của bạn",
+    "readMore": "Đọc Thêm →",
+    "categories": {
+      "all": "Tất cả",
+      "learningScience": "Khoa học học tập",
+      "technology": "Công nghệ",
+      "studyTips": "Mẹo học tập",
+      "edTech": "Công nghệ giáo dục"
+    },
+    "posts": {
+      "post1": {
+        "title": "Khoa học đằng sau việc học hiệu quả",
+        "excerpt": "Khám phá các nguyên tắc khoa học nhận thức khiến các công cụ học tập AI của KnowVa trở nên hiệu quả cho việc ghi nhớ và tiếp thu kiến thức.",
+        "author": "Dr. Sarah Johnson",
+        "category": "Khoa học học tập",
+        "readTime": "5 phút đọc"
+      },
+      "post2": {
+        "title": "AI đang cách mạng hóa giáo dục như thế nào",
+        "excerpt": "Khám phá cách trí tuệ nhân tạo đang thay đổi cách học sinh học tập và KnowVa đang dẫn đầu trong giáo dục cá nhân hóa.",
+        "author": "Michael Chen",
+        "category": "Công nghệ",
+        "readTime": "7 phút đọc"
+      },
+      "post3": {
+        "title": "Học thông minh hơn, không chăm chỉ hơn: Mẹo từ học sinh xuất sắc",
+        "excerpt": "Học các kỹ thuật học tập đã được chứng minh được sử dụng bởi học sinh có thành tích cao và cách KnowVa có thể giúp bạn áp dụng chúng hiệu quả.",
+        "author": "Emily Rodriguez",
+        "category": "Mẹo học tập",
+        "readTime": "4 phút đọc"
+      },
+      "post4": {
+        "title": "Tương lai của nền tảng học tập kỹ thuật số",
+        "excerpt": "Một cái nhìn sâu vào các xu hướng mới nổi trong công nghệ giáo dục và những gì học sinh có thể mong đợi từ thế hệ tiếp theo của công cụ học tập.",
+        "author": "Alex Thompson",
+        "category": "Công nghệ giáo dục",
+        "readTime": "6 phút đọc"
+      },
+      "post5": {
+        "title": "Xây dựng thói quen học tập tốt hơn với công nghệ",
+        "excerpt": "Lời khuyên thực tế về cách sử dụng công cụ kỹ thuật số để xây dựng thói quen học tập bền vững kéo dài vượt ra ngoài mùa thi.",
+        "author": "Dr. Sarah Johnson",
+        "category": "Mẹo học tập",
+        "readTime": "8 phút đọc"
+      },
+      "post6": {
+        "title": "Tâm lý học về trí nhớ và học tập",
+        "excerpt": "Hiểu cách não bộ của chúng ta xử lý và ghi nhớ thông tin có thể giúp bạn tối ưu hóa các buổi học để đạt hiệu quả tối đa.",
+        "author": "Dr. Lisa Park",
+        "category": "Khoa học học tập",
+        "readTime": "10 phút đọc"
+      }
+    }
+  },
+  "__comment_privacy": "=== Dịch Chính Sách Bảo Mật ===",
+  "terms": {
+    "title": "Điều Khoản & Điều Kiện",
+    "lastUpdated": "Cập nhật lần cuối: 15 tháng 3 năm 2024",
+    "acceptanceTitle": "1. Chấp Nhận Điều Khoản",
+    "acceptanceText": "Bằng việc truy cập và sử dụng KnowVa (\"Dịch vụ\"), bạn chấp nhận và đồng ý tuân theo các điều khoản và quy định của thỏa thuận này. Nếu bạn không đồng ý tuân theo những điều trên, vui lòng không sử dụng dịch vụ này.",
+    "useLicenseTitle": "2. Giấy Phép Sử Dụng",
+    "useLicenseText": "Được phép tạm thời tải xuống một bản sao của các tài liệu (thông tin hoặc phần mềm) trên trang web KnowVa chỉ để xem cá nhân, phi thương mại. Đây là việc cấp giấy phép, không phải chuyển nhượng quyền sở hữu, và theo giấy phép này bạn không được:",
+    "useLicenseItems": [
+      "sửa đổi hoặc sao chép các tài liệu",
+      "sử dụng tài liệu cho bất kỳ mục đích thương mại nào hoặc để hiển thị công khai",
+      "cố gắng đảo ngược kỹ thuật bất kỳ phần mềm nào có trên trang web KnowVa",
+      "xóa bất kỳ thông báo bản quyền hoặc quyền sở hữu khác khỏi tài liệu",
+      "chuyển tài liệu cho người khác hoặc \"gương\" tài liệu trên bất kỳ máy chủ nào khác"
+    ],
+    "userAccountsTitle": "3. Tài Khoản Người Dùng",
+    "userAccountsText": "Khi bạn tạo tài khoản với chúng tôi, bạn phải cung cấp thông tin chính xác, đầy đủ và hiện tại mọi lúc. Bạn chịu trách nhiệm bảo vệ mật khẩu và cho tất cả hoạt động xảy ra dưới tài khoản của bạn.",
+    "contentMaterialsTitle": "4. Nội Dung và Tài Liệu",
+    "contentMaterialsText": "Bạn giữ quyền sở hữu bất kỳ nội dung nào bạn tải lên KnowVa. Bằng việc tải lên nội dung, bạn cấp cho chúng tôi giấy phép toàn cầu, không độc quyền để sử dụng, lưu trữ và xử lý nội dung của bạn chỉ nhằm mục đích cung cấp Dịch vụ cho bạn.",
+    "privacyPolicyTitle": "5. Chính Sách Bảo Mật",
+    "privacyPolicyText": "Quyền riêng tư của bạn rất quan trọng đối với chúng tôi. Vui lòng xem lại Chính sách Bảo mật của chúng tôi, cũng điều chỉnh việc sử dụng Dịch vụ của bạn, để hiểu các thực hành của chúng tôi.",
+    "subscriptionBillingTitle": "6. Đăng Ký và Thanh Toán",
+    "subscriptionBillingText": "Một số tính năng của KnowVa yêu cầu đăng ký trả phí. Bằng việc đăng ký, bạn đồng ý trả các khoản phí được chỉ định. Đăng ký tự động gia hạn trừ khi hủy trước ngày gia hạn.",
+    "terminationTitle": "7. Chấm Dứt",
+    "terminationText": "Chúng tôi có thể chấm dứt hoặc đình chỉ tài khoản của bạn và cấm truy cập vào Dịch vụ ngay lập tức, không cần thông báo trước hoặc trách nhiệm pháp lý, theo quyết định riêng của chúng tôi, vì bất kỳ lý do gì và không giới hạn, bao gồm nhưng không giới hạn ở việc vi phạm Điều khoản.",
+    "limitationLiabilityTitle": "8. Giới Hạn Trách Nhiệm",
+    "limitationLiabilityText": "Trong mọi trường hợp, KnowVa, cũng như các giám đốc, nhân viên, đối tác, đại lý, nhà cung cấp hoặc công ty liên kết, không chịu trách nhiệm về bất kỳ thiệt hại gián tiếp, ngẫu nhiên, đặc biệt, hậu quả hoặc trừng phạt nào, bao gồm nhưng không giới hạn, mất lợi nhuận, dữ liệu, sử dụng, thiện chí hoặc các tổn thất vô hình khác, do việc sử dụng Dịch vụ của bạn.",
+    "changesTermsTitle": "9. Thay Đổi Điều Khoản",
+    "changesTermsText": "Chúng tôi có quyền, theo quyết định riêng của mình, sửa đổi hoặc thay thế các Điều khoản này bất cứ lúc nào. Nếu việc sửa đổi là quan trọng, chúng tôi sẽ cố gắng cung cấp thông báo ít nhất 30 ngày trước khi bất kỳ điều khoản mới nào có hiệu lực.",
+    "contactInfoTitle": "10. Thông Tin Liên Hệ",
+    "contactInfoText": "Nếu bạn có bất kỳ câu hỏi nào về Điều khoản & Điều kiện này, vui lòng liên hệ với chúng tôi tại:",
+    "contactEmail": "Email: legal@knowva.com",
+    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+  },
+  "privacy": {
+    "title": "Chính Sách Bảo Mật",
+    "lastUpdated": "Cập nhật lần cuối: 15 tháng 3 năm 2024",
+    "infoCollectionTitle": "1. Thông Tin Chúng Tôi Thu Thập",
+    "infoCollectionText": "Chúng tôi thu thập thông tin bạn cung cấp trực tiếp cho chúng tôi, chẳng hạn khi bạn tạo tài khoản, tải lên nội dung hoặc liên hệ hỗ trợ. Điều này có thể bao gồm:",
+    "infoCollectionItems": [
+      "Tên, email và thông tin liên hệ khác",
+      "Thông tin đăng nhập và hồ sơ tài khoản",
+      "Nội dung bạn tải lên, bao gồm tài liệu học tập và tệp",
+      "Dữ liệu sử dụng và tương tác với dịch vụ",
+      "Thông tin thiết bị và địa chỉ IP"
+    ],
+    "infoUseTitle": "2. Cách Chúng Tôi Sử Dụng Thông Tin Của Bạn",
+    "infoUseText": "Chúng tôi sử dụng thông tin thu thập được để:",
+    "infoUseItems": [
+      "Cung cấp, duy trì và cải thiện dịch vụ",
+      "Xử lý giao dịch và gửi thông tin liên quan",
+      "Gửi thông báo kỹ thuật, cập nhật và hỗ trợ",
+      "Phản hồi bình luận và câu hỏi của bạn",
+      "Phát triển sản phẩm và dịch vụ mới",
+      "Ngăn chặn gian lận và lạm dụng"
+    ],
+    "infoSharingTitle": "3. Chia Sẻ Thông Tin",
+    "infoSharingText": "Chúng tôi không bán, trao đổi hay chuyển giao thông tin cá nhân của bạn cho bên thứ ba nếu không có sự đồng ý của bạn, trừ các trường hợp sau:",
+    "infoSharingItems": [
+      "Khi có sự đồng ý rõ ràng của bạn",
+      "Để tuân thủ nghĩa vụ pháp lý",
+      "Để bảo vệ quyền lợi và an toàn của chúng tôi",
+      "Với các nhà cung cấp dịch vụ hỗ trợ vận hành"
+    ],
+    "dataSecurityTitle": "4. Bảo Mật Dữ Liệu",
+    "dataSecurityText": "Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức phù hợp để bảo vệ thông tin cá nhân của bạn trước truy cập, thay đổi, tiết lộ hoặc phá hủy trái phép. Tuy nhiên, không có phương thức truyền tải nào qua internet đảm bảo 100% an toàn.",
+    "yourRightsTitle": "5. Quyền Của Bạn",
+    "yourRightsText": "Bạn có quyền:",
+    "yourRightsItems": [
+      "Truy cập và cập nhật thông tin cá nhân",
+      "Yêu cầu xóa dữ liệu",
+      "Từ chối nhận thông tin tiếp thị",
+      "Xuất dữ liệu ở định dạng có thể di chuyển",
+      "Gửi khiếu nại đến cơ quan giám sát"
+    ],
+    "cookiesTrackingTitle": "6. Cookie và Theo Dõi",
+    "cookiesTrackingText": "Chúng tôi sử dụng cookie và công nghệ tương tự để nâng cao trải nghiệm, phân tích hành vi sử dụng và cá nhân hóa nội dung. Bạn có thể kiểm soát cookie trong cài đặt trình duyệt.",
+    "childrenPrivacyTitle": "7. Bảo Mật Trẻ Em",
+    "childrenPrivacyText": "Dịch vụ của chúng tôi không dành cho trẻ em dưới 13 tuổi. Chúng tôi không cố ý thu thập thông tin cá nhân từ trẻ em dưới 13 tuổi. Nếu bạn tin rằng chúng tôi đã thu thập thông tin như vậy, vui lòng liên hệ ngay.",
+    "internationalTransfersTitle": "8. Chuyển Giao Quốc Tế",
+    "internationalTransfersText": "Thông tin của bạn có thể được chuyển và xử lý ở các quốc gia khác. Chúng tôi đảm bảo có các biện pháp bảo vệ phù hợp để bảo vệ dữ liệu theo chính sách này.",
+    "changesPolicyTitle": "9. Thay Đổi Chính Sách Này",
+    "changesPolicyText": "Chúng tôi có thể cập nhật Chính sách Bảo mật theo thời gian. Chúng tôi sẽ thông báo bằng cách đăng chính sách mới trên trang này và cập nhật ngày 'Cập nhật lần cuối'.",
+    "contactUsTitle": "10. Liên Hệ Chúng Tôi",
+    "contactUsText": "Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này, vui lòng liên hệ với chúng tôi tại:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+  },
+  "documentation": {
+    "title": "Tài Liệu",
+    "subtitle": "Hướng dẫn toàn diện và hướng dẫn để giúp bạn tận dụng tối đa các tính năng của KnowVa.",
+    "searchPlaceholder": "Tìm kiếm tài liệu...",
+    "apiTitle": "Tài Liệu API",
+    "apiSubtitle": "Tích hợp KnowVa vào ứng dụng của bạn với API toàn diện của chúng tôi.",
+    "authentication": "Xác Thực",
+    "authDescription": "Tìm hiểu về khóa API và phương pháp xác thực",
+    "endpoints": "Điểm Cuối",
+    "endpointsDescription": "Khám phá các điểm cuối API có sẵn",
+    "examples": "Ví Dụ",
+    "examplesDescription": "Ví dụ mã và hướng dẫn",
+    "videoTitle": "Hướng Dẫn Video",
+    "videoSubtitle": "Xem hướng dẫn từng bước để làm chủ các tính năng KnowVa một cách nhanh chóng.",
+    "watchVideos": "Xem Video",
+    "__comment_sections": "=== Tài Liệu: Danh sách các mục ===",
+    "sections": {
+      "gettingStarted": {
+        "title": "Bắt đầu",
+        "description": "Học những điều cơ bản khi sử dụng KnowVa",
+        "articles": [
+          "Hướng dẫn nhanh",
+          "Tạo tài khoản đầu tiên",
+          "Tìm hiểu bảng điều khiển",
+          "Điều hướng cơ bản"
+        ]
+      },
+      "flashcards": {
+        "title": "Flashcard",
+        "description": "Thành thạo việc tạo và quản lý flashcard",
+        "articles": [
+          "Tạo bộ flashcard",
+          "Thêm thẻ từ hình ảnh",
+          "Tổ chức thẻ của bạn",
+          "Kỹ thuật học tập"
+        ]
+      },
+      "quizzes": {
+        "title": "Quiz",
+        "description": "Tạo và làm quiz hiệu quả",
+        "articles": [
+          "Tạo quiz từ nội dung",
+          "Tùy chỉnh cài đặt quiz",
+          "Làm quiz",
+          "Xem lại kết quả"
+        ]
+      },
+      "tests": {
+        "title": "Bài kiểm tra",
+        "description": "Tạo bài đánh giá toàn diện",
+        "articles": [
+          "Tạo bài kiểm tra",
+          "Các loại câu hỏi hỗ trợ",
+          "Cấu hình bài kiểm tra",
+          "Chấm điểm và phân tích"
+        ]
+      }
+    }
+  },
+  "cookies": {
+    "title": "Chính Sách Cookie",
+    "lastUpdated": "Cập nhật lần cuối: 15 tháng 3 năm 2024",
+    "whatAreCookies": "Cookie Là Gì?",
+    "cookiesDescription": "Cookie là các tệp văn bản nhỏ được lưu trữ trên thiết bị của bạn khi bạn truy cập trang web của chúng tôi. Chúng giúp chúng tôi cung cấp cho bạn trải nghiệm tốt hơn bằng cách ghi nhớ tùy chọn của bạn và phân tích cách bạn sử dụng trang web của chúng tôi.",
+    "howWeUseCookies": "Cách Chúng Tôi Sử Dụng Cookie",
+    "howWeUseDescription": "Chúng tôi sử dụng cookie để:",
+    "use1": "Ghi nhớ trạng thái đăng nhập và tùy chọn của bạn",
+    "use2": "Phân tích cách trang web của chúng tôi được sử dụng để cải thiện hiệu suất",
+    "use3": "Cung cấp nội dung và tính năng cá nhân hóa",
+    "use4": "Đảm bảo bảo mật và ngăn chặn gian lận",
+    "use5": "Cung cấp quảng cáo liên quan",
+    "typesOfCookies": "Các Loại Cookie Chúng Tôi Sử Dụng",
+    "necessary": "Cần Thiết",
+    "examples": "Ví dụ:",
+    "thirdPartyCookies": "Cookie Bên Thứ Ba",
+    "thirdPartyDescription": "Chúng tôi cũng có thể sử dụng cookie bên thứ ba từ các đối tác đáng tin cậy để giúp chúng tôi cung cấp dịch vụ tốt hơn. Chúng bao gồm:",
+    "thirdParty1": "Google Analytics để phân tích trang web",
+    "thirdParty2": "Nền tảng mạng xã hội cho tính năng chia sẻ",
+    "thirdParty3": "Bộ xử lý thanh toán cho giao dịch an toàn",
+    "thirdParty4": "Mạng quảng cáo cho quảng cáo liên quan",
+    "managingCookies": "Quản Lý Tùy Chọn Cookie Của Bạn",
+    "managingDescription": "Bạn có thể kiểm soát và quản lý cookie theo nhiều cách:",
+    "manage1": "Cài đặt trình duyệt: Hầu hết các trình duyệt cho phép bạn kiểm soát cookie thông qua cài đặt của chúng",
+    "manage2": "Đồng ý cookie: Bạn có thể thay đổi tùy chọn của mình thông qua biểu ngữ đồng ý cookie của chúng tôi",
+    "manage3": "Từ chối bên thứ ba: Truy cập trang web của các đối tác bên thứ ba của chúng tôi để từ chối",
+    "manage4": "Liên hệ chúng tôi: Liên hệ với chúng tôi để được hỗ trợ về quản lý cookie",
+    "cookieConsent": "Đồng Ý Cookie",
+    "consentDescription": "Khi bạn lần đầu truy cập trang web của chúng tôi, bạn sẽ thấy biểu ngữ đồng ý cookie. Bạn có thể chọn chấp nhận tất cả cookie, từ chối cookie không cần thiết hoặc tùy chỉnh tùy chọn của mình. Lựa chọn của bạn sẽ được ghi nhớ cho các lần truy cập trong tương lai.",
+    "updates": "Cập Nhật Chính Sách Này",
+    "updatesDescription": "Chúng tôi có thể cập nhật Chính sách Cookie này theo thời gian để phản ánh những thay đổi trong thực tiễn của chúng tôi hoặc vì các lý do vận hành, pháp lý hoặc quy định khác. Chúng tôi sẽ thông báo cho bạn về bất kỳ thay đổi quan trọng nào bằng cách đăng chính sách cập nhật trên trang web của chúng tôi.",
+    "contactUs": "Liên Hệ Chúng Tôi",
+    "contactDescription": "Nếu bạn có bất kỳ câu hỏi nào về việc sử dụng cookie của chúng tôi hoặc Chính sách Cookie này, vui lòng liên hệ với chúng tôi:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
   },
   "userDetails": "Chi tiết người dùng",
   "loadingUserInfo": "Đang tải thông tin người dùng...",
