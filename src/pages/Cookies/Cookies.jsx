@@ -6,27 +6,27 @@ const Cookies = () => {
 
   const cookieTypes = [
     {
-      title: 'Essential Cookies',
-      description: 'These cookies are necessary for the website to function properly.',
-      examples: ['Authentication cookies', 'Session management', 'Security features'],
+      title: t('cookies.cookieTypes.essential.title'),
+      description: t('cookies.cookieTypes.essential.description'),
+      examples: t('cookies.cookieTypes.essential.examples', { returnObjects: true }),
       necessary: true
     },
     {
-      title: 'Analytics Cookies',
-      description: 'These cookies help us understand how visitors interact with our website.',
-      examples: ['Google Analytics', 'User behavior tracking', 'Performance monitoring'],
+      title: t('cookies.cookieTypes.analytics.title'),
+      description: t('cookies.cookieTypes.analytics.description'),
+      examples: t('cookies.cookieTypes.analytics.examples', { returnObjects: true }),
       necessary: false
     },
     {
-      title: 'Functional Cookies',
-      description: 'These cookies enable enhanced functionality and personalization.',
-      examples: ['Language preferences', 'Theme settings', 'User preferences'],
+      title: t('cookies.cookieTypes.functional.title'),
+      description: t('cookies.cookieTypes.functional.description'),
+      examples: t('cookies.cookieTypes.functional.examples', { returnObjects: true }),
       necessary: false
     },
     {
-      title: 'Marketing Cookies',
-      description: 'These cookies are used to deliver relevant advertisements.',
-      examples: ['Ad targeting', 'Social media integration', 'Marketing campaigns'],
+      title: t('cookies.cookieTypes.marketing.title'),
+      description: t('cookies.cookieTypes.marketing.description'),
+      examples: t('cookies.cookieTypes.marketing.examples', { returnObjects: true }),
       necessary: false
     }
   ];
