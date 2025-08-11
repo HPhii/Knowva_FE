@@ -58,14 +58,6 @@ const Footer = () => {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    to="/product"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.product")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     to="/pricing"
                     className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
                   >
@@ -88,14 +80,6 @@ const Footer = () => {
                     {t("footer.documentation")}
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/tutorials"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.tutorials")}
-                  </Link>
-                </li>
               </ul>
             </div>
 
@@ -115,14 +99,6 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/careers"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.careers")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     to="/contact"
                     className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
                   >
@@ -135,14 +111,6 @@ const Footer = () => {
                     className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {t("footer.blog")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/press"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.press")}
                   </Link>
                 </li>
               </ul>
@@ -178,22 +146,6 @@ const Footer = () => {
                     {t("footer.cookies")}
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/security"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.security")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/accessibility"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.accessibility")}
-                  </Link>
-                </li>
               </ul>
             </div>
           </div>
@@ -205,8 +157,10 @@ const Footer = () => {
                 {t("footer.copyright")}
               </div>
               <div className="flex space-x-6">
-                <Link
-                  to="/twitter"
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   <span className="sr-only">{t("footer.twitter")}</span>
@@ -217,9 +171,11 @@ const Footer = () => {
                   >
                     <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
                   </svg>
-                </Link>
-                <Link
-                  to="/facebook"
+                </a>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   <span className="sr-only">{t("footer.facebook")}</span>
@@ -234,9 +190,11 @@ const Footer = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                </Link>
-                <Link
-                  to="/linkedin"
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   <span className="sr-only">{t("footer.linkedin")}</span>
@@ -251,7 +209,7 @@ const Footer = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                </Link>
+                </a>
               </div>
             </div>
           </div>

@@ -469,6 +469,28 @@
     "use4": "Ensure security and prevent fraud",
     "use5": "Deliver relevant advertisements",
     "typesOfCookies": "Types of Cookies We Use",
+    "cookieTypes": {
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "These cookies are necessary for the website to function properly.",
+        "examples": ["Authentication cookies", "Session management", "Security features"]
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "These cookies help us understand how visitors interact with our website.",
+        "examples": ["Google Analytics", "User behavior tracking", "Performance monitoring"]
+      },
+      "functional": {
+        "title": "Functional Cookies",
+        "description": "These cookies enable enhanced functionality and personalization.",
+        "examples": ["Language preferences", "Theme settings", "User preferences"]
+      },
+      "marketing": {
+        "title": "Marketing Cookies",
+        "description": "These cookies are used to deliver relevant advertisements.",
+        "examples": ["Ad targeting", "Social media integration", "Marketing campaigns"]
+      }
+    },
     "necessary": "Necessary",
     "examples": "Examples:",
     "thirdPartyCookies": "Third-Party Cookies",
@@ -587,23 +609,17 @@
     "brandDesc": "Empowering learning through interactive quizzes, flashcards, and comprehensive tests.",
     "exploreMore": "Explore More",
     "customers": "Customers",
-    "product": "Product",
     "pricing": "Pricing",
     "support": "Support",
     "documentation": "Documentation",
-    "tutorials": "Tutorials",
     "company": "Company",
     "aboutUs": "About us",
-    "careers": "Careers",
     "contactUs": "Contact us",
     "blog": "Blog",
-    "press": "Press",
     "furtherInfo": "Further Information",
     "terms": "Terms & Conditions",
     "privacy": "Privacy Policy",
     "cookies": "Cookie Policy",
-    "security": "Security",
-    "accessibility": "Accessibility",
     "copyright": "© 2024 KnowVa. All rights reserved.",
     "twitter": "Twitter",
     "facebook": "Facebook",

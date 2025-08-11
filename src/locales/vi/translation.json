@@ -469,6 +469,28 @@
     "use4": "Đảm bảo bảo mật và ngăn chặn gian lận",
     "use5": "Cung cấp quảng cáo liên quan",
     "typesOfCookies": "Các Loại Cookie Chúng Tôi Sử Dụng",
+    "cookieTypes": {
+      "essential": {
+        "title": "Cookie Cần Thiết",
+        "description": "Những cookie này cần thiết để trang web hoạt động bình thường.",
+        "examples": ["Cookie xác thực", "Quản lý phiên làm việc", "Tính năng bảo mật"]
+      },
+      "analytics": {
+        "title": "Cookie Phân Tích",
+        "description": "Những cookie này giúp chúng tôi hiểu cách khách truy cập tương tác với trang web của chúng tôi.",
+        "examples": ["Google Analytics", "Theo dõi hành vi người dùng", "Giám sát hiệu suất"]
+      },
+      "functional": {
+        "title": "Cookie Chức Năng",
+        "description": "Những cookie này cho phép chức năng nâng cao và cá nhân hóa.",
+        "examples": ["Tùy chọn ngôn ngữ", "Cài đặt giao diện", "Tùy chọn người dùng"]
+      },
+      "marketing": {
+        "title": "Cookie Tiếp Thị",
+        "description": "Những cookie này được sử dụng để cung cấp quảng cáo liên quan.",
+        "examples": ["Nhắm mục tiêu quảng cáo", "Tích hợp mạng xã hội", "Chiến dịch tiếp thị"]
+      }
+    },
     "necessary": "Cần Thiết",
     "examples": "Ví dụ:",
     "thirdPartyCookies": "Cookie Bên Thứ Ba",
@@ -587,23 +609,17 @@
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
     "customers": "Khách hàng",
-    "product": "Sản phẩm",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
     "documentation": "Tài liệu",
-    "tutorials": "Hướng dẫn",
     "company": "Công ty",
     "aboutUs": "Về chúng tôi",
-    "careers": "Tuyển dụng",
     "contactUs": "Liên hệ",
     "blog": "Blog",
-    "press": "Báo chí",
     "furtherInfo": "Thông tin thêm",
     "terms": "Điều khoản & Điều kiện",
     "privacy": "Chính sách bảo mật",
     "cookies": "Chính sách Cookie",
-    "security": "Bảo mật",
-    "accessibility": "Truy cập",
     "copyright": "© 2024 KnowVa. Đã đăng ký bản quyền.",
     "twitter": "Twitter",
     "facebook": "Facebook",
