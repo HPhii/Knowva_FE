@@ -11,6 +11,17 @@
     "userDetails": "User Details",
     "verifyEmail": "Verify Email"
   },
+  "upload": {
+    "createStudyMaterials": "Create study materials from your lectures",
+    "description": "Upload images or PDFs of your lecture slides to generate concise, easy-to-understand study notes.",
+    "dragDrop": "Drag and drop files here",
+    "orClick": "or click to upload",
+    "chooseFile": "Choose a file",
+    "uploadingFiles": "Uploading files",
+    "of": "of",
+    "filesUploaded": "files uploaded",
+    "startCreating": "Start creating"
+  },
   "login": {
     "title": "Login",
     "email": "Email",
@@ -74,6 +85,412 @@
     "tooManyLoginAttempts": "Too many failed login attempts. Please try again in 5 minutes.",
     "invalidRegistration": "Invalid registration information. Please check your details.",
     "updateProfileError": "Failed to update profile. Please try again."
+  },
+  "about": {
+    "heroTitle": "Revolutionizing Learning Through AI",
+    "heroSubtitle": "KnowVa is on a mission to make learning more effective, engaging, and accessible through intelligent study tools powered by artificial intelligence.",
+    "missionTitle": "Our Mission",
+    "missionText": "We believe that every student deserves access to personalized, effective learning tools. By combining the power of artificial intelligence with proven educational methodologies, we create study materials that adapt to individual learning styles and needs.",
+    "missionText2": "From flashcards that remember what you struggle with to quizzes that adapt to your knowledge level, KnowVa transforms passive studying into an active, engaging learning experience.",
+    "valuesTitle": "Our Values",
+    "values": {
+      "innovation": "Innovation in Education",
+      "accessibility": "Accessibility for All",
+      "dataDriven": "Data-Driven Learning",
+      "privacy": "User Privacy & Security"
+    },
+    "statsTitle": "KnowVa by the Numbers",
+    "stats": {
+      "activeUsers": "Active Users",
+      "flashcardsCreated": "Flashcards Created",
+      "quizzesGenerated": "Quizzes Generated",
+      "userSatisfaction": "User Satisfaction"
+    },
+    "teamTitle": "Meet Our Team",
+    "teamSubtitle": "The passionate individuals behind KnowVa who are dedicated to transforming education through technology.",
+    "team": {
+      "sarah": {
+        "name": "Sarah Johnson",
+        "role": "CEO & Founder",
+        "bio": "Former educator with 10+ years experience in EdTech"
+      },
+      "michael": {
+        "name": "Michael Chen",
+        "role": "CTO",
+        "bio": "AI/ML expert with focus on educational technology"
+      },
+      "emily": {
+        "name": "Emily Rodriguez",
+        "role": "Head of Product",
+        "bio": "Product strategist passionate about user experience"
+      }
+    },
+    "storyTitle": "Our Story",
+    "storyText": "In today's fast-paced learning environment, students are often overwhelmed with dense visual materials like slides, diagrams, and scanned notes. While visual resources are effective, turning them into useful study tools like flashcards and quizzes takes a lot of time and effort. That's where KnowVa began – as a solution built by students, for students.",
+    "storyText2": "We realized the struggle of manually converting image-based materials into review content. So, we created KnowVa to make this process smarter, faster, and more intuitive. By leveraging modern technologies, KnowVa extracts knowledge from learning images and helps users generate flashcards and quizzes effortlessly.",
+    "storyText3": "Our mission is simple: to help learners retain knowledge better, revise smarter, and take control of their learning – especially in a world where self-directed education is more important than ever. With KnowVa, we're not just building a tool. We're reimagining how students learn from visuals."
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Select the perfect plan for your learning needs. Start free and upgrade anytime.",
+    "faqTitle": "Frequently Asked Questions",
+    "mostPopular": "Most Popular",
+    "getStarted": "Get Started",
+    "getVIP": "Get VIP",
+    "regular": "Regular",
+    "vip": "VIP",
+    "perMonth": "/month",
+    "features": {
+      "upTo50Flashcards": "Up to 50 flashcards per set",
+      "basicQuizGeneration": "Basic quiz generation",
+      "standardTestCreation": "Standard test creation",
+      "emailSupport": "Email support",
+      "basicAnalytics": "Basic analytics",
+      "2GBStorage": "2GB storage",
+      "unlimitedFlashcards": "Unlimited flashcards",
+      "advancedAIQuiz": "Advanced AI quiz generation",
+      "premiumTestCreation": "Premium test creation",
+      "prioritySupport": "Priority support",
+      "advancedAnalytics": "Advanced analytics",
+      "10GBStorage": "10GB storage",
+      "customBranding": "Custom branding",
+      "apiAccess": "API access"
+    },
+    "faq": {
+      "changePlanTitle": "Can I change my plan anytime?",
+      "changePlanAnswer": "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
+      "freeTrialTitle": "Is there a free trial?",
+      "freeTrialAnswer": "We offer a 7-day free trial for all plans. No credit card required to start your trial.",
+      "paymentMethodsTitle": "What payment methods do you accept?",
+      "paymentMethodsAnswer": "We accept all major credit cards, PayPal, and bank transfers for annual plans."
+    }
+  },
+  "support": {
+    "title": "Support Center",
+    "subtitle": "Find answers to your questions and get help with KnowVa.",
+    "contactTitle": "Still Need Help?",
+    "contactSubtitle": "Our support team is here to help you with any questions or issues.",
+    "searchPlaceholder": "Search for help...",
+    "gettingStarted": {
+      "title": "Getting Started",
+      "description": "Learn the basics of using KnowVa",
+      "article1": "How to create your first flashcard set",
+      "article2": "Understanding the quiz generation process",
+      "article3": "Setting up your account",
+      "article4": "Navigating the dashboard"
+    },
+    "accountBilling": {
+      "title": "Account & Billing",
+      "description": "Manage your account and subscription",
+      "article1": "Updating your payment information",
+      "article2": "Changing your subscription plan",
+      "article3": "Canceling your subscription",
+      "article4": "Downloading your data"
+    },
+    "featuresTools": {
+      "title": "Features & Tools",
+      "description": "Master all KnowVa features",
+      "article1": "Advanced flashcard techniques",
+      "article2": "Customizing quiz settings",
+      "article3": "Using AI-powered features",
+      "article4": "Exporting your study materials"
+    },
+    "troubleshooting": {
+      "title": "Troubleshooting",
+      "description": "Solve common issues and problems",
+      "article1": "File upload issues",
+      "article2": "Performance problems",
+      "article3": "Login difficulties",
+      "article4": "Data synchronization errors"
+    },
+    "emailSupport": {
+      "title": "Email Support",
+      "email": "support@knowva.com",
+      "responseTime": "Response within 24 hours"
+    },
+    "liveChat": {
+      "title": "Live Chat",
+      "availability": "Available 24/7",
+      "responseTime": "Instant response"
+    },
+    "documentation": {
+      "title": "Documentation",
+      "description": "Comprehensive guides",
+      "tutorials": "Step-by-step tutorials"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions or feedback? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+    "formTitle": "Send us a Message",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "sendMessage": "Send Message",
+    "infoTitle": "Contact Information",
+    "faqTitle": "Quick Questions?",
+    "address": "Address",
+    "phone": "Phone",
+    "contactEmail": "contact@knowva.com",
+    "supportEmail": "support@knowva.com",
+    "addressLine1": "123 Innovation Drive",
+    "addressLine2": "San Francisco, CA 94105",
+    "addressLine3": "United States",
+    "phoneNumber": "+1 (555) 123-4567",
+    "phoneHours": "Mon-Fri 9AM-6PM PST",
+    "faqLinks": {
+      "getStarted": "How do I get started with KnowVa?",
+      "pricingPlans": "What are your pricing plans?",
+      "resetPassword": "How can I reset my password?",
+      "exportMaterials": "Can I export my study materials?"
+    }
+  },
+  "__comment_blog": "=== Blog Page Translations ===",
+  "blog": {
+    "title": "KnowVa Blog",
+    "subtitle": "Insights, tips, and stories about learning, technology, and the future of education.",
+    "newsletterTitle": "Stay Updated",
+    "newsletterSubtitle": "Get the latest insights on learning, technology, and education delivered to your inbox.",
+    "subscribe": "Subscribe",
+    "emptyTitle": "No posts yet",
+    "emptySubtitle": "We’re working on great content. Please check back soon.",
+    "emailPlaceholder": "Enter your email",
+    "readMore": "Read More →",
+    "categories": {
+      "all": "All",
+      "learningScience": "Learning Science",
+      "technology": "Technology",
+      "studyTips": "Study Tips",
+      "edTech": "EdTech"
+    },
+    "posts": {
+      "post1": {
+        "title": "The Science Behind Effective Learning",
+        "excerpt": "Discover the cognitive science principles that make KnowVa's AI-powered study tools so effective for memory retention and knowledge acquisition.",
+        "author": "Dr. Sarah Johnson",
+        "category": "Learning Science",
+        "readTime": "5 min read"
+      },
+      "post2": {
+        "title": "How AI is Revolutionizing Education",
+        "excerpt": "Explore how artificial intelligence is transforming the way students learn and how KnowVa is leading the charge in personalized education.",
+        "author": "Michael Chen",
+        "category": "Technology",
+        "readTime": "7 min read"
+      },
+      "post3": {
+        "title": "Study Smarter, Not Harder: Tips from Top Students",
+        "excerpt": "Learn the proven study techniques used by high-achieving students and how KnowVa can help you implement them effectively.",
+        "author": "Emily Rodriguez",
+        "category": "Study Tips",
+        "readTime": "4 min read"
+      },
+      "post4": {
+        "title": "The Future of Digital Learning Platforms",
+        "excerpt": "A deep dive into emerging trends in educational technology and what students can expect from the next generation of learning tools.",
+        "author": "Alex Thompson",
+        "category": "EdTech",
+        "readTime": "6 min read"
+      },
+      "post5": {
+        "title": "Building Better Study Habits with Technology",
+        "excerpt": "Practical advice on how to use digital tools to build sustainable study habits that last beyond exam season.",
+        "author": "Dr. Sarah Johnson",
+        "category": "Study Tips",
+        "readTime": "8 min read"
+      },
+      "post6": {
+        "title": "The Psychology of Memory and Learning",
+        "excerpt": "Understanding how our brains process and retain information can help you optimize your study sessions for maximum effectiveness.",
+        "author": "Dr. Lisa Park",
+        "category": "Learning Science",
+        "readTime": "10 min read"
+      }
+    }
+  },
+  "__comment_privacy": "=== Privacy Page Translations ===",
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdated": "Last updated: March 15, 2024",
+    "acceptanceTitle": "1. Acceptance of Terms",
+    "acceptanceText": "By accessing and using KnowVa (\"the Service\"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.",
+    "useLicenseTitle": "2. Use License",
+    "useLicenseText": "Permission is granted to temporarily download one copy of the materials (information or software) on KnowVa's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:",
+    "useLicenseItems": [
+      "modify or copy the materials",
+      "use the materials for any commercial purpose or for any public display",
+      "attempt to reverse engineer any software contained on KnowVa's website",
+      "remove any copyright or other proprietary notations from the materials",
+      "transfer the materials to another person or \"mirror\" the materials on any other server"
+    ],
+    "userAccountsTitle": "3. User Accounts",
+    "userAccountsText": "When you create an account with us, you must provide information that is accurate, complete, and current at all times. You are responsible for safeguarding the password and for all activities that occur under your account.",
+    "contentMaterialsTitle": "4. Content and Materials",
+    "contentMaterialsText": "You retain ownership of any content you upload to KnowVa. By uploading content, you grant us a worldwide, non-exclusive license to use, store, and process your content solely for the purpose of providing the Service to you.",
+    "privacyPolicyTitle": "5. Privacy Policy",
+    "privacyPolicyText": "Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the Service, to understand our practices.",
+    "subscriptionBillingTitle": "6. Subscription and Billing",
+    "subscriptionBillingText": "Some features of KnowVa require a paid subscription. By subscribing, you agree to pay the specified fees. Subscriptions automatically renew unless cancelled before the renewal date.",
+    "terminationTitle": "7. Termination",
+    "terminationText": "We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.",
+    "limitationLiabilityTitle": "8. Limitation of Liability",
+    "limitationLiabilityText": "In no event shall KnowVa, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the Service.",
+    "changesTermsTitle": "9. Changes to Terms",
+    "changesTermsText": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect.",
+    "contactInfoTitle": "10. Contact Information",
+    "contactInfoText": "If you have any questions about these Terms & Conditions, please contact us at:",
+    "contactEmail": "Email: legal@knowva.com",
+    "contactAddress": "Address: 123 Innovation Drive, San Francisco, CA 94105"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: March 15, 2024",
+    "infoCollectionTitle": "1. Information We Collect",
+    "infoCollectionText": "We collect information you provide directly to us, such as when you create an account, upload content, or contact us for support. This may include:",
+    "infoCollectionItems": [
+      "Name, email address, and other contact information",
+      "Account credentials and profile information",
+      "Content you upload, including study materials and files",
+      "Usage data and interaction with our services",
+      "Device information and IP addresses"
+    ],
+    "infoUseTitle": "2. How We Use Your Information",
+    "infoUseText": "We use the information we collect to:",
+    "infoUseItems": [
+      "Provide, maintain, and improve our services",
+      "Process your transactions and send related information",
+      "Send technical notices, updates, and support messages",
+      "Respond to your comments and questions",
+      "Develop new products and services",
+      "Protect against fraud and abuse"
+    ],
+    "infoSharingTitle": "3. Information Sharing",
+    "infoSharingText": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following circumstances:",
+    "infoSharingItems": [
+      "With your explicit consent",
+      "To comply with legal obligations",
+      "To protect our rights and safety",
+      "With service providers who assist in our operations"
+    ],
+    "dataSecurityTitle": "4. Data Security",
+    "dataSecurityText": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.",
+    "yourRightsTitle": "5. Your Rights",
+    "yourRightsText": "You have the right to:",
+    "yourRightsItems": [
+      "Access and update your personal information",
+      "Request deletion of your data",
+      "Opt out of marketing communications",
+      "Export your data in a portable format",
+      "Lodge a complaint with supervisory authorities"
+    ],
+    "cookiesTrackingTitle": "6. Cookies and Tracking",
+    "cookiesTrackingText": "We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content. You can control cookie settings through your browser preferences.",
+    "childrenPrivacyTitle": "7. Children's Privacy",
+    "childrenPrivacyText": "Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.",
+    "internationalTransfersTitle": "8. International Transfers",
+    "internationalTransfersText": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this policy.",
+    "changesPolicyTitle": "9. Changes to This Policy",
+    "changesPolicyText": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the 'Last updated' date.",
+    "contactUsTitle": "10. Contact Us",
+    "contactUsText": "If you have any questions about this Privacy Policy, please contact us at:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Address: 123 Innovation Drive, San Francisco, CA 94105"
+  },
+  "documentation": {
+    "title": "Documentation",
+    "subtitle": "Comprehensive guides and tutorials to help you make the most of KnowVa's features.",
+    "searchPlaceholder": "Search documentation...",
+    "apiTitle": "API Documentation",
+    "apiSubtitle": "Integrate KnowVa into your applications with our comprehensive API.",
+    "authentication": "Authentication",
+    "authDescription": "Learn about API keys and authentication methods",
+    "endpoints": "Endpoints",
+    "endpointsDescription": "Explore available API endpoints",
+    "examples": "Examples",
+    "examplesDescription": "Code examples and tutorials",
+    "videoTitle": "Video Tutorials",
+    "videoSubtitle": "Watch step-by-step tutorials to master KnowVa features quickly.",
+    "watchVideos": "Watch Videos",
+    "__comment_sections": "=== Documentation Page: Sections list ===",
+    "sections": {
+      "gettingStarted": {
+        "title": "Getting Started",
+        "description": "Learn the basics of using KnowVa",
+        "articles": [
+          "Quick Start Guide",
+          "Creating Your First Account",
+          "Understanding the Dashboard",
+          "Basic Navigation"
+        ]
+      },
+      "flashcards": {
+        "title": "Flashcards",
+        "description": "Master flashcard creation and management",
+        "articles": [
+          "Creating Flashcard Sets",
+          "Adding Cards from Images",
+          "Organizing Your Cards",
+          "Study Techniques"
+        ]
+      },
+      "quizzes": {
+        "title": "Quizzes",
+        "description": "Generate and take quizzes effectively",
+        "articles": [
+          "Generating Quizzes from Content",
+          "Customizing Quiz Settings",
+          "Taking Quizzes",
+          "Reviewing Results"
+        ]
+      },
+      "tests": {
+        "title": "Tests",
+        "description": "Create comprehensive assessments",
+        "articles": [
+          "Creating Test Assessments",
+          "Question Types Available",
+          "Test Configuration",
+          "Grading and Analytics"
+        ]
+      }
+    }
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated: March 15, 2024",
+    "whatAreCookies": "What Are Cookies?",
+    "cookiesDescription": "Cookies are small text files that are stored on your device when you visit our website. They help us provide you with a better experience by remembering your preferences and analyzing how you use our site.",
+    "howWeUseCookies": "How We Use Cookies",
+    "howWeUseDescription": "We use cookies to:",
+    "use1": "Remember your login status and preferences",
+    "use2": "Analyze how our website is used to improve performance",
+    "use3": "Provide personalized content and features",
+    "use4": "Ensure security and prevent fraud",
+    "use5": "Deliver relevant advertisements",
+    "typesOfCookies": "Types of Cookies We Use",
+    "necessary": "Necessary",
+    "examples": "Examples:",
+    "thirdPartyCookies": "Third-Party Cookies",
+    "thirdPartyDescription": "We may also use third-party cookies from trusted partners to help us provide better services. These include:",
+    "thirdParty1": "Google Analytics for website analytics",
+    "thirdParty2": "Social media platforms for sharing features",
+    "thirdParty3": "Payment processors for secure transactions",
+    "thirdParty4": "Advertising networks for relevant ads",
+    "managingCookies": "Managing Your Cookie Preferences",
+    "managingDescription": "You can control and manage cookies in several ways:",
+    "manage1": "Browser settings: Most browsers allow you to control cookies through their settings",
+    "manage2": "Cookie consent: You can change your preferences through our cookie consent banner",
+    "manage3": "Third-party opt-outs: Visit the websites of our third-party partners to opt out",
+    "manage4": "Contact us: Reach out to us for assistance with cookie management",
+    "cookieConsent": "Cookie Consent",
+    "consentDescription": "When you first visit our website, you will see a cookie consent banner. You can choose to accept all cookies, reject non-essential cookies, or customize your preferences. Your choices will be remembered for future visits.",
+    "updates": "Updates to This Policy",
+    "updatesDescription": "We may update this Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the updated policy on our website.",
+    "contactUs": "Contact Us",
+    "contactDescription": "If you have any questions about our use of cookies or this Cookie Policy, please contact us:",
+    "contactEmail": "Email: privacy@knowva.com",
+    "contactAddress": "Address: 123 Innovation Drive, San Francisco, CA 94105"
   },
   "userDetails": "User Details",
   "loadingUserInfo": "Loading user information...",
