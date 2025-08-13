@@ -13,6 +13,8 @@ import Support from "../pages/Support/Support";
 import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
 import Blog from "../pages/Blog/Blog";
+import PostBlog from "../pages/Blog/PostBlog";
+import BlogDetail from "../pages/Blog/BlogDetail";
 import Terms from "../pages/Terms/Terms";
 import Privacy from "../pages/Privacy/Privacy";
 import Documentation from "../pages/Documentation/Documentation";
@@ -39,6 +41,8 @@ const router = createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "blog", element: <Blog /> },
+      { path: "blog/create", element: <PostBlog /> },
+      { path: "blog/:slug", element: <BlogDetail /> },
       { path: "terms", element: <Terms /> },
       { path: "privacy", element: <Privacy /> },
       { path: "documentation", element: <Documentation /> },

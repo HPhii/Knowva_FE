@@ -257,12 +257,59 @@
     "emptySubtitle": "Chúng tôi đang chuẩn bị nội dung chất lượng. Vui lòng quay lại sau.",
     "emailPlaceholder": "Nhập email của bạn",
     "readMore": "Đọc Thêm →",
+    "postBlog": "Đăng bài viết",
     "categories": {
       "all": "Tất cả",
-      "learningScience": "Khoa học học tập",
-      "technology": "Công nghệ",
-      "studyTips": "Mẹo học tập",
-      "edTech": "Công nghệ giáo dục"
+      "studySkills": "Kỹ năng học tập",
+      "flashcardQuizTips": "Mẹo Flashcard & Quiz",
+      "learningTools": "Công cụ học tập",
+      "freeResources": "Tài nguyên miễn phí",
+      "memoryScience": "Khoa học trí nhớ",
+      "inspiringStories": "Câu chuyện truyền cảm hứng",
+      "uncategorized": "Chưa phân loại",
+      "unknown": "Danh mục không xác định"
+    },
+    "actions": {
+      "tryAgain": "Thử lại",
+      "backToBlog": "Quay lại Blog",
+      "backToList": "Quay lại danh sách Blog",
+      "createNewPost": "Đăng bài mới"
+    },
+    "status": {
+      "published": "Đã xuất bản"
+    },
+    "defaultAuthorInitial": "A",
+    "comments": {
+      "title": "Bình luận",
+      "subtitle": "Chia sẻ suy nghĩ của bạn về bài viết này",
+      "cannotDisplay": "Không thể hiển thị bình luận - thiếu ID bài viết"
+    },
+    "errors": {
+      "cannotLoadPosts": "Không thể tải danh sách bài viết. Vui lòng thử lại sau.",
+      "cannotLoadPost": "Không thể tải bài viết. Vui lòng thử lại sau.",
+      "tryDifferentKeyword": "Vui lòng thử lại với từ khóa hoặc danh mục khác."
+    },
+    "sort": {
+      "sortBy": "Sắp xếp theo:",
+      "direction": "Thứ tự:",
+      "current": "Hiện tại:",
+      "publishedAt": "Ngày xuất bản",
+      "title": "Tiêu đề",
+      "authorName": "Tác giả",
+      "readTime": "Thời gian đọc",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật",
+      "desc": "Giảm dần",
+      "asc": "Tăng dần"
+    },
+    "url": {
+      "current": "URL hiện tại:"
+    },
+    "results": {
+      "title": "Kết quả tìm kiếm",
+      "found": "Tìm thấy",
+      "posts": "bài viết",
+      "for": "cho"
     },
     "posts": {
       "post1": {
@@ -624,5 +671,76 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "linkedin": "LinkedIn"
+  },
+  "postBlog": {
+    "title": "Tạo bài viết blog mới",
+    "subtitle": "Chia sẻ kiến thức và hiểu biết của bạn với cộng đồng KnowVa",
+    "backToBlog": "Quay lại Blog",
+    "form": {
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề bài viết blog của bạn",
+      "excerpt": "Tóm tắt",
+      "excerptPlaceholder": "Viết tóm tắt ngắn gọn về bài viết của bạn",
+      "category": "Danh mục",
+      "selectCategory": "Chọn danh mục",
+      "image": "Ảnh đại diện",
+      "status": "Trạng thái",
+      "draft": "Bản nháp",
+      "published": "Đã xuất bản",
+      "content": "Nội dung",
+      "contentPlaceholder": "Viết nội dung bài viết blog của bạn tại đây...",
+      "saveDraft": "Lưu bản nháp",
+      "publish": "Xuất bản",
+      "saving": "Đang lưu...",
+      "publishing": "Đang xuất bản..."
+    },
+
+    "success": {
+      "postCreated": "Tạo bài viết blog thành công!"
+    },
+    "errors": {
+      "fillRequiredFields": "Vui lòng điền đầy đủ các trường bắt buộc",
+      "createFailed": "Không thể tạo bài viết blog. Vui lòng thử lại."
+    }
+  },
+  "__comment_comments": "=== Comment System Translations ===",
+  "comments": {
+    "title": "Bình luận",
+    "flashcardTitle": "Bình luận Flashcard",
+    "quizTitle": "Bình luận Quiz",
+    "noComments": "Chưa có bình luận nào",
+    "noCommentsSubtitle": "Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!",
+    "loadingComments": "Đang tải bình luận...",
+    "writeComment": "Viết bình luận...",
+    "writeReply": "Viết phản hồi của bạn...",
+    "imageUrlPlaceholder": "URL hình ảnh (tùy chọn)",
+    "postComment": "Gửi bình luận",
+    "addComment": "Thêm bình luận",
+    "submitComment": "Gửi bình luận",
+    "sendReply": "Gửi phản hồi",
+    "reply": "Trả lời",
+    "replyingTo": "Trả lời",
+    "cancel": "Hủy",
+    "posting": "Đang gửi...",
+    "sending": "Đang gửi...",
+    "commentPosted": "Bình luận đã gửi thành công!",
+    "replyPosted": "Phản hồi đã gửi thành công!",
+    "pleaseLogin": "Vui lòng đăng nhập để bình luận",
+    "pleaseLoginReply": "Vui lòng đăng nhập để phản hồi",
+    "enterComment": "Vui lòng nhập bình luận",
+    "enterReply": "Vui lòng nhập phản hồi",
+    "userNotFound": "Không tìm thấy thông tin người dùng",
+    "errorPosting": "Lỗi khi gửi bình luận",
+    "errorPostingReply": "Lỗi khi gửi phản hồi",
+    "refreshComments": "Làm mới bình luận",
+    "refreshTooltip": "Làm mới bình luận",
+    "cannotLoad": "Không thể tải bình luận - thiếu ID bài viết"
+  },
+  "rating": {
+    "pleaseLoginToRate": "Vui lòng đăng nhập để đánh giá",
+    "ratingSubmittedSuccessfully": "Đánh giá đã được ghi nhận",
+    "errorSubmittingRating": "Có lỗi xảy ra khi gửi đánh giá",
+    "rateThis": "Đánh giá",
+    "sendingRating": "Đang gửi đánh giá"
   }
 }

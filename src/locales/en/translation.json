@@ -257,12 +257,59 @@
     "emptySubtitle": "We’re working on great content. Please check back soon.",
     "emailPlaceholder": "Enter your email",
     "readMore": "Read More →",
+    "postBlog": "Post Blog",
     "categories": {
       "all": "All",
-      "learningScience": "Learning Science",
-      "technology": "Technology",
-      "studyTips": "Study Tips",
-      "edTech": "EdTech"
+      "studySkills": "Study Skills",
+      "flashcardQuizTips": "Flashcard & Quiz Tips",
+      "learningTools": "Learning Tools",
+      "freeResources": "Free Resources",
+      "memoryScience": "Memory Science",
+      "inspiringStories": "Inspiring Stories",
+      "uncategorized": "Uncategorized",
+      "unknown": "Unknown Category"
+    },
+    "actions": {
+      "tryAgain": "Try Again",
+      "backToBlog": "Back to Blog",
+      "backToList": "Back to Blog List",
+      "createNewPost": "Create New Post"
+    },
+    "status": {
+      "published": "Published"
+    },
+    "defaultAuthorInitial": "A",
+    "comments": {
+      "title": "Comments",
+      "subtitle": "Share your thoughts about this article",
+      "cannotDisplay": "Cannot display comments - missing post ID"
+    },
+    "errors": {
+      "cannotLoadPosts": "Cannot load blog posts. Please try again later.",
+      "cannotLoadPost": "Cannot load blog post. Please try again later.",
+      "tryDifferentKeyword": "Please try again with different keywords or categories."
+    },
+    "sort": {
+      "sortBy": "Sort by:",
+      "direction": "Order:",
+      "current": "Current:",
+      "publishedAt": "Published Date",
+      "title": "Title",
+      "authorName": "Author",
+      "readTime": "Read Time",
+      "createdAt": "Created Date",
+      "updatedAt": "Updated Date",
+      "desc": "Descending",
+      "asc": "Ascending"
+    },
+    "url": {
+      "current": "Current URL:"
+    },
+    "results": {
+      "title": "Search Results",
+      "found": "Found",
+      "posts": "posts",
+      "for": "for"
     },
     "posts": {
       "post1": {
@@ -624,5 +671,76 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "linkedin": "LinkedIn"
+  },
+  "postBlog": {
+    "title": "Create New Blog Post",
+    "subtitle": "Share your knowledge and insights with the KnowVa community",
+    "backToBlog": "Back to Blog",
+    "form": {
+      "title": "Title",
+      "titlePlaceholder": "Enter your blog post title",
+      "excerpt": "Excerpt",
+      "excerptPlaceholder": "Write a brief summary of your post",
+      "category": "Category",
+      "selectCategory": "Select a category",
+      "image": "Featured Image",
+      "status": "Status",
+      "draft": "Draft",
+      "published": "Published",
+      "content": "Content",
+      "contentPlaceholder": "Write your blog post content here...",
+      "saveDraft": "Save Draft",
+      "publish": "Publish",
+      "saving": "Saving...",
+      "publishing": "Publishing..."
+    },
+
+    "success": {
+      "postCreated": "Blog post created successfully!"
+    },
+    "errors": {
+      "fillRequiredFields": "Please fill in all required fields",
+      "createFailed": "Failed to create blog post. Please try again."
+    }
+  },
+  "__comment_comments": "=== Comment System Translations ===",
+  "comments": {
+    "title": "Comments",
+    "flashcardTitle": "Flashcard Comments",
+    "quizTitle": "Quiz Comments",
+    "noComments": "No comments yet",
+    "noCommentsSubtitle": "Be the first to share your thoughts!",
+    "loadingComments": "Loading comments...",
+    "writeComment": "Write a comment...",
+    "writeReply": "Write your reply...",
+    "imageUrlPlaceholder": "Image URL (optional)",
+    "postComment": "Post Comment",
+    "addComment": "Add Comment",
+    "submitComment": "Submit Comment",
+    "sendReply": "Send Reply",
+    "reply": "Reply",
+    "replyingTo": "Replying to",
+    "cancel": "Cancel",
+    "posting": "Posting...",
+    "sending": "Sending...",
+    "commentPosted": "Comment posted successfully!",
+    "replyPosted": "Reply posted successfully!",
+    "pleaseLogin": "Please login to comment",
+    "pleaseLoginReply": "Please login to reply",
+    "enterComment": "Please enter a comment",
+    "enterReply": "Please enter a reply",
+    "userNotFound": "User information not found",
+    "errorPosting": "Error posting comment",
+    "errorPostingReply": "Error posting reply",
+    "refreshComments": "Refresh comments",
+    "refreshTooltip": "Refresh comments",
+    "cannotLoad": "Cannot load comments - missing post ID"
+  },
+  "rating": {
+    "pleaseLoginToRate": "Please login to rate",
+    "ratingSubmittedSuccessfully": "Rating submitted successfully",
+    "errorSubmittingRating": "Error submitting rating",
+    "rateThis": "Rate this",
+    "sendingRating": "Sending rating"
   }
 }
