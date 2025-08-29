@@ -1,1 +1,65 @@
+/* Import Manrope font từ Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  /* Font */
+  --font-display: "Manrope", sans-serif;
+
+  --color-background: #ffffff; /* background color */
+
+  /* Blue */
+  --color-blue: #1f2937;
+  --color-blue-hover: #030c1e;
+
+  /* Yellow */
+  --color-yellow: #ffcc00;
+  --color-yellow-hover: #e9bb00;
+
+  /* Red */
+  --color-red-text: #e01f1f;
+  --color-red-price-board: #ba0000;
+  --color-red-price-board-button: #ffaeae;
+  --color-red-price-board-button-hover: #ff8181;
+
+  /* Green */
+  --color-green-price-board: #008a20;
+  --color-green-price-board-button: #c1e3cd;
+  --color-green-price-board-button-hover: #b5d9b5;
+
+  /* Grey */
+  --color-grey-light: #f0f2f5;
+  --color-grey-dark: #dbe0e5;
+}
+
+/* Set Manrope làm font mặc định cho toàn bộ dự án */
+* {
+  font-family: "Manrope", sans-serif;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Đảm bảo tất cả text elements sử dụng Manrope */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+button,
+input,
+textarea,
+select,
+a {
+  font-family: "Manrope", sans-serif;
+}

@@ -1,0 +1,327 @@
+````markdown
+---
+description: "AI coding rules for Knowva, an intelligent learning web platform."
+globs: ["**"]
+alwaysApply: true
+---
+
+# Knowva - Intelligent Learning Platform Rules
+
+## Project Overview
+Knowva is an intelligent learning web platform integrated with AI to generate study materials. This is a React + Vite project utilizing Tailwind CSS, with a strong focus on a clean, minimalist, and modern UI/UX design.
+
+## Core Technologies
+- React ~19.1.0
+- Vite (build tool and dev server)
+- Tailwind CSS (with custom configuration)
+- React Router DOM
+- Redux Toolkit + React-Redux
+- Ant Design 5
+- Headless UI
+- Heroicons
+- Axios
+
+## Design System & Color Scheme
+
+### Predefined Colors (Use ONLY these from the CSS theme)
+Always use these defined CSS variables for consistency. Do not hard-code hex values.
+
+```css
+/* Font */
+--font-display: "Manrope", sans-serif;
+
+--color-background: #ffffff; /* background color */
+
+/* Blue */
+--color-blue: #1f94e0;
+--color-blue-hover: #007fd2;
+
+/* Yellow */
+--color-yellow: #ffcc00;
+--color-yellow-hover: #e9bb00;
+
+/* Red */
+--color-red-text: #e01f1f;
+--color-red-price-board: #ba0000;
+--color-red-price-board-button: #ffaeae;
+--color-red-price-board-button-hover: #ff8181;
+
+/* Green */
+--color-green-price-board: #008a20;
+--color-green-price-board-button: #c1e3cd;
+--color-green-price-board-button-hover: #b5d9b5;
+
+/* Grey */
+--color-grey-light: #f0f2f5;
+--color-grey-dark: #dbe0e5;
+````
+
+### Usage Guidelines
+
+  - Use CSS variables in CSS files: `background-color: var(--color-blue);`
+  - Use Tailwind classes configured with these colors in JSX: `bg-blue text-white`
+  - **Blue**: Primary actions, buttons, links.
+  - **Yellow**: Highlights, calls-to-action, important notices.
+  - **Grey Scale**: Text hierarchy, backgrounds, borders, and disabled states.
+
+## Design Principles
+
+### 1\. Minimalism
+
+  - Clean, uncluttered interfaces with a maximum of 4-5 primary colors.
+  - Generous use of white space (grid spacing from 8px to 32px).
+  - Focus only on essential elements; components are shown only when needed.
+  - Typography hierarchy with the **Manrope** font family.
+  - Avoid deep shadows; use subtle borders and light corner rounding (8px-16px).
+
+### 2\. Responsive Design
+
+  - Implement a **mobile-first** approach.
+  - Use Tailwind's default breakpoints: `sm:`, `md:`, `lg:`, `xl:`.
+  - Ensure layouts, components, and typography are fluid and adapt to all screen sizes.
+  - Ensure touch targets are at least 44x44px on mobile devices.
+
+## Code Standards
+
+### Component Structure
+
+Follow this structure for all new components. Separate logic (hooks) from presentation (JSX).
+
+```jsx
+import React from 'react';
+import { useSomeHook } from '../hooks/useSomeHook';
+// import { SomeIcon } from '@heroicons/react/24/outline';
+
+const ComponentName = ({ propName }) => {
+  // State and custom hooks
+  const { data, loading, error } = useSomeHook();
+
+  // Event handlers
+  const handleClick = () => {
+    // Logic for handling click events
+  };
+
+  // Conditional rendering
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // Main render
+  return (
+    <div className="p-4 bg-background rounded-lg border border-grey-dark">
+      {/* Component content using Tailwind CSS and CSS variables */}
+      <h2 className="text-xl font-semibold">{propName}</h2>
+      <button
+        onClick={handleClick}
+        className="mt-4 px-4 py-2 bg-blue text-white rounded-md hover:bg-blue-hover transition-colors"
+      >
+        Action
+      </button>
+    </div>
+  );
+};
+
+export default ComponentName;
+```
+
+### CSS Classes Priority
+
+1.  Use Tailwind utility classes configured with our theme colors (`bg-blue`, `text-red-text`).
+2.  Use custom CSS with our CSS variables (`var(--color-...)`) only when a specific style cannot be achieved with Tailwind.
+3.  Apply responsive prefixes (`sm:`, `md:`, `lg:`) for all layout and styling adjustments.
+
+### File Organization
+
+The project structure should follow this convention:
+
+```
+src/
+├── assets/          # Images, fonts, icons
+├── components/      # Reusable UI components (e.g., Button, Card)
+├── config/          # Configuration files (e.g., axios instance)
+├── hooks/           # Custom React hooks
+├── pages/           # Page-level components
+├── router/          # React Router configuration
+├── store/           # Redux Toolkit store, slices, and APIs
+├── styles/          # Global styles, base styles (contains index.css)
+└── utils/           # Utility functions
+```
+
+## Coding Rules
+
+### 1\. Color Usage
+
+  - **NEVER** use hardcoded hex colors or arbitrary values in `className`.
+  - **ALWAYS** use the predefined Tailwind theme colors (e.g., `bg-blue`, `text-yellow`) or CSS variables.
+  - **Correct**: `className="bg-blue hover:bg-blue-hover"`
+  - **Incorrect**: `className="bg-[#1f94e0]"`
+
+### 2\. Responsive Design
+
+  - **ALWAYS** include mobile-first responsive classes. Start with base styles for mobile and add `md:` or `lg:` overrides for larger screens.
+  - Use `hidden lg:block` for desktop-only elements and `block lg:hidden` for mobile-only elements.
+
+### 3\. State Management
+
+  - Use **Redux Toolkit** for global application state (e.g., user authentication, shared data).
+  - Use **`useState`** or **`useReducer`** for local component state (e.g., form inputs, modal visibility).
+  - Encapsulate reusable stateful logic within **custom hooks**.
+
+## UI/UX Guidelines
+
+### Typography
+
+  - Font family: **Manrope** (configured globally).
+  - Heading hierarchy: Use `text-3xl`, `text-2xl`, `text-xl`, `text-lg`.
+  - Body text: `text-base` (16px).
+  - Secondary/helper text: `text-sm`, `text-grey-dark`.
+  - Font weight: Use `font-normal` (400), `font-medium` (500), `font-semibold` (600), `font-bold` (700).
+
+### Spacing
+
+  - Use a consistent spacing scale based on multiples of 4 (e.g., 4, 8, 12, 16, 24, 32px).
+  - Use Tailwind's spacing utilities for padding, margin, and gaps: `p-4`, `m-6`, `gap-8`.
+
+### Interactions
+
+  - Provide clear `hover` and `focus` states for all interactive elements.
+  - Use smooth, subtle transitions: `transition-all duration-200 ease-in-out`.
+  - Implement loading states (e.g., skeleton screens, spinners) for data-fetching operations.
+  - Design clear and concise form validation with helpful error messages.
+
+### Accessibility
+
+  - Use semantic HTML5 elements (`<main>`, `<nav>`, `<article>`, etc.).
+  - Provide `alt` text for all meaningful images.
+  - Ensure visible focus states for keyboard navigation.
+  - Use ARIA labels and roles where native semantics are insufficient.
+
+## Example Implementation
+
+### Document Card Component
+
+A card to display a document summary.
+
+```jsx
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
+
+const DocumentCard = ({ document }) => {
+  return (
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6 border border-grey-light flex flex-col">
+      <div className="flex items-start space-x-4">
+        <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-grey-light rounded-lg">
+          <DocumentTextIcon className="h-6 w-6 text-blue" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg font-semibold text-gray-900 truncate">
+            {document.title}
+          </h3>
+          <p className="text-sm text-grey-dark mt-1">
+            {document.subject}
+          </p>
+        </div>
+      </div>
+      <p className="mt-4 text-base text-gray-700 flex-grow">
+        {document.summary}
+      </p>
+      <div className="mt-4 pt-4 border-t border-grey-light">
+        <span className="text-xs font-medium text-grey-dark">
+          Last updated: {document.lastUpdated}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default DocumentCard;
+```
+---
+
+## Internationalization (i18n) & Language Support
+
+### ✅ General Rules
+
+* **All user-facing text must use `react-i18next`.**
+* **Do NOT hardcode any strings.** Always use the `t()` function.
+* Every component must support **at least two languages**: English (`en.json`) and Vietnamese (`vi.json`).
+* **Never skip localization** even for placeholder text, tooltips, alt text, or button labels.
+
+### ✅ Usage Pattern
+
+```jsx
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation();
+
+<button>{t("signup.googleButton")}</button>
+```
+
+### ✅ Translation File Updates
+
+When adding any **new UI element**, you must:
+
+1. Add the required key-value entries to both `src/locales/en.json` and `src/locales/vi.json`.
+2. Group keys semantically (e.g., under `login`, `signup`, `profile`, etc.)
+3. Keep keys consistent across both files.
+
+**Example – `en.json`:**
+
+```json
+{
+  "signup": {
+    "googleButton": "Sign up with Google"
+  }
+}
+```
+
+**Example – `vi.json`:**
+
+```json
+{
+  "signup": {
+    "googleButton": "Đăng ký bằng Google"
+  }
+}
+```
+
+### ✅ When to Apply
+
+This rule applies **every time** you:
+
+* Add a **button**, **label**, **modal**, **tooltip**, or any UI text
+* Create a **form**, **page**, or **component**
+* Add onboarding steps, empty states, alerts, or notifications
+
+---
+
+## Cursor Placement & UX
+
+When rendering components involving input fields or modals:
+
+* Ensure input elements **autofocus the cursor** only when necessary (e.g., login email field).
+* Do **not** automatically focus the cursor on components that are rendered conditionally or within modals unless it's the primary interaction.
+* Use `autoFocus` attribute thoughtfully:
+
+  ```jsx
+  <input
+    type="email"
+    autoFocus
+    className="..."
+    placeholder={t("login.emailPlaceholder")}
+  />
+  ```
+
+---
+
+> 🔁 **In summary:**
+> If you **add a new UI**, you must:
+>
+> * Use `t()` for all text
+> * Update both `en.json` and `vi.json`
+> * Keep key names clean and consistent
+> * Use proper cursor focus behavior for inputs
+
+---
+
+```
+```
