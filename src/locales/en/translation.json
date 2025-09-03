@@ -741,6 +741,156 @@
     "ratingSubmittedSuccessfully": "Rating submitted successfully",
     "errorSubmittingRating": "Error submitting rating",
     "rateThis": "Rate this",
-    "sendingRating": "Sending rating"
+    "sendingRating": "Sending rating",
+    "yourRating": "Your rating",
+    "currentRating": "Current rating"
+  },
+  "__comment_admin": "=== Admin Dashboard Translations ===",
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "systemName": "KnowVa Admin",
+    "profile": "Profile",
+    "logout": "Logout",
+    "menu": {
+      "userManagement": "User Management 👤",
+      "blogManagement": "Blog Management 📝",
+      "reportManagement": "Bug Report Management ⚠️"
+    },
+    "userManagement": {
+      "title": "User Management",
+      "searchPlaceholder": "Search users...",
+      "filterByRole": "Filter by Role",
+      "filterByStatus": "Filter by Status",
+      "table": {
+        "avatar": "Avatar",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "moderator": "Moderator"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended",
+        "pending": "Pending"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "suspend": "Suspend",
+        "activate": "Activate"
+      },
+      "editUser": "Edit User",
+      "deleteUser": "Delete User",
+      "deleteConfirm": "Are you sure you want to delete this user?",
+      "deleteSuccess": "User deleted successfully",
+      "deleteError": "Failed to delete user",
+      "updateSuccess": "User updated successfully",
+      "updateError": "Failed to update user"
+    },
+    "blogManagement": {
+      "title": "Blog Management",
+      "addNewBlog": "Add New Blog",
+      "searchPlaceholder": "Search blogs...",
+      "filterByStatus": "Filter by Status",
+      "table": {
+        "title": "Title",
+        "author": "Author",
+        "createdAt": "Created Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "publish": "Publish",
+        "unpublish": "Unpublish"
+      },
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Enter blog title",
+        "excerpt": "Excerpt",
+        "excerptPlaceholder": "Enter blog excerpt",
+        "category": "Category",
+        "selectCategory": "Select category",
+        "content": "Content",
+        "contentPlaceholder": "Write your blog content here...",
+        "status": "Status",
+        "save": "Save",
+        "publish": "Publish",
+        "saving": "Saving...",
+        "publishing": "Publishing..."
+      },
+      "addSuccess": "Blog added successfully",
+      "addError": "Failed to add blog",
+      "updateSuccess": "Blog updated successfully",
+      "updateError": "Failed to update blog",
+      "deleteSuccess": "Blog deleted successfully",
+      "deleteError": "Failed to delete blog",
+      "deleteConfirm": "Are you sure you want to delete this blog?"
+    },
+    "reportManagement": {
+      "title": "Bug Report Management",
+      "searchPlaceholder": "Search reports...",
+      "filterByStatus": "Filter by Status",
+      "table": {
+        "reporter": "Reporter",
+        "description": "Description",
+        "date": "Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "actions": {
+        "view": "View",
+        "updateStatus": "Update Status",
+        "resolve": "Resolve",
+        "close": "Close"
+      },
+      "viewReport": "View Report",
+      "updateStatus": "Update Status",
+      "statusUpdateSuccess": "Status updated successfully",
+      "statusUpdateError": "Failed to update status",
+      "reportDetails": "Report Details",
+      "priority": "Priority",
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      }
+    },
+    "common": {
+      "search": "Search",
+      "filter": "Filter",
+      "clear": "Clear",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "actions": "Actions",
+      "noData": "No data available",
+      "loading": "Loading...",
+      "error": "Error occurred",
+      "success": "Operation completed successfully"
+    }
   }
 }

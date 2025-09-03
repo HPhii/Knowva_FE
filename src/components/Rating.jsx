@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../config/axios';
 
-const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog' }) => {
+const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog', userRating: initialUserRating = null, onRatingChange = null }) => {
   const { t } = useTranslation();
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(initialUserRating?.rating || 0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,6 +32,13 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog' }) => {
 
   const theme = themes[variant];
 
+  // Update rating when userRating prop changes
+  React.useEffect(() => {
+    if (initialUserRating?.rating) {
+      setRating(initialUserRating.rating);
+    }
+  }, [initialUserRating]);
+
   // Handle star click
   const handleStarClick = async (starValue) => {
     if (isSubmitting) return;
@@ -50,10 +57,15 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog' }) => {
         ratingValue: starValue
       };
 
-      const response = await api.post(`/interactions/${entityType}/${entityId}/rating`, payload);
-      
-      setRating(starValue);
-              showToast(t('rating.ratingSubmittedSuccessfully'), 'success');
+                      const response = await api.post(`interactions/${entityType}/${entityId}/rating`, payload);
+        
+        setRating(starValue);
+        showToast(t('rating.ratingSubmittedSuccessfully'), 'success');
+        
+        // Call callback to update parent component
+        if (onRatingChange) {
+          onRatingChange();
+        }
       
     } catch (error) {
       console.error('Error submitting rating:', error);
@@ -133,16 +145,16 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog' }) => {
 
   return (
     <div className={`mb-4 p-3 border-2 ${theme.borderColor} rounded-lg bg-gray-50`}>
-      <div className="flex items-center justify-between mb-2">
-        <label className={`text-sm font-medium ${theme.starColor}`}>
-                      {t('rating.rateThis')} {variant}:
-        </label>
-        {rating > 0 && (
-          <span className={`text-xs ${theme.starSelectedColor} font-medium`}>
-            {rating}/5
-          </span>
-        )}
-      </div>
+             <div className="flex items-center justify-between mb-2">
+         <label className={`text-sm font-medium ${theme.starColor}`}>
+           {t('rating.rateThis')} {variant}:
+         </label>
+         {rating > 0 && (
+           <span className={`text-xs ${theme.starSelectedColor} font-medium`}>
+             {initialUserRating ? t('rating.yourRating', 'Đánh giá của bạn') : t('rating.currentRating', 'Đánh giá hiện tại')}: {rating}/5
+           </span>
+         )}
+       </div>
       
       <div className="flex items-center space-x-1">
         {[1, 2, 3, 4, 5].map((starValue) => (

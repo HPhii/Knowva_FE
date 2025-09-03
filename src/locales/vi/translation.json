@@ -738,9 +738,159 @@
   },
   "rating": {
     "pleaseLoginToRate": "Vui lòng đăng nhập để đánh giá",
-    "ratingSubmittedSuccessfully": "Đánh giá đã được ghi nhận",
-    "errorSubmittingRating": "Có lỗi xảy ra khi gửi đánh giá",
-    "rateThis": "Đánh giá",
-    "sendingRating": "Đang gửi đánh giá"
+    "ratingSubmittedSuccessfully": "Đánh giá đã được gửi thành công",
+    "errorSubmittingRating": "Lỗi khi gửi đánh giá",
+    "rateThis": "Đánh giá cái này",
+    "sendingRating": "Đang gửi đánh giá...",
+    "yourRating": "Đánh giá của bạn",
+    "currentRating": "Đánh giá hiện tại"
+  },
+  "__comment_admin": "=== Admin Dashboard Translations ===",
+  "admin": {
+    "dashboard": "Bảng điều khiển Admin",
+    "systemName": "KnowVa Admin",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "menu": {
+      "userManagement": "Quản lý User 👤",
+      "blogManagement": "Quản lý Blog 📝",
+      "reportManagement": "Quản lý Báo cáo lỗi ⚠️"
+    },
+    "userManagement": {
+      "title": "Quản lý User",
+      "searchPlaceholder": "Tìm kiếm user...",
+      "filterByRole": "Lọc theo Vai trò",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "avatar": "Ảnh đại diện",
+        "name": "Tên",
+        "email": "Email",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "moderator": "Moderator"
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "suspended": "Bị đình chỉ",
+        "pending": "Chờ xử lý"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "suspend": "Đình chỉ",
+        "activate": "Kích hoạt"
+      },
+      "editUser": "Chỉnh sửa User",
+      "deleteUser": "Xóa User",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa user này?",
+      "deleteSuccess": "Đã xóa user thành công",
+      "deleteError": "Không thể xóa user",
+      "updateSuccess": "Đã cập nhật user thành công",
+      "updateError": "Không thể cập nhật user"
+    },
+    "blogManagement": {
+      "title": "Quản lý Blog",
+      "addNewBlog": "Thêm Blog mới",
+      "searchPlaceholder": "Tìm kiếm blog...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "title": "Tiêu đề",
+        "author": "Tác giả",
+        "createdAt": "Ngày tạo",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "draft": "Bản nháp",
+        "published": "Đã xuất bản",
+        "archived": "Đã lưu trữ"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "publish": "Xuất bản",
+        "unpublish": "Hủy xuất bản"
+      },
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề blog",
+        "excerpt": "Tóm tắt",
+        "excerptPlaceholder": "Nhập tóm tắt blog",
+        "category": "Danh mục",
+        "selectCategory": "Chọn danh mục",
+        "content": "Nội dung",
+        "contentPlaceholder": "Viết nội dung blog của bạn ở đây...",
+        "status": "Trạng thái",
+        "save": "Lưu",
+        "publish": "Xuất bản",
+        "saving": "Đang lưu...",
+        "publishing": "Đang xuất bản..."
+      },
+      "addSuccess": "Đã thêm blog thành công",
+      "addError": "Không thể thêm blog",
+      "updateSuccess": "Đã cập nhật blog thành công",
+      "updateError": "Không thể cập nhật blog",
+      "deleteSuccess": "Đã xóa blog thành công",
+      "deleteError": "Không thể xóa blog",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa blog này?"
+    },
+    "reportManagement": {
+      "title": "Quản lý Báo cáo lỗi",
+      "searchPlaceholder": "Tìm kiếm báo cáo...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "reporter": "Người báo cáo",
+        "description": "Mô tả",
+        "date": "Ngày",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "pending": "Chờ xử lý",
+        "inProgress": "Đang xử lý",
+        "resolved": "Đã giải quyết",
+        "closed": "Đã đóng"
+      },
+      "actions": {
+        "view": "Xem",
+        "updateStatus": "Cập nhật trạng thái",
+        "resolve": "Giải quyết",
+        "close": "Đóng"
+      },
+      "viewReport": "Xem báo cáo",
+      "updateStatus": "Cập nhật trạng thái",
+      "statusUpdateSuccess": "Đã cập nhật trạng thái thành công",
+      "statusUpdateError": "Không thể cập nhật trạng thái",
+      "reportDetails": "Chi tiết báo cáo",
+      "priority": "Độ ưu tiên",
+      "priorities": {
+        "low": "Thấp",
+        "medium": "Trung bình",
+        "high": "Cao",
+        "critical": "Quan trọng"
+      }
+    },
+    "common": {
+      "search": "Tìm kiếm",
+      "filter": "Lọc",
+      "clear": "Xóa",
+      "apply": "Áp dụng",
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "view": "Xem",
+      "actions": "Hành động",
+      "noData": "Không có dữ liệu",
+      "loading": "Đang tải...",
+      "error": "Đã xảy ra lỗi",
+      "success": "Thao tác hoàn thành thành công"
+    }
   }
 }

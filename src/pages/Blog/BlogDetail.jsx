@@ -20,6 +20,8 @@ const BlogDetail = () => {
   const [error, setError] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
+  const [userRating, setUserRating] = useState(null);
+  const [ratingLoading, setRatingLoading] = useState(false);
 
   // Fetch blog data from API
   useEffect(() => {
@@ -28,7 +30,7 @@ const BlogDetail = () => {
         setLoading(true);
         setError(null);
         
-        const response = await api.get(`/blog/posts/slug/${slug}`);
+        const response = await api.get(`blog/posts/slug/${slug}`);
         setBlog(response.data);
       } catch (err) {
         console.error('Error fetching blog:', err);
@@ -43,6 +45,32 @@ const BlogDetail = () => {
     }
   }, [slug]);
 
+  // Fetch user's rating for this blog
+  useEffect(() => {
+    const fetchUserRating = async () => {
+      if (!blog || !blog.id) return;
+      
+      try {
+        setRatingLoading(true);
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await api.get(`interactions/blogpost/${blog.id}/rating/my`);
+        setUserRating(response.data);
+        console.log('User rating:', response.data);
+      } catch (error) {
+        console.log('User has no rating yet or error:', error);
+        setUserRating(null);
+      } finally {
+        setRatingLoading(false);
+      }
+    };
+
+    if (blog && blog.id) {
+      fetchUserRating();
+    }
+  }, [blog?.id]);
+
   // Fetch comments when blog is loaded
   useEffect(() => {
     const fetchComments = async () => {
@@ -52,7 +80,7 @@ const BlogDetail = () => {
         setCommentsLoading(true);
         console.log('Fetching comments for blog:', blog.id);
         
-        const response = await api.get(`/interactions/blogpost/${blog.id}/comments`);
+        const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
         console.log('Comments API response:', response.data);
         console.log('Response data type:', typeof response.data);
         console.log('Response data keys:', Object.keys(response.data || {}));
@@ -110,7 +138,7 @@ const BlogDetail = () => {
           setCommentsLoading(true);
           console.log('Fetching comments on mount for blog:', blog.id);
           
-          const response = await api.get(`/interactions/blogpost/${blog.id}/comments`);
+          const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
           console.log('Comments API response on mount:', response.data);
           console.log('Response data type on mount:', typeof response.data);
           console.log('Response data keys on mount:', Object.keys(response.data || {}));
@@ -169,7 +197,7 @@ const BlogDetail = () => {
       setCommentsLoading(true);
       console.log('Refreshing comments for blog:', blog.id);
       
-      const response = await api.get(`/interactions/blogpost/${blog.id}/comments`);
+      const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
       console.log('Comments refresh response:', response.data);
       console.log('Response data type for refresh:', typeof response.data);
       console.log('Response data keys for refresh:', Object.keys(response.data || {}));
@@ -313,69 +341,61 @@ const BlogDetail = () => {
         </button>
       </div>
 
-      {/* Full-width Hero Section with Title Overlay */}
-      <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] overflow-hidden">
-        <img
-          src={blog.imageUrl}
-          alt={blog.title}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/1200x600?text=Blog+Image';
-          }}
-        />
-        
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        
-        {/* Title positioned in overlay */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight drop-shadow-2xl">
-              {blog.title}
-            </h1>
+      {/* Compact Header: Title first, then meta, then image */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+          {blog.title}
+        </h1>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+          {/* Author */}
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+              {blog.authorName?.charAt(0)?.toUpperCase() || 'A'}
+            </div>
+            <span className="font-medium text-gray-700">{blog.authorName}</span>
           </div>
-        </div>
-        
-        {/* Category Badge */}
-        <div className="absolute top-6 right-6">
-          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/90 text-gray-800 backdrop-blur-sm">
+          <span className="text-gray-300">•</span>
+          {/* Publish Date */}
+          <span>{formatDate(blog.publishedAt)}</span>
+          {blog.readTime && (
+            <>
+              <span className="text-gray-300">•</span>
+              <span>{blog.readTime}</span>
+            </>
+          )}
+          <span className="text-gray-300">•</span>
+          {/* Category */}
+          <span className="text-blue-600 font-medium">
             {getCategoryNameSmart(blog.categoryId || blog.categoryName, t)}
           </span>
+          {/* User Rating Display */}
+          {userRating && (
+            <>
+              <span className="text-gray-300">•</span>
+              <span className="text-yellow-600 font-medium">
+                ⭐ {userRating.rating}/5
+              </span>
+            </>
+          )}
         </div>
       </div>
 
+      {/* Main image below meta (compact height) */}
+      {blog.imageUrl && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+          <img
+            src={blog.imageUrl}
+            alt={blog.title}
+            className="w-full h-64 md:h-80 object-cover rounded-xl"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/1200x600?text=Blog+Image';
+            }}
+          />
+        </div>
+      )}
+
       {/* Main Content - Centered with max-w-4xl */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Meta Information Row - Seamless layout */}
-        <div className="py-8 border-b border-gray-100">
-          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500">
-            {/* Author */}
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                {blog.authorName?.charAt(0)?.toUpperCase() || 'A'}
-              </div>
-              <span className="font-medium text-gray-700">{blog.authorName}</span>
-            </div>
-            
-            {/* Divider */}
-            <span className="text-gray-300">•</span>
-            
-            {/* Publish Date */}
-            <span>{formatDate(blog.publishedAt)}</span>
-            
-            {/* Divider */}
-            <span className="text-gray-300">•</span>
-            
-            {/* Read Time */}
-            <span>{blog.readTime}</span>
-            
-            {/* Divider */}
-            <span className="text-gray-300">•</span>
-            
-            {/* Category */}
-                          <span className="text-blue-600 font-medium">{getCategoryNameSmart(blog.categoryId || blog.categoryName, t)}</span>
-          </div>
-        </div>
 
         {/* Excerpt Section */}
         {blog.excerpt && (
@@ -414,6 +434,7 @@ const BlogDetail = () => {
                 onAddComment={addNewComment}
                 isLoading={commentsLoading}
                 onRefreshComments={refreshComments}
+                userRating={userRating}
               />
             </>
           )}

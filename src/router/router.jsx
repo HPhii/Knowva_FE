@@ -23,6 +23,7 @@ import EditProfile from "../pages/User/EditProfile";
 import VerifyEmail from "../pages/User/VerifyEmail";
 import VerifyComplete from "../pages/User/VerifyComplete";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 
 
 const router = createBrowserRouter([
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
   { path: "forgot-password", element: <ForgotPassword /> },
   { path: "verify-email", element: <VerifyEmail /> },
   { path: "verify-complete", element: <VerifyComplete /> },
+  { path: "admin", element: <AdminDashboard /> },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
   // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp
