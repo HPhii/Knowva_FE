@@ -17,6 +17,8 @@ import Support from "../pages/Support/Support";
 import About from "../pages/About/About";
 import Contact from "../pages/Contact/Contact";
 import Blog from "../pages/Blog/Blog";
+import PostBlog from "../pages/Blog/PostBlog";
+import BlogDetail from "../pages/Blog/BlogDetail";
 import Terms from "../pages/Terms/Terms";
 import Privacy from "../pages/Privacy/Privacy";
 import Documentation from "../pages/Documentation/Documentation";
@@ -25,6 +27,7 @@ import EditProfile from "../pages/User/EditProfile";
 import VerifyEmail from "../pages/User/VerifyEmail";
 import VerifyComplete from "../pages/User/VerifyComplete";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +45,8 @@ const router = createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "blog", element: <Blog /> },
+      { path: "blog/create", element: <PostBlog /> },
+      { path: "blog/:slug", element: <BlogDetail /> },
       { path: "terms", element: <Terms /> },
       { path: "privacy", element: <Privacy /> },
       { path: "documentation", element: <Documentation /> },
@@ -58,6 +63,15 @@ const router = createBrowserRouter([
   { path: "forgot-password", element: <ForgotPassword /> },
   { path: "verify-email", element: <VerifyEmail /> },
   { path: "verify-complete", element: <VerifyComplete /> },
+
+  { path: "admin", element: <AdminDashboard /> },
+  { path: "admin/users", element: <AdminDashboard /> },
+  { path: "admin/blogs", element: <AdminDashboard /> },
+  { path: "admin/reports", element: <AdminDashboard /> },
+  { path: "admin/statistics", element: <AdminDashboard /> },
+  { path: "admin/notifications", element: <AdminDashboard /> },
+  { path: "admin/feedback", element: <AdminDashboard /> },
+
   {
     path: "user",
     element: <UserApp />,

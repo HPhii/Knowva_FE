@@ -155,7 +155,7 @@ const Documentation = () => {
           <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
             {t('documentation.videoSubtitle', 'Watch step-by-step tutorials to master KnowVa features quickly.')}
           </p>
-          <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          <button className="bg-white !text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
             {t('documentation.watchVideos', 'Watch Videos')}
           </button>
         </div>

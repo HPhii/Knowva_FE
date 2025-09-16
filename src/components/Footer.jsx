@@ -4,8 +4,22 @@ import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { t } = useTranslation();
+
   return (
-    <footer className="relative bg-gray-900 text-white">
+    <footer className="relative bg-slate-900 text-white overflow-hidden">
+      {/* Animated Background with Universe Effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating particles with CSS animations */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow"></div>
+        <div className="absolute top-2/3 right-1/3 w-1.5 h-1.5 bg-purple-400/20 rounded-full animate-float-medium"></div>
+        <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/20 rounded-full animate-float-fast"></div>
+        <div className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/20 rounded-full animate-float-slow" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/20 rounded-full animate-float-medium" style={{ animationDelay: '0.5s' }}></div>
+        
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 via-purple-900/5 to-pink-900/5"></div>
+      </div>
+
       {/* Deep Wave Separator */}
       <div className="absolute top-0 left-0 w-full h-24 overflow-hidden">
         <svg
@@ -15,23 +29,23 @@ const Footer = () => {
         >
           <path
             d="M0,0V120C200,60,400,180,600,120C800,60,1000,180,1200,120V0Z"
-            fill="#111827"
+            fill="#0f172a"
           />
           <path
             d="M0,0V80C150,40,300,120,450,80C600,40,750,120,900,80C1050,40,1200,120,1200,80V0Z"
-            fill="#1F2937"
+            fill="#1e293b"
             opacity="0.8"
           />
           <path
             d="M0,0V60C100,30,200,90,300,60C400,30,500,90,600,60C700,30,800,90,900,60C1000,30,1100,90,1200,60V0Z"
-            fill="#374151"
+            fill="#334155"
             opacity="0.6"
           />
         </svg>
       </div>
 
       {/* Footer Content */}
-      <div className="relative pt-32 pb-12 px-6 sm:px-8 lg:px-12">
+      <div className="relative z-10 pt-32 pb-12 px-6 sm:px-8 lg:px-12">
         <div className="max-w-7xl mx-auto">
           {/* Main Footer Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -45,7 +59,7 @@ const Footer = () => {
                   {t("footer.brandDesc")}
                 </p>
               </div>
-              <button className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-200 text-sm uppercase tracking-wide">
+              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm uppercase tracking-wide">
                 {t("footer.exploreMore")}
               </button>
             </div>
@@ -215,6 +229,39 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          25% { transform: translateY(-8px) translateX(4px); }
+          50% { transform: translateY(-4px) translateX(-6px); }
+          75% { transform: translateY(-12px) translateX(2px); }
+        }
+        
+        @keyframes float-medium {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          33% { transform: translateY(-6px) translateX(3px); }
+          66% { transform: translateY(-10px) translateX(-5px); }
+        }
+        
+        @keyframes float-fast {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-5px) translateX(2px); }
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        
+        .animate-float-medium {
+          animation: float-medium 6s ease-in-out infinite;
+        }
+        
+        .animate-float-fast {
+          animation: float-fast 4s ease-in-out infinite;
+        }
+      `}</style>
     </footer>
   );
 };

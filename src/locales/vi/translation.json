@@ -258,12 +258,59 @@
     "emptySubtitle": "Chúng tôi đang chuẩn bị nội dung chất lượng. Vui lòng quay lại sau.",
     "emailPlaceholder": "Nhập email của bạn",
     "readMore": "Đọc Thêm →",
+    "postBlog": "Đăng bài viết",
     "categories": {
       "all": "Tất cả",
-      "learningScience": "Khoa học học tập",
-      "technology": "Công nghệ",
-      "studyTips": "Mẹo học tập",
-      "edTech": "Công nghệ giáo dục"
+      "studySkills": "Kỹ năng học tập",
+      "flashcardQuizTips": "Mẹo Flashcard & Quiz",
+      "learningTools": "Công cụ học tập",
+      "freeResources": "Tài nguyên miễn phí",
+      "memoryScience": "Khoa học trí nhớ",
+      "inspiringStories": "Câu chuyện truyền cảm hứng",
+      "uncategorized": "Chưa phân loại",
+      "unknown": "Danh mục không xác định"
+    },
+    "actions": {
+      "tryAgain": "Thử lại",
+      "backToBlog": "Quay lại Blog",
+      "backToList": "Quay lại danh sách Blog",
+      "createNewPost": "Đăng bài mới"
+    },
+    "status": {
+      "published": "Đã xuất bản"
+    },
+    "defaultAuthorInitial": "A",
+    "comments": {
+      "title": "Bình luận",
+      "subtitle": "Chia sẻ suy nghĩ của bạn về bài viết này",
+      "cannotDisplay": "Không thể hiển thị bình luận - thiếu ID bài viết"
+    },
+    "errors": {
+      "cannotLoadPosts": "Không thể tải danh sách bài viết. Vui lòng thử lại sau.",
+      "cannotLoadPost": "Không thể tải bài viết. Vui lòng thử lại sau.",
+      "tryDifferentKeyword": "Vui lòng thử lại với từ khóa hoặc danh mục khác."
+    },
+    "sort": {
+      "sortBy": "Sắp xếp theo:",
+      "direction": "Thứ tự:",
+      "current": "Hiện tại:",
+      "publishedAt": "Ngày xuất bản",
+      "title": "Tiêu đề",
+      "authorName": "Tác giả",
+      "readTime": "Thời gian đọc",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật",
+      "desc": "Giảm dần",
+      "asc": "Tăng dần"
+    },
+    "url": {
+      "current": "URL hiện tại:"
+    },
+    "results": {
+      "title": "Kết quả tìm kiếm",
+      "found": "Tìm thấy",
+      "posts": "bài viết",
+      "for": "cho"
     },
     "posts": {
       "post1": {
@@ -822,5 +869,226 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "linkedin": "LinkedIn"
+  },
+  "postBlog": {
+    "title": "Tạo bài viết blog mới",
+    "subtitle": "Chia sẻ kiến thức và hiểu biết của bạn với cộng đồng KnowVa",
+    "backToBlog": "Quay lại Blog",
+    "form": {
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề bài viết blog của bạn",
+      "excerpt": "Tóm tắt",
+      "excerptPlaceholder": "Viết tóm tắt ngắn gọn về bài viết của bạn",
+      "category": "Danh mục",
+      "selectCategory": "Chọn danh mục",
+      "image": "Ảnh đại diện",
+      "status": "Trạng thái",
+      "draft": "Bản nháp",
+      "published": "Đã xuất bản",
+      "content": "Nội dung",
+      "contentPlaceholder": "Viết nội dung bài viết blog của bạn tại đây...",
+      "saveDraft": "Lưu bản nháp",
+      "publish": "Xuất bản",
+      "saving": "Đang lưu...",
+      "publishing": "Đang xuất bản..."
+    },
+
+    "success": {
+      "postCreated": "Tạo bài viết blog thành công!"
+    },
+    "errors": {
+      "fillRequiredFields": "Vui lòng điền đầy đủ các trường bắt buộc",
+      "createFailed": "Không thể tạo bài viết blog. Vui lòng thử lại."
+    }
+  },
+  "__comment_comments": "=== Comment System Translations ===",
+  "comments": {
+    "title": "Bình luận",
+    "flashcardTitle": "Bình luận Flashcard",
+    "quizTitle": "Bình luận Quiz",
+    "noComments": "Chưa có bình luận nào",
+    "noCommentsSubtitle": "Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!",
+    "loadingComments": "Đang tải bình luận...",
+    "writeComment": "Viết bình luận...",
+    "writeReply": "Viết phản hồi của bạn...",
+    "imageUrlPlaceholder": "URL hình ảnh (tùy chọn)",
+    "postComment": "Gửi bình luận",
+    "addComment": "Thêm bình luận",
+    "submitComment": "Gửi bình luận",
+    "sendReply": "Gửi phản hồi",
+    "reply": "Trả lời",
+    "replyingTo": "Trả lời",
+    "cancel": "Hủy",
+    "posting": "Đang gửi...",
+    "sending": "Đang gửi...",
+    "commentPosted": "Bình luận đã gửi thành công!",
+    "replyPosted": "Phản hồi đã gửi thành công!",
+    "pleaseLogin": "Vui lòng đăng nhập để bình luận",
+    "pleaseLoginReply": "Vui lòng đăng nhập để phản hồi",
+    "enterComment": "Vui lòng nhập bình luận",
+    "enterReply": "Vui lòng nhập phản hồi",
+    "userNotFound": "Không tìm thấy thông tin người dùng",
+    "errorPosting": "Lỗi khi gửi bình luận",
+    "errorPostingReply": "Lỗi khi gửi phản hồi",
+    "refreshComments": "Làm mới bình luận",
+    "refreshTooltip": "Làm mới bình luận",
+    "cannotLoad": "Không thể tải bình luận - thiếu ID bài viết"
+  },
+  "rating": {
+    "pleaseLoginToRate": "Vui lòng đăng nhập để đánh giá",
+    "ratingSubmittedSuccessfully": "Đánh giá đã được gửi thành công",
+    "errorSubmittingRating": "Lỗi khi gửi đánh giá",
+    "rateThis": "Đánh giá cái này",
+    "sendingRating": "Đang gửi đánh giá...",
+    "yourRating": "Đánh giá của bạn",
+    "currentRating": "Đánh giá hiện tại"
+  },
+  "__comment_admin": "=== Admin Dashboard Translations ===",
+  "admin": {
+    "dashboard": "Bảng điều khiển Admin",
+    "systemName": "KnowVa Admin",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "menu": {
+      "userManagement": "Quản lý User 👤",
+      "blogManagement": "Quản lý Blog 📝",
+      "reportManagement": "Quản lý Báo cáo lỗi ⚠️"
+    },
+    "userManagement": {
+      "title": "Quản lý User",
+      "searchPlaceholder": "Tìm kiếm user...",
+      "filterByRole": "Lọc theo Vai trò",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "avatar": "Ảnh đại diện",
+        "name": "Tên",
+        "email": "Email",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "moderator": "Moderator"
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "suspended": "Bị đình chỉ",
+        "pending": "Chờ xử lý"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "suspend": "Đình chỉ",
+        "activate": "Kích hoạt"
+      },
+      "editUser": "Chỉnh sửa User",
+      "deleteUser": "Xóa User",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa user này?",
+      "deleteSuccess": "Đã xóa user thành công",
+      "deleteError": "Không thể xóa user",
+      "updateSuccess": "Đã cập nhật user thành công",
+      "updateError": "Không thể cập nhật user"
+    },
+    "blogManagement": {
+      "title": "Quản lý Blog",
+      "addNewBlog": "Thêm Blog mới",
+      "searchPlaceholder": "Tìm kiếm blog...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "title": "Tiêu đề",
+        "author": "Tác giả",
+        "createdAt": "Ngày tạo",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "draft": "Bản nháp",
+        "published": "Đã xuất bản",
+        "archived": "Đã lưu trữ"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "publish": "Xuất bản",
+        "unpublish": "Hủy xuất bản"
+      },
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề blog",
+        "excerpt": "Tóm tắt",
+        "excerptPlaceholder": "Nhập tóm tắt blog",
+        "category": "Danh mục",
+        "selectCategory": "Chọn danh mục",
+        "content": "Nội dung",
+        "contentPlaceholder": "Viết nội dung blog của bạn ở đây...",
+        "status": "Trạng thái",
+        "save": "Lưu",
+        "publish": "Xuất bản",
+        "saving": "Đang lưu...",
+        "publishing": "Đang xuất bản..."
+      },
+      "addSuccess": "Đã thêm blog thành công",
+      "addError": "Không thể thêm blog",
+      "updateSuccess": "Đã cập nhật blog thành công",
+      "updateError": "Không thể cập nhật blog",
+      "deleteSuccess": "Đã xóa blog thành công",
+      "deleteError": "Không thể xóa blog",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa blog này?"
+    },
+    "reportManagement": {
+      "title": "Quản lý Báo cáo lỗi",
+      "searchPlaceholder": "Tìm kiếm báo cáo...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "reporter": "Người báo cáo",
+        "description": "Mô tả",
+        "date": "Ngày",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "pending": "Chờ xử lý",
+        "inProgress": "Đang xử lý",
+        "resolved": "Đã giải quyết",
+        "closed": "Đã đóng"
+      },
+      "actions": {
+        "view": "Xem",
+        "updateStatus": "Cập nhật trạng thái",
+        "resolve": "Giải quyết",
+        "close": "Đóng"
+      },
+      "viewReport": "Xem báo cáo",
+      "updateStatus": "Cập nhật trạng thái",
+      "statusUpdateSuccess": "Đã cập nhật trạng thái thành công",
+      "statusUpdateError": "Không thể cập nhật trạng thái",
+      "reportDetails": "Chi tiết báo cáo",
+      "priority": "Độ ưu tiên",
+      "priorities": {
+        "low": "Thấp",
+        "medium": "Trung bình",
+        "high": "Cao",
+        "critical": "Quan trọng"
+      }
+    },
+    "common": {
+      "search": "Tìm kiếm",
+      "filter": "Lọc",
+      "clear": "Xóa",
+      "apply": "Áp dụng",
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "view": "Xem",
+      "actions": "Hành động",
+      "noData": "Không có dữ liệu",
+      "loading": "Đang tải...",
+      "error": "Đã xảy ra lỗi",
+      "success": "Thao tác hoàn thành thành công"
+    }
   }
 }
