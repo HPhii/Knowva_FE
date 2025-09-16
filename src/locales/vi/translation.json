@@ -1,5 +1,6 @@
 {
   "header": {
+    "home": "Trang chủ",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
     "tests": "Bài kiểm tra",
@@ -473,22 +474,38 @@
       "essential": {
         "title": "Cookie Cần Thiết",
         "description": "Những cookie này cần thiết để trang web hoạt động bình thường.",
-        "examples": ["Cookie xác thực", "Quản lý phiên làm việc", "Tính năng bảo mật"]
+        "examples": [
+          "Cookie xác thực",
+          "Quản lý phiên làm việc",
+          "Tính năng bảo mật"
+        ]
       },
       "analytics": {
         "title": "Cookie Phân Tích",
         "description": "Những cookie này giúp chúng tôi hiểu cách khách truy cập tương tác với trang web của chúng tôi.",
-        "examples": ["Google Analytics", "Theo dõi hành vi người dùng", "Giám sát hiệu suất"]
+        "examples": [
+          "Google Analytics",
+          "Theo dõi hành vi người dùng",
+          "Giám sát hiệu suất"
+        ]
       },
       "functional": {
         "title": "Cookie Chức Năng",
         "description": "Những cookie này cho phép chức năng nâng cao và cá nhân hóa.",
-        "examples": ["Tùy chọn ngôn ngữ", "Cài đặt giao diện", "Tùy chọn người dùng"]
+        "examples": [
+          "Tùy chọn ngôn ngữ",
+          "Cài đặt giao diện",
+          "Tùy chọn người dùng"
+        ]
       },
       "marketing": {
         "title": "Cookie Tiếp Thị",
         "description": "Những cookie này được sử dụng để cung cấp quảng cáo liên quan.",
-        "examples": ["Nhắm mục tiêu quảng cáo", "Tích hợp mạng xã hội", "Chiến dịch tiếp thị"]
+        "examples": [
+          "Nhắm mục tiêu quảng cáo",
+          "Tích hợp mạng xã hội",
+          "Chiến dịch tiếp thị"
+        ]
       }
     },
     "necessary": "Cần Thiết",
@@ -617,6 +634,173 @@
     "title": "Xác thực Email thành công!",
     "description": "Email của bạn đã được xác thực. Bây giờ bạn có thể truy cập tất cả tính năng của ứng dụng.",
     "goToHome": "Về trang chủ"
+  },
+  "quiz": {
+    "title": "Tạo Quiz",
+    "tabs": {
+      "text": "Văn bản",
+      "document": "Tài liệu",
+      "image": "Hình ảnh",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Dán nội dung ghi chú hoặc tài liệu của bạn",
+      "characterCount": "ký tự",
+      "minCharacters": "Cần tối thiểu 150 ký tự",
+      "readyToCreate": "Sẵn sàng tạo quiz"
+    },
+    "documentInput": {
+      "selectFile": "Chọn một tệp PDF để tạo quiz",
+      "fileSelected": "Đã chọn:",
+      "readyToCreate": "Sẵn sàng tạo từ PDF",
+      "noFileSelected": "Chưa chọn file PDF"
+    },
+    "buttons": {
+      "next": "Tiếp theo",
+      "options": "Tùy chọn",
+      "generate": "Tạo",
+      "save": "Lưu Quiz",
+      "edit": "Chỉnh sửa",
+      "cancel": "Hủy",
+      "saveChanges": "Lưu thay đổi",
+      "delete": "Xóa"
+    },
+    "modal": {
+      "title": "Tạo Quiz",
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề",
+        "description": "Mô tả",
+        "descriptionPlaceholder": "Nhập mô tả",
+        "language": "Ngôn ngữ",
+        "questionType": "Loại câu hỏi",
+        "maxQuestions": "Số câu hỏi tối đa",
+        "visibility": "Quyền hiển thị",
+        "category": "Danh mục (chọn nhiều)",
+        "categoryPlaceholder": "Chọn danh mục",
+        "timeLimit": "Thời gian (phút)"
+      },
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "questionTypeRequired": "Vui lòng chọn loại câu hỏi",
+        "maxQuestionsRequired": "Vui lòng nhập số câu hỏi",
+        "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+        "categoryRequired": "Vui lòng chọn ít nhất 1 danh mục",
+        "timeLimitRequired": "Vui lòng nhập thời gian"
+      }
+    },
+    "generatedQuiz": {
+      "title": "Quiz đã tạo",
+      "fields": {
+        "title": "Tiêu đề:",
+        "category": "Danh mục:",
+        "questionType": "Loại câu hỏi:",
+        "timeLimit": "Thời gian:",
+        "visibility": "Quyền hiển thị:",
+        "description": "Mô tả:",
+        "questions": "Câu hỏi:"
+      },
+      "question": {
+        "label": "Câu hỏi",
+        "answers": "Đáp án:",
+        "correct": "Đúng",
+        "wrong": "Sai"
+      },
+      "messages": {
+        "generateSuccess": "Tạo quiz thành công",
+        "generateError": "Tạo quiz thất bại. Vui lòng thử lại.",
+        "saveSuccess": "Lưu quiz thành công",
+        "saveError": "Lưu quiz thất bại. Vui lòng thử lại.",
+        "updateSuccess": "Cập nhật quiz thành công",
+        "noQuizToSave": "Không có quiz để lưu",
+        "textRequired": "Vui lòng nhập nội dung văn bản trước.",
+        "fileRequired": "Vui lòng chọn một tệp tài liệu.",
+        "pdfOnly": "Chỉ hỗ trợ tệp PDF."
+      }
+    }
+  },
+  "flashcard": {
+    "title": "Tạo Flashcard",
+    "tabs": {
+      "text": "Văn bản",
+      "document": "Tài liệu",
+      "image": "Hình ảnh",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Dán nội dung ghi chú hoặc tài liệu của bạn",
+      "characterCount": "ký tự",
+      "minCharacters": "Cần tối thiểu 150 ký tự",
+      "readyToCreate": "Sẵn sàng tạo flashcard"
+    },
+    "documentInput": {
+      "selectFile": "Chọn một tệp PDF để tạo flashcard",
+      "fileSelected": "Đã chọn:",
+      "readyToCreate": "Sẵn sàng tạo từ PDF",
+      "noFileSelected": "Chưa chọn file PDF"
+    },
+    "buttons": {
+      "next": "Tiếp theo",
+      "options": "Tùy chọn",
+      "generate": "Tạo",
+      "save": "Lưu Flashcard",
+      "edit": "Chỉnh sửa",
+      "cancel": "Hủy",
+      "saveChanges": "Lưu thay đổi",
+      "delete": "Xóa"
+    },
+    "modal": {
+      "title": "Tạo Flashcard",
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề",
+        "description": "Mô tả",
+        "descriptionPlaceholder": "Nhập mô tả",
+        "language": "Ngôn ngữ",
+        "cardType": "Loại thẻ",
+        "maxCards": "Số thẻ tối đa",
+        "visibility": "Quyền hiển thị",
+        "category": "Danh mục (chọn nhiều)",
+        "categoryPlaceholder": "Chọn danh mục",
+        "difficulty": "Độ khó"
+      },
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "cardTypeRequired": "Vui lòng chọn loại thẻ",
+        "maxCardsRequired": "Vui lòng nhập số thẻ",
+        "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+        "categoryRequired": "Vui lòng chọn ít nhất 1 danh mục",
+        "difficultyRequired": "Vui lòng chọn độ khó"
+      }
+    },
+    "generatedFlashcard": {
+      "title": "Flashcard đã tạo",
+      "fields": {
+        "title": "Tiêu đề:",
+        "category": "Danh mục:",
+        "cardType": "Loại thẻ:",
+        "difficulty": "Độ khó:",
+        "visibility": "Quyền hiển thị:",
+        "description": "Mô tả:",
+        "cards": "Thẻ:"
+      },
+      "card": {
+        "label": "Thẻ",
+        "front": "Mặt trước:",
+        "back": "Mặt sau:"
+      },
+      "messages": {
+        "generateSuccess": "Tạo flashcard thành công",
+        "generateError": "Tạo flashcard thất bại. Vui lòng thử lại.",
+        "saveSuccess": "Lưu flashcard thành công",
+        "saveError": "Lưu flashcard thất bại. Vui lòng thử lại.",
+        "updateSuccess": "Cập nhật flashcard thành công",
+        "noFlashcardToSave": "Không có flashcard để lưu",
+        "textRequired": "Vui lòng nhập nội dung văn bản trước.",
+        "fileRequired": "Vui lòng chọn một tệp tài liệu.",
+        "pdfOnly": "Chỉ hỗ trợ tệp PDF."
+      }
+    }
   },
   "footer": {
     "brand": "KnowVa",
