@@ -1,5 +1,6 @@
 {
   "header": {
+    "home": "Home",
     "quizzes": "Quizzes",
     "flashcards": "Flashcards",
     "tests": "Tests",
@@ -529,22 +530,38 @@
       "essential": {
         "title": "Essential Cookies",
         "description": "These cookies are necessary for the website to function properly.",
-        "examples": ["Authentication cookies", "Session management", "Security features"]
+        "examples": [
+          "Authentication cookies",
+          "Session management",
+          "Security features"
+        ]
       },
       "analytics": {
         "title": "Analytics Cookies",
         "description": "These cookies help us understand how visitors interact with our website.",
-        "examples": ["Google Analytics", "User behavior tracking", "Performance monitoring"]
+        "examples": [
+          "Google Analytics",
+          "User behavior tracking",
+          "Performance monitoring"
+        ]
       },
       "functional": {
         "title": "Functional Cookies",
         "description": "These cookies enable enhanced functionality and personalization.",
-        "examples": ["Language preferences", "Theme settings", "User preferences"]
+        "examples": [
+          "Language preferences",
+          "Theme settings",
+          "User preferences"
+        ]
       },
       "marketing": {
         "title": "Marketing Cookies",
         "description": "These cookies are used to deliver relevant advertisements.",
-        "examples": ["Ad targeting", "Social media integration", "Marketing campaigns"]
+        "examples": [
+          "Ad targeting",
+          "Social media integration",
+          "Marketing campaigns"
+        ]
       }
     },
     "necessary": "Necessary",
@@ -633,6 +650,20 @@
   "quizAttempts": "Quiz Attempts",
   "noVIP": "No VIP",
   "editProfile": "Edit Profile",
+  "userMenu": "User Menu",
+  "quizSet": "Quiz Set",
+  "flashcardSet": "Flashcard Set",
+  "transaction": "Transaction",
+  "myProfile": "My Profile",
+  "quizSetDescription": "Manage your quiz sets and track your progress",
+  "flashcardSetDescription": "Create and manage your flashcard sets for effective learning",
+  "transactionDescription": "View your transaction history and payment details",
+  "noQuizSets": "No Quiz Sets Available",
+  "noFlashcardSets": "No Flashcard Sets Available",
+  "noTransactions": "No Transactions Available",
+  "quizSetEmptyMessage": "You haven't created any quiz sets yet. Start creating quizzes to test your knowledge!",
+  "flashcardSetEmptyMessage": "You haven't created any flashcard sets yet. Start creating flashcards to enhance your learning experience!",
+  "transactionEmptyMessage": "You haven't made any transactions yet. Your payment history will appear here once you make a purchase.",
   "cancel": "Cancel",
   "save": "Save",
   "male": "Male",
@@ -659,6 +690,173 @@
     "title": "Email Verified Successfully!",
     "description": "Your email has been verified. You can now access all features of the application.",
     "goToHome": "Go to Home"
+  },
+  "quiz": {
+    "title": "Create Quiz",
+    "tabs": {
+      "text": "Text",
+      "document": "Document",
+      "image": "Image",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Paste in your notes or other content",
+      "characterCount": "characters",
+      "minCharacters": "Minimum 150 characters required",
+      "readyToCreate": "Ready to create quiz"
+    },
+    "documentInput": {
+      "selectFile": "Select a PDF file to create quiz",
+      "fileSelected": "Selected:",
+      "readyToCreate": "Ready to create from PDF",
+      "noFileSelected": "No PDF file selected"
+    },
+    "buttons": {
+      "next": "Next",
+      "options": "Options",
+      "generate": "Generate",
+      "save": "Save Quiz",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "delete": "Delete"
+    },
+    "modal": {
+      "title": "Generate Quiz",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Enter title",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter description",
+        "language": "Language",
+        "questionType": "Question Type",
+        "maxQuestions": "Max Questions",
+        "visibility": "Visibility",
+        "category": "Category (multi-select)",
+        "categoryPlaceholder": "Select categories",
+        "timeLimit": "Time Limit (minutes)"
+      },
+      "validation": {
+        "titleRequired": "Please enter title",
+        "questionTypeRequired": "Please select question type",
+        "maxQuestionsRequired": "Please enter number of questions",
+        "visibilityRequired": "Please select visibility",
+        "categoryRequired": "Please select at least 1 category",
+        "timeLimitRequired": "Please enter time limit"
+      }
+    },
+    "generatedQuiz": {
+      "title": "Generated Quiz",
+      "fields": {
+        "title": "Title:",
+        "category": "Category:",
+        "questionType": "Question Type:",
+        "timeLimit": "Time Limit:",
+        "visibility": "Visibility:",
+        "description": "Description:",
+        "questions": "Questions:"
+      },
+      "question": {
+        "label": "Question",
+        "answers": "Answers:",
+        "correct": "Correct",
+        "wrong": "Wrong"
+      },
+      "messages": {
+        "generateSuccess": "Quiz generated successfully",
+        "generateError": "Failed to generate quiz. Please try again.",
+        "saveSuccess": "Quiz saved successfully",
+        "saveError": "Failed to save quiz. Please try again.",
+        "updateSuccess": "Quiz updated successfully",
+        "noQuizToSave": "No quiz to save",
+        "textRequired": "Please enter text content first.",
+        "fileRequired": "Please select a document file.",
+        "pdfOnly": "Only PDF files are supported."
+      }
+    }
+  },
+  "flashcard": {
+    "title": "Create Flashcard",
+    "tabs": {
+      "text": "Text",
+      "document": "Document",
+      "image": "Image",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Paste in your notes or other content",
+      "characterCount": "characters",
+      "minCharacters": "Minimum 150 characters required",
+      "readyToCreate": "Ready to create flashcard"
+    },
+    "documentInput": {
+      "selectFile": "Select a PDF file to create flashcard",
+      "fileSelected": "Selected:",
+      "readyToCreate": "Ready to create from PDF",
+      "noFileSelected": "No PDF file selected"
+    },
+    "buttons": {
+      "next": "Next",
+      "options": "Options",
+      "generate": "Generate",
+      "save": "Save Flashcard",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "delete": "Delete"
+    },
+    "modal": {
+      "title": "Generate Flashcard",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Enter title",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter description",
+        "language": "Language",
+        "cardType": "Card Type",
+        "maxCards": "Max Cards",
+        "visibility": "Visibility",
+        "category": "Category (multi-select)",
+        "categoryPlaceholder": "Select categories",
+        "difficulty": "Difficulty"
+      },
+      "validation": {
+        "titleRequired": "Please enter title",
+        "cardTypeRequired": "Please select card type",
+        "maxCardsRequired": "Please enter number of cards",
+        "visibilityRequired": "Please select visibility",
+        "categoryRequired": "Please select at least 1 category",
+        "difficultyRequired": "Please select difficulty"
+      }
+    },
+    "generatedFlashcard": {
+      "title": "Generated Flashcard",
+      "fields": {
+        "title": "Title:",
+        "category": "Category:",
+        "cardType": "Card Type:",
+        "difficulty": "Difficulty:",
+        "visibility": "Visibility:",
+        "description": "Description:",
+        "cards": "Cards:"
+      },
+      "card": {
+        "label": "Card",
+        "front": "Front:",
+        "back": "Back:"
+      },
+      "messages": {
+        "generateSuccess": "Flashcard generated successfully",
+        "generateError": "Failed to generate flashcard. Please try again.",
+        "saveSuccess": "Flashcard saved successfully",
+        "saveError": "Failed to save flashcard. Please try again.",
+        "updateSuccess": "Flashcard updated successfully",
+        "noFlashcardToSave": "No flashcard to save",
+        "textRequired": "Please enter text content first.",
+        "fileRequired": "Please select a document file.",
+        "pdfOnly": "Only PDF files are supported."
+      }
+    }
   },
   "footer": {
     "brand": "KnowVa",

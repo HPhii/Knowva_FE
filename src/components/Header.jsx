@@ -24,8 +24,6 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
-  console.log("userInfo", userInfo);
-
   // Kiểm tra trạng thái đăng nhập và fetch user data khi component mount
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -264,6 +262,16 @@ const Header = () => {
       <div className="flex justify-center items-center h-full relative z-10">
         {/* Public navigation links */}
         <nav className="h-full hidden lg:flex items-center ml-4 pl-6">
+          {/* Home */}
+          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
+            <Link
+              to="/"
+              className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
+            >
+              {t("header.home")}
+            </Link>
+          </div>
+
           {/* Quizzes */}
           <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
             isCurrentPage("/quizzes") 
