@@ -18,6 +18,9 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tiptap/extension-blockquote": "^3.1.0",
     "@tiptap/extension-code-block": "^3.1.0",
+    "@tiptap/extension-color": "^3.4.1",
+    "@tiptap/extension-font-family": "^3.4.1",
+    "@tiptap/extension-highlight": "^3.4.1",
     "@tiptap/extension-horizontal-rule": "^3.1.0",
     "@tiptap/extension-image": "^3.1.0",
     "@tiptap/extension-link": "^3.1.0",
@@ -26,6 +29,7 @@
     "@tiptap/extension-subscript": "^3.1.0",
     "@tiptap/extension-superscript": "^3.1.0",
     "@tiptap/extension-text-align": "^3.1.0",
+    "@tiptap/extension-text-style": "^3.4.1",
     "@tiptap/extension-underline": "^3.1.0",
     "@tiptap/pm": "^3.1.0",
     "@tiptap/react": "^3.1.0",
@@ -41,6 +45,7 @@
     "react-dropzone": "^14.3.8",
     "react-i18next": "^15.6.1",
     "react-router-dom": "^7.7.1",
+    "recharts": "^3.1.2",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {

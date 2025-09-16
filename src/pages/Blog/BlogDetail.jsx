@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import { Rate, Progress } from 'antd';
 import api from '../../config/axios';
 import CommentSection from '../../components/CommentSection';
 import { getCategoryNameSmart } from '../../utils/blogCategories';
@@ -22,6 +23,8 @@ const BlogDetail = () => {
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [userRating, setUserRating] = useState(null);
   const [ratingLoading, setRatingLoading] = useState(false);
+  const [summaryData, setSummaryData] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
 
   // Fetch blog data from API
   useEffect(() => {
@@ -68,6 +71,27 @@ const BlogDetail = () => {
 
     if (blog && blog.id) {
       fetchUserRating();
+    }
+  }, [blog?.id]);
+
+  // Fetch summary data for this blog
+  useEffect(() => {
+    const fetchSummaryData = async () => {
+      if (!blog || !blog.id) return;
+      
+      try {
+        setSummaryLoading(true);
+        const response = await api.get(`interactions/blogpost/${blog.id}/summary`);
+        setSummaryData(response.data);
+      } catch (error) {
+        setSummaryData(null);
+      } finally {
+        setSummaryLoading(false);
+      }
+    };
+
+    if (blog && blog.id) {
+      fetchSummaryData();
     }
   }, [blog?.id]);
 
@@ -342,7 +366,7 @@ const BlogDetail = () => {
       </div>
 
       {/* Compact Header: Title first, then meta, then image */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
           {blog.title}
         </h1>
@@ -382,7 +406,7 @@ const BlogDetail = () => {
 
       {/* Main image below meta (compact height) */}
       {blog.imageUrl && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
           <img
             src={blog.imageUrl}
             alt={blog.title}
@@ -394,8 +418,8 @@ const BlogDetail = () => {
         </div>
       )}
 
-      {/* Main Content - Centered with max-w-4xl */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Main Content - Wider layout for better space utilization */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Excerpt Section */}
         {blog.excerpt && (
@@ -413,6 +437,97 @@ const BlogDetail = () => {
             className="prose prose-lg max-w-none text-gray-700 leading-relaxed [&>p]:mb-6 [&>p]:text-lg [&>p]:leading-relaxed [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mb-6 [&>h2]:mt-12 [&>h2]:border-b [&>h2]:border-gray-200 [&>h2]:pb-3 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:space-y-3 [&>ul]:text-lg [&>ul]:text-gray-700 [&>ul]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-500 [&>blockquote]:pl-6 [&>blockquote]:py-4 [&>blockquote]:my-8 [&>blockquote]:bg-blue-50 [&>blockquote]:rounded-r-lg [&>blockquote]:italic"
           />
         </div>
+
+        {/* Summary Statistics Section */}
+        {summaryLoading && (
+          <div className="py-12 border-t border-gray-100">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="mt-2 text-gray-600">Đang tải thống kê...</p>
+            </div>
+          </div>
+        )}
+
+        {summaryData && (
+          <div className="py-12 border-t border-gray-100">
+            <div className="mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('blog.statistics.title', 'Thống kê đánh giá')}</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Average Rating */}
+                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.averageRating', 'Điểm trung bình')}</h4>
+                  <div className="flex items-center space-x-3">
+                    <Rate 
+                      value={summaryData.averageRating} 
+                      disabled 
+                      style={{ fontSize: '20px' }}
+                    />
+                    <span className="text-2xl font-bold text-yellow-600">
+                      {summaryData.averageRating.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Total Ratings */}
+                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.totalRatings', 'Tổng đánh giá')}</h4>
+                  <div className="text-3xl font-bold text-blue-600">
+                    {summaryData.totalRatings}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">{t('blog.statistics.ratingsCount', 'lượt đánh giá')}</p>
+                </div>
+
+                {/* Total Comments */}
+                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.totalComments', 'Tổng bình luận')}</h4>
+                  <div className="text-3xl font-bold text-green-600">
+                    {summaryData.totalComments}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">{t('blog.statistics.commentsCount', 'bình luận')}</p>
+                </div>
+              </div>
+
+              {/* Rating Distribution */}
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">{t('blog.statistics.ratingDistribution', 'Phân bố đánh giá')}</h4>
+                <div className="space-y-4">
+                  {[5, 4, 3, 2, 1].map((stars) => {
+                    const count = summaryData.ratingDistribution[`${stars === 1 ? 'one' : stars === 2 ? 'two' : stars === 3 ? 'three' : stars === 4 ? 'four' : 'five'}Star`];
+                    const percentage = summaryData.totalRatings > 0 ? (count / summaryData.totalRatings) * 100 : 0;
+                    
+                    return (
+                      <div key={stars} className="grid grid-cols-12 gap-4 items-center">
+                        <div className="col-span-3 flex items-center space-x-2">
+                          <span className="text-yellow-500 text-sm">
+                            {'⭐'.repeat(stars)}
+                          </span>
+                          <span className="text-xs font-medium text-gray-700">
+                            ({stars})
+                          </span>
+                        </div>
+                        <div className="col-span-7">
+                          <Progress 
+                            percent={percentage} 
+                            showInfo={false}
+                            strokeColor="#f59e0b"
+                            trailColor="#f3f4f6"
+                            size="small"
+                          />
+                        </div>
+                        <div className="col-span-2 text-right">
+                          <span className="text-sm font-medium text-gray-700">
+                            {count}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Comments Section - Seamless transition */}
         <div className="py-12 border-t border-gray-100">

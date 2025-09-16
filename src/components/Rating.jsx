@@ -32,10 +32,18 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog', userRatin
 
   const theme = themes[variant];
 
+  // Debug log for rating state
+  console.log('⭐ Rating component state:', { rating, hoverRating, initialUserRating });
+
   // Update rating when userRating prop changes
   React.useEffect(() => {
+    console.log('🔄 Rating component - userRating prop changed:', initialUserRating);
     if (initialUserRating?.rating) {
+      console.log('⭐ Setting rating to:', initialUserRating.rating);
       setRating(initialUserRating.rating);
+    } else {
+      console.log('❌ No rating in userRating prop, setting to 0');
+      setRating(0);
     }
   }, [initialUserRating]);
 
@@ -151,7 +159,7 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog', userRatin
          </label>
          {rating > 0 && (
            <span className={`text-xs ${theme.starSelectedColor} font-medium`}>
-             {initialUserRating ? t('rating.yourRating', 'Đánh giá của bạn') : t('rating.currentRating', 'Đánh giá hiện tại')}: {rating}/5
+             {initialUserRating ? t('rating.yourRating', 'Đánh giá của bạn') : t('rating.currentRating', 'Đánh giá hiện tại')}: {rating}/5 ⭐
            </span>
          )}
        </div>

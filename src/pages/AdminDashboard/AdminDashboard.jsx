@@ -1,100 +1,179 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Space, Typography, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Layout, Menu, Avatar, Dropdown, Typography, Button } from 'antd';
 import { 
   UserOutlined, 
   FileTextOutlined, 
-  ExclamationCircleOutlined,
+  BugOutlined,
+  BarChartOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LogoutOutlined,
-  UserSwitchOutlined,
-  GlobalOutlined
+  SettingOutlined,
+  NotificationOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import UserManagement from './components/UserManagement';
 import BlogManagement from './components/BlogManagement';
 import ReportManagement from './components/ReportManagement';
+import Statistics from './components/Statistics';
+import SystemNotification from './components/SystemNotification';
+import FeedbackManagement from './components/FeedbackManagement';
 
 const { Header, Sider, Content } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const AdminDashboard = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState('userManagement');
+  
+  // Get current page from URL path
+  const getCurrentPage = () => {
+    const path = location.pathname;
+    if (path === '/admin/blogs') return 'blogManagement';
+    if (path === '/admin/reports') return 'reportManagement';
+    if (path === '/admin/users') return 'userManagement';
+    if (path === '/admin/statistics') return 'statistics';
+    if (path === '/admin/notifications') return 'systemNotification';
+    if (path === '/admin/feedback') return 'feedbackManagement';
+    return 'userManagement'; // default
+  };
+  
+  const [selectedMenu, setSelectedMenu] = useState(getCurrentPage());
 
-  // Mock admin data
+  // 🎭 Mock admin data for demo purposes
   const adminUser = {
     name: 'Admin User',
     email: 'admin@knowva.com',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'
   };
 
+  // Update selectedMenu when URL changes and handle default redirect
+  useEffect(() => {
+    const currentPage = getCurrentPage();
+    setSelectedMenu(currentPage);
+    
+    // Redirect to users page if accessing /admin directly
+    if (location.pathname === '/admin') {
+      navigate('/admin/users', { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   // Menu items
   const menuItems = [
     {
       key: 'userManagement',
       icon: <UserOutlined />,
-      label: t('admin.menu.userManagement'),
+      label: 'User Management',
     },
     {
       key: 'blogManagement',
       icon: <FileTextOutlined />,
-      label: t('admin.menu.blogManagement'),
+      label: 'Blog Management',
     },
     {
       key: 'reportManagement',
-      icon: <ExclamationCircleOutlined />,
-      label: t('admin.menu.reportManagement'),
+      icon: <BugOutlined />,
+      label: 'Bug Report Management',
+    },
+    {
+      key: 'statistics',
+      icon: <BarChartOutlined />,
+      label: 'Statistics',
+    },
+    {
+      key: 'systemNotification',
+      icon: <NotificationOutlined />,
+      label: 'System Notifications',
+    },
+    {
+      key: 'feedbackManagement',
+      icon: <MessageOutlined />,
+      label: 'Feedback Management',
     },
   ];
 
   // Handle menu selection
   const handleMenuClick = ({ key }) => {
     setSelectedMenu(key);
+    // Navigate to the corresponding URL
+    switch (key) {
+      case 'userManagement':
+        navigate('/admin/users');
+        break;
+      case 'blogManagement':
+        navigate('/admin/blogs');
+        break;
+      case 'reportManagement':
+        navigate('/admin/reports');
+        break;
+      case 'statistics':
+        navigate('/admin/statistics');
+        break;
+      case 'systemNotification':
+        navigate('/admin/notifications');
+        break;
+      case 'feedbackManagement':
+        navigate('/admin/feedback');
+        break;
+      default:
+        navigate('/admin/users');
+    }
   };
 
-  // Handle logout
+  /**
+   * 🚪 Handle admin logout
+   * TODO: Implement actual logout logic with API call
+   */
   const handleLogout = () => {
     // TODO: Implement logout logic
     console.log('Logout clicked');
   };
 
-  // Handle profile
+  /**
+   * ⚙️ Handle admin profile settings
+   * TODO: Implement profile management logic
+   */
   const handleProfile = () => {
     // TODO: Implement profile logic
     console.log('Profile clicked');
   };
 
-  // Handle language change
-  const handleLanguageChange = (language) => {
-    i18n.changeLanguage(language);
-  };
-
   // User dropdown menu
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />} onClick={handleProfile}>
-        {t('admin.profile')}
+      <Menu.Item key="profile" icon={<SettingOutlined />} onClick={handleProfile}>
+        Profile Settings
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        {t('admin.logout')}
+        Logout
       </Menu.Item>
     </Menu>
   );
 
-  // Language dropdown menu
-  const languageMenu = (
-    <Menu>
-      <Menu.Item key="en" onClick={() => handleLanguageChange('en')}>
-        🇺🇸 English
-      </Menu.Item>
-      <Menu.Item key="vi" onClick={() => handleLanguageChange('vi')}>
-        🇻🇳 Tiếng Việt
-      </Menu.Item>
-    </Menu>
-  );
+  // Get page title
+  const getPageTitle = () => {
+    switch (selectedMenu) {
+      case 'userManagement':
+        return 'User Management';
+      case 'blogManagement':
+        return 'Blog Management';
+      case 'reportManagement':
+        return 'Bug Report Management';
+      case 'statistics':
+        return 'Statistics';
+      case 'systemNotification':
+        return 'System Notifications';
+      case 'feedbackManagement':
+        return 'Feedback Management';
+      default:
+        return 'User Management';
+    }
+  };
 
   // Render content based on selected menu
   const renderContent = () => {
@@ -105,79 +184,171 @@ const AdminDashboard = () => {
         return <BlogManagement />;
       case 'reportManagement':
         return <ReportManagement />;
+      case 'statistics':
+        return <Statistics />;
+      case 'systemNotification':
+        return <SystemNotification />;
+      case 'feedbackManagement':
+        return <FeedbackManagement />;
       default:
         return <UserManagement />;
     }
   };
 
   return (
-    <Layout className="min-h-screen">
+    <Layout style={{ minHeight: '100vh' }}>
+      {/* Sidebar */}
       <Sider 
         trigger={null} 
         collapsible 
         collapsed={collapsed}
-        className="bg-gray-900 transition-all duration-200 ease-in-out"
-        width={280}
+        theme="dark"
+        width={260}
+        style={{
+          background: '#001529',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.15)'
+        }}
       >
-        <div className="p-4 border-b border-gray-700 bg-gray-900">
-          <Title level={4} className="text-white m-0 text-center">
-            {collapsed ? 'KV' : t('admin.systemName')}
-          </Title>
+        {/* Logo Section */}
+        <div style={{ 
+          padding: '16px', 
+          textAlign: 'center',
+          borderBottom: '1px solid #002140'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            gap: '12px'
+          }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              background: 'linear-gradient(135deg, #1890ff, #40a9ff)',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '16px'
+            }}>
+              K
+            </div>
+            {!collapsed && (
+              <div>
+                <Title level={4} style={{ color: 'white', margin: 0, fontSize: '18px' }}>
+                  KnowVa Admin
+                </Title>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Menu */}
         <Menu
           theme="dark"
           mode="inline"
           selectedKeys={[selectedMenu]}
           items={menuItems}
           onClick={handleMenuClick}
-          className="border-r-0 bg-gray-900"
+          style={{
+            background: '#001529',
+            border: 'none',
+            fontSize: '15px'
+          }}
         />
       </Sider>
       
       <Layout>
-        <Header className="bg-white px-6 flex justify-between items-center shadow-md sticky top-0 z-50">
-          <div className="flex items-center gap-4">
+        {/* Header */}
+        <Header style={{
+          background: '#fff',
+          padding: '0 24px',
+          borderBottom: '1px solid #f0f0f0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setCollapsed(!collapsed)}
-              className="text-lg p-2 rounded-md transition-all duration-200 ease-in-out hover:bg-gray-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              style={{
+                fontSize: '16px',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
             />
-            <Title level={3} className="m-0 text-blue-600 font-semibold">
-              {t(`admin.${selectedMenu}.title`)}
+            <Title level={3} style={{ 
+              margin: 0, 
+              color: '#262626',
+              fontSize: '20px',
+              fontWeight: 600
+            }}>
+              {getPageTitle()}
             </Title>
           </div>
           
-          <div className="flex items-center">
-            <Space size="middle">
-              {/* Language Selector */}
-              <Dropdown overlay={languageMenu} placement="bottomRight">
-                <Button 
-                  type="text" 
-                  icon={<GlobalOutlined />}
-                  className="text-base p-2 rounded-md transition-all duration-200 ease-in-out hover:bg-gray-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                />
-              </Dropdown>
-              
-              {/* User Profile */}
-              <Dropdown overlay={userMenu} placement="bottomRight">
-                <Space className="cursor-pointer p-2 rounded-md transition-all duration-200 ease-in-out hover:bg-gray-100 hover:scale-102">
-                  <Avatar 
-                    src={adminUser.avatar} 
-                    icon={<UserOutlined />}
-                    size="large"
-                  />
-                  <span className="font-medium text-gray-700">{adminUser.name}</span>
-                </Space>
-              </Dropdown>
-            </Space>
-          </div>
+          {/* Admin Profile */}
+          <Dropdown overlay={userMenu} placement="bottomRight">
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+            >
+              <Avatar 
+                src={adminUser.avatar} 
+                icon={<UserOutlined />}
+                size="large"
+              />
+              <div>
+                <div style={{ 
+                  fontWeight: 600, 
+                  color: '#262626',
+                  lineHeight: '1.2'
+                }}>
+                  {adminUser.name}
+                </div>
+                <div style={{ 
+                  fontSize: '12px', 
+                  color: '#8c8c8c',
+                  lineHeight: '1.2'
+                }}>
+                  Administrator
+                </div>
+              </div>
+            </div>
+          </Dropdown>
         </Header>
         
-        <Content className="bg-gray-50 min-h-screen">
-          <div className="p-6 bg-white m-6 rounded-lg shadow-md min-h-screen">
-            {renderContent()}
-          </div>
+        {/* Content */}
+        <Content style={{
+          padding: '24px',
+          background: '#f5f5f5',
+          minHeight: 'calc(100vh - 64px)'
+        }}>
+          {renderContent()}
         </Content>
       </Layout>
     </Layout>

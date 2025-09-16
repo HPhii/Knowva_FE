@@ -187,16 +187,15 @@ const Blog = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            {/* Header Section - Minimalist with search and create button */}
+            {/* Header Section - All controls in one row */}
             <div className="border-b border-gray-100 sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
-                <div className="max-w-4xl mx-auto px-6 py-8">
-                    {/* Search and Create Post Row */}
-                    <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
-                        {/* Search Bar - Minimalist with rounded corners */}
-                        <div className="flex-1 w-full lg:w-auto">
-                            <div className="relative max-w-lg">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                    <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+                        {/* Search Bar - Fixed width */}
+                        <div className="w-full lg:w-80">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
@@ -204,87 +203,68 @@ const Blog = () => {
                                     type="search"
                                     value={keyword}
                                     onChange={handleSearchChange}
-                                    placeholder={t('blog.searchPlaceholder', 'Search for articles...')}
-                                    className="block w-full pl-12 pr-4 py-3 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50 focus:bg-white shadow-sm"
+                                    placeholder={t('blog.searchPlaceholder', 'Search...')}
+                                    className="block w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
                                 />
                             </div>
                         </div>
                         
-                        {/* Create Post Button - Pill-shaped with system gradient */}
+                        {/* Sort Controls - Fixed width */}
+                        <div className="flex items-center gap-2 w-full lg:w-auto">
+                            <select
+                                value={sortBy}
+                                onChange={(e) => handleSortByChange(e.target.value)}
+                                className="px-2 py-2 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            >
+                                <option value="publishedAt">{t('blog.sort.publishedAt', 'Date')}</option>
+                                <option value="title">{t('blog.sort.title', 'Title')}</option>
+                                <option value="authorName">{t('blog.sort.authorName', 'Author')}</option>
+                                <option value="readTime">{t('blog.sort.readTime', 'Read Time')}</option>
+                            </select>
+                            
+                            <select
+                                value={sortDirection}
+                                onChange={(e) => handleSortDirectionChange(e.target.value)}
+                                className="px-2 py-2 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            >
+                                <option value="DESC">↓</option>
+                                <option value="ASC">↑</option>
+                            </select>
+                        </div>
+                        
+                        {/* Category Filters - Flexible width, no scroll */}
+                        <div className="flex items-center gap-2 flex-1 flex-wrap">
+                            {categories.map((category) => (
+                                <button
+                                    key={category.id || 'all'}
+                                    onClick={() => handleCategoryChange(category.id)}
+                                    className={`px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-all duration-200 ${
+                                        selectedCategoryId === category.id
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                                >
+                                    {t(category.nameKey)}
+                                </button>
+                            ))}
+                        </div>
+                        
+                        {/* Create Post Button - Fixed width */}
                         <button
                             onClick={() => navigate('/blog/create')}
-                            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-sm"
+                            className="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 whitespace-nowrap w-full lg:w-auto justify-center"
                         >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                             </svg>
-                            {t('blog.actions.createNewPost', 'Create Post')}
+                            {t('blog.actions.createNewPost', 'Create')}
                         </button>
-                    </div>
-                    
-                    {/* Sort Controls and Category Filters - Full width like header */}
-                    <div className="w-full mt-6 pt-6 border-t border-gray-100">
-                        <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between w-full">
-                            {/* Sort Controls - Left side */}
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                {/* Sort By */}
-                                <div className="flex items-center space-x-3">
-                                    <label className="text-sm font-medium text-gray-600 whitespace-nowrap">
-                                        {t('blog.sort.sortBy', 'Sort by:')}
-                                    </label>
-                                    <select
-                                        value={sortBy}
-                                        onChange={(e) => handleSortByChange(e.target.value)}
-                                        className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                    >
-                                        <option value="publishedAt">{t('blog.sort.publishedAt', 'Published Date')}</option>
-                                        <option value="title">{t('blog.sort.title', 'Title')}</option>
-                                        <option value="authorName">{t('blog.sort.authorName', 'Author')}</option>
-                                        <option value="readTime">{t('blog.sort.readTime', 'Read Time')}</option>
-                                        <option value="createdAt">{t('blog.sort.createdAt', 'Created Date')}</option>
-                                        <option value="updatedAt">{t('blog.sort.updatedAt', 'Updated Date')}</option>
-                                    </select>
-                                </div>
-                                
-                                {/* Sort Direction */}
-                                <div className="flex items-center space-x-3">
-                                    <label className="text-sm font-medium text-gray-600 whitespace-nowrap">
-                                        {t('blog.sort.direction', 'Order:')}
-                                    </label>
-                                    <select
-                                        value={sortDirection}
-                                        onChange={(e) => handleSortDirectionChange(e.target.value)}
-                                        className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white hover:bg-gray-50"
-                                    >
-                                        <option value="DESC">{t('blog.sort.desc', 'Descending')}</option>
-                                        <option value="ASC">{t('blog.sort.asc', 'Ascending')}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            {/* Category Filters - Right side, full width */}
-                            <div className="flex flex-wrap gap-2 flex-1 lg:justify-end">
-                                {categories.map((category) => (
-                                    <button
-                                        key={category.id || 'all'}
-                                        onClick={() => handleCategoryChange(category.id)}
-                                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                                            selectedCategoryId === category.id
-                                                ? 'bg-gray-800 text-white'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                        }`}
-                                    >
-                                        {t(category.nameKey)}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Main Content - Centered container with plenty of whitespace */}
-            <div className="max-w-4xl mx-auto px-6 py-12">
+            <div className="max-w-7xl mx-auto px-4 py-8">
                 {loading && <LoadingSpinner />}
                 {error && !loading && <ErrorState />}
                 {!loading && !error && blogs.length === 0 && <EmptyState />}
@@ -292,91 +272,18 @@ const Blog = () => {
                 {!loading && !error && blogs.length > 0 && (
                     <>
                         {/* Results Header - Clean typography */}
-                        <div className="mb-12 text-center animate-fade-in">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                                {t('blog.results.title', 'Search Results')}
-                            </h2>
-                            <p className="text-lg text-gray-600">
-                                {t('blog.results.found', 'Found')} <span className="font-semibold text-blue-600">{blogs.length}</span> {t('blog.results.posts', 'articles')}
-                                {keyword && (
-                                    <span> {t('blog.results.for', 'for')} "<span className="font-medium text-gray-800">{keyword}</span>"</span>
-                                )}
-                            </p>
-                        </div>
+                       
                         
-                        {/* Blog Feed - Clean list layout with spacing */}
-                        <div className="space-y-12 animate-fade-in">
+                        {/* Blog Feed - Grid layout with BlogCard components */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
                             {blogs.map((blog, index) => (
-                                <article 
-                                    key={blog.id} 
-                                    className="animate-fade-in-up border-b border-gray-100 pb-12 last:border-b-0 last:pb-0"
+                                <div 
+                                    key={blog.id}
+                                    className="animate-fade-in-up"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        {/* Optional Thumbnail - Small and not dominant */}
-                                        {blog.thumbnail && (
-                                            <div className="md:col-span-1">
-                                                <img 
-                                                    src={blog.thumbnail} 
-                                                    alt={blog.title}
-                                                    className="w-full h-32 object-cover rounded-lg"
-                                                />
-                                            </div>
-                                        )}
-                                        
-                                        {/* Content - Main focus */}
-                                        <div className={`${blog.thumbnail ? 'md:col-span-2' : 'md:col-span-3'}`}>
-                                            {/* Title - Large and bold */}
-                                            <h3 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors duration-200 cursor-pointer">
-                                                {blog.title}
-                                            </h3>
-                                            
-                                            {/* Description - Neutral gray */}
-                                            <p className="text-gray-600 text-lg leading-relaxed mb-4">
-                                                {blog.description || blog.excerpt || 'No description available.'}
-                                            </p>
-                                            
-                                            {/* Meta Info - Small muted text */}
-                                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                                                {blog.authorName && (
-                                                    <span className="flex items-center">
-                                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                        </svg>
-                                                        {blog.authorName}
-                                                    </span>
-                                                )}
-                                                
-                                                {blog.publishedAt && (
-                                                    <span className="flex items-center">
-                                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                        </svg>
-                                                        {new Date(blog.publishedAt).toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                                
-                                                {blog.category && (
-                                                    <span className="flex items-center">
-                                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                                        </svg>
-                                                        {blog.category}
-                                                    </span>
-                                                )}
-                                                
-                                                {blog.readTime && (
-                                                    <span className="flex items-center">
-                                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                        {blog.readTime} min read
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
+                                    <BlogCard blog={blog} />
+                                </div>
                             ))}
                         </div>
 

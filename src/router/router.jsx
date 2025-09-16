@@ -61,6 +61,12 @@ const router = createBrowserRouter([
   { path: "verify-email", element: <VerifyEmail /> },
   { path: "verify-complete", element: <VerifyComplete /> },
   { path: "admin", element: <AdminDashboard /> },
+  { path: "admin/users", element: <AdminDashboard /> },
+  { path: "admin/blogs", element: <AdminDashboard /> },
+  { path: "admin/reports", element: <AdminDashboard /> },
+  { path: "admin/statistics", element: <AdminDashboard /> },
+  { path: "admin/notifications", element: <AdminDashboard /> },
+  { path: "admin/feedback", element: <AdminDashboard /> },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
   // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp

@@ -284,6 +284,15 @@
       "subtitle": "Share your thoughts about this article",
       "cannotDisplay": "Cannot display comments - missing post ID"
     },
+    "statistics": {
+      "title": "Rating Statistics",
+      "averageRating": "Average Rating",
+      "totalRatings": "Total Ratings",
+      "totalComments": "Total Comments",
+      "ratingDistribution": "Rating Distribution",
+      "ratingsCount": "ratings",
+      "commentsCount": "comments"
+    },
     "errors": {
       "cannotLoadPosts": "Cannot load blog posts. Please try again later.",
       "cannotLoadPost": "Cannot load blog post. Please try again later.",

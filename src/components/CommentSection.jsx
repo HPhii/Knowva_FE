@@ -17,22 +17,27 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   const [replyingTo, setReplyingTo] = useState(null);
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
 
+  // Rating edit state
+  const [isEditingRating, setIsEditingRating] = useState(false);
+  const [tempRating, setTempRating] = useState(0);
+
+  // Comment edit state
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editCommentText, setEditCommentText] = useState('');
+  const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+  const [isDeletingComment, setIsDeletingComment] = useState(false);
+
   // User rating state - use prop if provided, otherwise use local state
   const [userRating, setUserRating] = useState(propUserRating);
   const [isLoadingRating, setIsLoadingRating] = useState(false);
 
-  // Debug info
-  console.log('CommentSection props:', { variant, entityId, entityType, commentsCount: comments.length });
-  console.log('Comments data received:', comments);
-  console.log('First comment structure:', comments[0]);
-  console.log('Comments array type:', Array.isArray(comments));
 
-  // Fetch user's rating on component mount (only if not provided via props)
+  // Fetch user's rating on component mount (always fetch if entityId and entityType are available)
   useEffect(() => {
-    if (entityId && entityType && !propUserRating) {
+    if (entityId && entityType) {
       fetchUserRating();
     }
-  }, [entityId, entityType, propUserRating]);
+  }, [entityId, entityType]);
 
   // Update local userRating when propUserRating changes
   useEffect(() => {
@@ -41,17 +46,38 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     }
   }, [propUserRating]);
 
+  // Force fetch rating on component mount (for reload scenarios)
+  useEffect(() => {
+    if (entityId && entityType) {
+      // Small delay to ensure localStorage is available
+      const timer = setTimeout(() => {
+        fetchUserRating();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []); // Empty dependency array - only run once on mount
+
   // Fetch user's rating for this entity
   const fetchUserRating = async () => {
     try {
       setIsLoadingRating(true);
       const token = localStorage.getItem('token');
-      if (!token) return;
+      if (!token) {
+        setUserRating(null);
+        return;
+      }
 
-              const response = await api.get(`interactions/${entityType}/${entityId}/rating/my`);
-      setUserRating(response.data);
+      const response = await api.get(`interactions/${entityType}/${entityId}/rating/my`);
+      
+      if (response.data && response.data.rating !== undefined) {
+        setUserRating(response.data);
+      } else if (response.data && typeof response.data === 'number') {
+        // Handle case where API returns just the rating number
+        setUserRating({ rating: response.data });
+      } else {
+        setUserRating(null);
+      }
     } catch (error) {
-      console.log('User has no rating yet or error:', error);
       setUserRating(null);
     } finally {
       setIsLoadingRating(false);
@@ -122,10 +148,10 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
     // First pass: identify parent comments and create reply map
     comments.forEach(comment => {
-      if (!comment.parentCommentId && !comment.parentId) {
+      if (!comment.parentId) {
         parentComments.push({ ...comment, replies: comment.replies || [] });
       } else {
-        const parentId = comment.parentCommentId || comment.parentId;
+        const parentId = comment.parentId;
         if (!replyMap.has(parentId)) {
           replyMap.set(parentId, []);
         }
@@ -201,7 +227,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         payload.imageUrl = imageUrl.trim();
       }
 
-              const newComment = await api.post(`interactions/${entityType}/${entityId}/comment`, payload);
+      const newComment = await api.post(`interactions/${entityType}/${entityId}/comment`, payload);
 
       // Add new comment to the list
       const commentToAdd = {
@@ -229,8 +255,6 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       }
       
     } catch (error) {
-      console.error('Error posting comment:', error);
-      
       let errorMessage = t('comments.errorPostingComment');
       
       if (error.response?.data?.message) {
@@ -284,10 +308,12 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         payload.imageUrl = replyImageUrl.trim();
       }
 
-              const newReply = await api.post(`interactions/${entityType}/${entityId}/comment`, {
+      const finalPayload = {
         ...payload,
-        parentCommentId: parentCommentId
-      });
+        parentId: parentCommentId
+      };
+
+      const newReply = await api.post(`interactions/${entityType}/${entityId}/comment`, finalPayload);
 
       // Add new reply to the parent comment
       const replyToAdd = {
@@ -297,7 +323,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         createdAt: newReply.data.createdAt || newReply.data.created_at || new Date().toISOString(),
         imageUrl: replyImageUrl.trim() || null,
         user: newReply.data.user || { name: 'You' },
-        parentCommentId: parentCommentId,
+        parentId: parentCommentId,
         likes: 0,
         isLiked: false
       };
@@ -316,8 +342,6 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       }
       
     } catch (error) {
-      console.error('Error posting reply:', error);
-      
       let errorMessage = t('comments.errorPostingReply');
       
       if (error.response?.data?.message) {
@@ -332,39 +356,199 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     }
   };
 
-  // Handle like/unlike comment
-  const handleLikeComment = async (commentId, isLiked) => {
-    try {
-      // Toggle like state optimistically
-      // In a real app, you'd update the comment's like state here
-      
-      // Call API to like/unlike
-      if (isLiked) {
-        // Unlike
-        await api.delete(`interactions/${entityType}/${entityId}/comment/${commentId}/like`);
-      } else {
-        // Like
-        await api.post(`interactions/${entityId}/${entityType}/comment/${commentId}/like`);
-      }
-      
-      showToast(isLiked ? t('comments.unliked') : t('comments.liked'), 'success');
-      
-      // Refresh comments to get updated like count
-      if (onRefreshComments) {
-        onRefreshComments();
-      }
-      
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      showToast(t('comments.errorLiking'), 'error');
-    }
-  };
 
   // Cancel reply
   const cancelReply = () => {
     setReplyText('');
     setReplyImageUrl('');
     setReplyingTo(null);
+  };
+
+  // Handle edit rating
+  const handleEditRating = () => {
+    setIsEditingRating(true);
+    setTempRating(userRating?.rating || 0);
+  };
+
+  // Handle save rating edit
+  const handleSaveRatingEdit = async () => {
+    if (tempRating === userRating?.rating) {
+      setIsEditingRating(false);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast(t('rating.pleaseLoginToRate'), 'error');
+        return;
+      }
+
+      const payload = {
+        ratingValue: tempRating
+      };
+
+      await api.put(`interactions/${entityType}/${entityId}/rating`, payload);
+      
+      setUserRating(prev => ({ ...prev, rating: tempRating }));
+      setIsEditingRating(false);
+      showToast(t('rating.ratingUpdatedSuccessfully'), 'success');
+      
+    } catch (error) {
+      let errorMessage = t('rating.errorUpdatingRating');
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showToast(errorMessage, 'error');
+    }
+  };
+
+  // Handle cancel rating edit
+  const handleCancelRatingEdit = () => {
+    setIsEditingRating(false);
+    setTempRating(0);
+  };
+
+  // Handle delete rating
+  const handleDeleteRating = async () => {
+    if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast(t('rating.pleaseLoginToRate'), 'error');
+        return;
+      }
+
+      await api.delete(`interactions/${entityType}/${entityId}/rating`);
+      
+      setUserRating(null);
+      showToast(t('rating.ratingDeletedSuccessfully'), 'success');
+      
+      // Reload page after 1 second
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      let errorMessage = t('rating.errorDeletingRating');
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showToast(errorMessage, 'error');
+    }
+  };
+
+  // Handle edit comment
+  const handleEditComment = (commentId, currentContent) => {
+    setEditingCommentId(commentId);
+    setEditCommentText(currentContent);
+  };
+
+  // Handle save comment edit
+  const handleSaveCommentEdit = async () => {
+    if (!editCommentText.trim()) {
+      showToast('Nội dung comment không được để trống', 'error');
+      return;
+    }
+
+    if (isSubmittingEdit) return;
+
+    setIsSubmittingEdit(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast('Vui lòng đăng nhập để chỉnh sửa comment', 'error');
+        return;
+      }
+
+      const payload = {
+        content: editCommentText.trim()
+      };
+
+      await api.put(`interactions/comment/${editingCommentId}`, payload);
+      
+      // Update comment in the list
+      if (onAddComment) {
+        // Trigger refresh to get updated comments
+        onAddComment({ id: editingCommentId, content: editCommentText.trim() });
+      }
+      
+      setEditingCommentId(null);
+      setEditCommentText('');
+      showToast('Chỉnh sửa comment thành công', 'success');
+      
+    } catch (error) {
+      let errorMessage = 'Không thể chỉnh sửa comment';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsSubmittingEdit(false);
+    }
+  };
+
+  // Handle cancel comment edit
+  const handleCancelCommentEdit = () => {
+    setEditingCommentId(null);
+    setEditCommentText('');
+  };
+
+  // Handle delete comment
+  const handleDeleteComment = async (commentId) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa comment này?')) {
+      return;
+    }
+
+    if (isDeletingComment) return;
+
+    setIsDeletingComment(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast('Vui lòng đăng nhập để xóa comment', 'error');
+        return;
+      }
+
+      await api.delete(`interactions/comment/${commentId}`);
+      
+      showToast('Xóa comment thành công', 'success');
+      
+      // Reload page after 1 second to refresh comments
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      let errorMessage = 'Không thể xóa comment';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showToast(errorMessage, 'error');
+    } finally {
+      setIsDeletingComment(false);
+    }
   };
 
   // Simple toast function (can be replaced with react-toastify later)
@@ -468,26 +652,104 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       </div>
       
       {/* Rating Component */}
-      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h4 className="text-lg font-semibold text-slate-800 flex items-center">
-            <span className="text-2xl mr-2">⭐</span>
-            {t('comments.rateThisPost', 'Đánh giá bài viết này')}
-          </h4>
-          {userRating && (
-            <span className="text-xs text-slate-600 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
-              {t('comments.yourRating', 'Đánh giá của bạn')}: {userRating.rating}/5
-            </span>
+      {userRating && userRating.rating ? (
+        // Show rating result when user has already rated
+        <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-green-50 to-blue-50 border border-green-200 shadow-sm relative">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <h4 className="text-lg font-semibold text-slate-800 flex items-center justify-center mb-2">
+                <span className="text-2xl mr-2">⭐</span>
+                {t('comments.yourRating', 'Đánh giá của bạn')}
+              </h4>
+              
+              {!isEditingRating ? (
+                // Display current rating
+                <>
+                  <div className="flex items-center justify-center space-x-1 mb-2">
+                    {[1, 2, 3, 4, 5].map((starValue) => (
+                      <span key={starValue} className="text-3xl">
+                        {starValue <= userRating.rating ? '⭐' : '☆'}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    {userRating.rating}/5 sao
+                  </p>
+                </>
+              ) : (
+                // Edit rating form
+                <div className="space-y-3">
+                  <div className="flex items-center justify-center space-x-1">
+                    {[1, 2, 3, 4, 5].map((starValue) => (
+                      <button
+                        key={starValue}
+                        onClick={() => setTempRating(starValue)}
+                        className="text-3xl transition-transform duration-200 hover:scale-110"
+                      >
+                        {starValue <= tempRating ? '⭐' : '☆'}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    {tempRating}/5 sao
+                  </p>
+                  <div className="flex items-center justify-center space-x-2">
+                    <button
+                      onClick={handleSaveRatingEdit}
+                      className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg transition-colors duration-200"
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      onClick={handleCancelRatingEdit}
+                      className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors duration-200"
+                    >
+                      Hủy
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Edit and Delete buttons in bottom right corner */}
+          {!isEditingRating && (
+            <div className="absolute bottom-3 right-3 flex items-center space-x-3">
+              <span
+                onClick={handleEditRating}
+                className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer underline transition-colors duration-200"
+              >
+                Chỉnh sửa
+              </span>
+              <span
+                onClick={handleDeleteRating}
+                className="text-xs text-red-600 hover:text-red-800 cursor-pointer underline transition-colors duration-200"
+              >
+                Xóa
+              </span>
+            </div>
           )}
         </div>
-        <Rating 
-          entityId={entityId} 
-          entityType={entityType} 
-          variant={variant}
-          userRating={userRating}
-          onRatingChange={fetchUserRating}
-        />
-      </div>
+      ) : (
+        // Show rating form when user hasn't rated yet
+        <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <h4 className="text-lg font-semibold text-slate-800 flex items-center justify-center mb-4">
+                <span className="text-2xl mr-2">⭐</span>
+                {t('comments.rateThisPost', 'Đánh giá bài viết này')}
+              </h4>
+              <Rating 
+                entityId={entityId} 
+                entityType={entityType} 
+                variant={variant}
+                userRating={userRating}
+                onRatingChange={fetchUserRating}
+              />
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Comment Form */}
       <div className="mb-8 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
@@ -602,9 +864,37 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                         )}
                       </div>
                       
-                      <p className="text-slate-700 text-sm leading-relaxed mb-4">
-                        {commentContent}
-                      </p>
+                      {editingCommentId === commentId ? (
+                        // Edit comment form
+                        <div className="mb-4">
+                          <textarea
+                            value={editCommentText}
+                            onChange={(e) => setEditCommentText(e.target.value)}
+                            className="w-full p-3 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700"
+                            rows="3"
+                            disabled={isSubmittingEdit}
+                          />
+                          <div className="flex justify-end space-x-2 mt-2">
+                            <button
+                              onClick={handleCancelCommentEdit}
+                              className="px-3 py-1 text-xs text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors duration-200"
+                            >
+                              Hủy
+                            </button>
+                            <button
+                              onClick={handleSaveCommentEdit}
+                              disabled={!editCommentText.trim() || isSubmittingEdit}
+                              className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                            >
+                              {isSubmittingEdit ? 'Đang lưu...' : 'Lưu'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-slate-700 text-sm leading-relaxed mb-4">
+                          {commentContent}
+                        </p>
+                      )}
                       
                       {/* Display image if exists */}
                       {commentImage && (
@@ -622,16 +912,13 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
                       {/* Action Buttons */}
                       <div className="flex items-center space-x-6">
-                        {/* Like Button */}
+                        {/* Edit Button */}
                         <button
-                          onClick={() => handleLikeComment(commentId, isLiked)}
-                          className={`flex items-center space-x-2 text-xs font-medium transition-all duration-200 ${isLiked ? 'text-red-500' : 'text-slate-500'} hover:text-red-500`}
+                          onClick={() => handleEditComment(commentId, commentContent)}
+                          className="text-xs text-blue-600 hover:text-blue-700 focus:outline-none font-medium flex items-center space-x-2 transition-all duration-200"
                         >
-                          <span className={`text-lg ${isLiked ? '❤️' : '🤍'}`}>
-                            {isLiked ? '❤️' : '🤍'}
-                          </span>
-                          <span className="font-semibold">{likeCount > 0 ? likeCount : ''}</span>
-                          <span>{isLiked ? t('comments.liked') : t('comments.like')}</span>
+                          <span className="text-base">✏️</span>
+                          <span>Chỉnh sửa</span>
                         </button>
 
                         {/* Reply button */}
@@ -641,6 +928,17 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                         >
                           <span className="text-base">💬</span>
                           <span>{t('comments.reply')}</span>
+                        </button>
+                      </div>
+
+                      {/* Delete Button - positioned at bottom right of comment */}
+                      <div className="flex justify-end mt-2">
+                        <button
+                          onClick={() => handleDeleteComment(commentId)}
+                          disabled={isDeletingComment}
+                          className="text-xs text-red-600 hover:text-red-700 underline transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isDeletingComment ? 'Đang xóa...' : 'Xóa'}
                         </button>
                       </div>
                     </div>
@@ -717,8 +1015,6 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                       const replyContent = reply.content || reply.text || reply.message || reply.body || '';
                       const replyImage = reply.imageUrl || reply.image || reply.attachment || reply.userAvatarUrl;
                       const replyDate = reply.createdAt || reply.created_at || reply.timestamp || reply.date || new Date().toISOString();
-                      const replyLikeCount = reply.likes || reply.likeCount || 0;
-                      const replyIsLiked = reply.isLiked || reply.userLiked || false;
                       
                       return (
                         <div key={replyId} className="p-4 rounded-xl border-l-4 border-blue-200 bg-slate-50 hover:bg-slate-100 transition-all duration-300">
@@ -760,18 +1056,14 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                                 </div>
                               )}
 
-                              {/* Reply Action Buttons */}
-                              <div className="flex items-center space-x-6">
-                                {/* Like Button */}
+                              {/* Delete Button for Reply - positioned at bottom right */}
+                              <div className="flex justify-end mt-2">
                                 <button
-                                  onClick={() => handleLikeComment(replyId, replyIsLiked)}
-                                  className={`flex items-center space-x-2 text-xs font-medium transition-all duration-200 ${replyIsLiked ? 'text-red-500' : 'text-slate-500'} hover:text-red-500`}
+                                  onClick={() => handleDeleteComment(replyId)}
+                                  disabled={isDeletingComment}
+                                  className="text-xs text-red-600 hover:text-red-700 underline transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  <span className={`text-lg ${replyIsLiked ? '❤️' : '🤍'}`}>
-                                    {replyIsLiked ? '❤️' : '🤍'}
-                                  </span>
-                                  <span className="font-semibold">{replyLikeCount > 0 ? replyLikeCount : ''}</span>
-                                  <span>{replyIsLiked ? t('comments.liked') : t('comments.like')}</span>
+                                  {isDeletingComment ? 'Đang xóa...' : 'Xóa'}
                                 </button>
                               </div>
                             </div>
