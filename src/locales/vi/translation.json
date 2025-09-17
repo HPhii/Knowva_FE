@@ -132,38 +132,66 @@
     "storyText3": "Sứ mệnh của chúng tôi rất rõ ràng: giúp người học ghi nhớ tốt hơn, ôn luyện hiệu quả hơn, và làm chủ quá trình tự học – đặc biệt trong bối cảnh giáo dục ngày càng chú trọng đến khả năng tự học. Với KnowVa, chúng tôi không chỉ tạo ra một công cụ – mà là định hình lại cách sinh viên học từ hình ảnh."
   },
   "pricing": {
-    "title": "Chọn Gói Của Bạn",
+    "title": "Chọn Gói Dịch Vụ",
     "subtitle": "Chọn gói hoàn hảo cho nhu cầu học tập của bạn. Bắt đầu miễn phí và nâng cấp bất cứ lúc nào.",
     "faqTitle": "Câu Hỏi Thường Gặp",
     "mostPopular": "Phổ Biến Nhất",
+    "free": "Miễn phí",
     "getStarted": "Bắt Đầu",
-    "getVIP": "Lấy VIP",
-    "regular": "Thường",
+    "getVIP": "Nâng Cấp VIP",
+    "regular": "Cơ Bản",
     "vip": "VIP",
     "perMonth": "/tháng",
+    "processing": "Đang xử lý...",
     "features": {
-      "upTo50Flashcards": "Tối đa 50 flashcard mỗi bộ",
+      "upTo50Flashcards": "Tối đa 50 thẻ ghi nhớ mỗi bộ",
       "basicQuizGeneration": "Tạo quiz cơ bản",
-      "standardTestCreation": "Tạo bài kiểm tra chuẩn",
+      "standardTestCreation": "Tạo bài kiểm tra tiêu chuẩn",
       "emailSupport": "Hỗ trợ qua email",
       "basicAnalytics": "Phân tích cơ bản",
-      "2GBStorage": "2GB lưu trữ",
-      "unlimitedFlashcards": "Flashcard không giới hạn",
+      "2GBStorage": "Lưu trữ 2GB",
+      "unlimitedFlashcards": "Thẻ ghi nhớ không giới hạn",
       "advancedAIQuiz": "Tạo quiz AI nâng cao",
       "premiumTestCreation": "Tạo bài kiểm tra cao cấp",
       "prioritySupport": "Hỗ trợ ưu tiên",
       "advancedAnalytics": "Phân tích nâng cao",
-      "10GBStorage": "10GB lưu trữ",
+      "10GBStorage": "Lưu trữ 10GB",
       "customBranding": "Tùy chỉnh thương hiệu",
       "apiAccess": "Truy cập API"
     },
+    "errors": {
+      "loginRequired": "Vui lòng đăng nhập để mua gói dịch vụ",
+      "paymentLinkFailed": "Không thể tạo liên kết thanh toán",
+      "paymentFailed": "Thanh toán thất bại. Vui lòng thử lại.",
+      "renewalFailed": "Gia hạn thanh toán thất bại. Vui lòng thử lại."
+    },
     "faq": {
-      "changePlanTitle": "Tôi có thể thay đổi gói bất cứ lúc nào không?",
-      "changePlanAnswer": "Có, bạn có thể nâng cấp hoặc hạ cấp gói của mình bất cứ lúc nào. Thay đổi sẽ được áp dụng trong chu kỳ thanh toán tiếp theo.",
+      "changePlanTitle": "Tôi có thể thay đổi gói dịch vụ bất cứ lúc nào không?",
+      "changePlanAnswer": "Có, bạn có thể nâng cấp hoặc hạ cấp gói dịch vụ bất cứ lúc nào. Thay đổi sẽ có hiệu lực trong chu kỳ thanh toán tiếp theo.",
       "freeTrialTitle": "Có dùng thử miễn phí không?",
       "freeTrialAnswer": "Chúng tôi cung cấp dùng thử miễn phí 7 ngày cho tất cả các gói. Không cần thẻ tín dụng để bắt đầu dùng thử.",
-      "paymentMethodsTitle": "Bạn chấp nhận phương thức thanh toán nào?",
-      "paymentMethodsAnswer": "Chúng tôi chấp nhận tất cả thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói hàng năm."
+      "paymentMethodsTitle": "Bạn chấp nhận những phương thức thanh toán nào?",
+      "paymentMethodsAnswer": "Chúng tôi chấp nhận tất cả các thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói hàng năm."
+    }
+  },
+  "payment": {
+    "success": {
+      "title": "Thanh toán thành công!",
+      "description": "Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi.",
+      "status": "Trạng thái",
+      "completed": "Hoàn thành",
+      "orderCode": "Mã đơn hàng",
+      "amount": "Số tiền",
+      "backToHome": "Quay về trang chủ",
+      "goToDashboard": "Đi đến bảng điều khiển"
+    },
+    "cancel": {
+      "title": "Thanh toán đã bị hủy",
+      "description": "Thanh toán không được hoàn tất. Bạn có thể thử lại sau.",
+      "descriptionWithCode": "Giao dịch với mã {{orderCode}} đã không được hoàn tất.",
+      "tryAgain": "Bạn có thể thử lại hoặc liên hệ hỗ trợ nếu cần trợ giúp.",
+      "tryAgainButton": "Thử lại",
+      "backToHome": "Quay về trang chủ"
     }
   },
   "support": {

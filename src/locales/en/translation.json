@@ -136,11 +136,13 @@
     "subtitle": "Select the perfect plan for your learning needs. Start free and upgrade anytime.",
     "faqTitle": "Frequently Asked Questions",
     "mostPopular": "Most Popular",
+    "free": "Free",
     "getStarted": "Get Started",
     "getVIP": "Get VIP",
     "regular": "Regular",
     "vip": "VIP",
     "perMonth": "/month",
+    "processing": "Processing...",
     "features": {
       "upTo50Flashcards": "Up to 50 flashcards per set",
       "basicQuizGeneration": "Basic quiz generation",
@@ -157,6 +159,12 @@
       "customBranding": "Custom branding",
       "apiAccess": "API access"
     },
+    "errors": {
+      "loginRequired": "Please log in to purchase a plan",
+      "paymentLinkFailed": "Failed to create payment link",
+      "paymentFailed": "Payment failed. Please try again.",
+      "renewalFailed": "Renewal payment failed. Please try again."
+    },
     "faq": {
       "changePlanTitle": "Can I change my plan anytime?",
       "changePlanAnswer": "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
@@ -164,6 +172,26 @@
       "freeTrialAnswer": "We offer a 7-day free trial for all plans. No credit card required to start your trial.",
       "paymentMethodsTitle": "What payment methods do you accept?",
       "paymentMethodsAnswer": "We accept all major credit cards, PayPal, and bank transfers for annual plans."
+    }
+  },
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "description": "Thank you for trusting our service.",
+      "status": "Status",
+      "completed": "Completed",
+      "orderCode": "Order Code",
+      "amount": "Amount",
+      "backToHome": "Back to Home",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "cancel": {
+      "title": "Payment Cancelled",
+      "description": "Payment was not completed. You can try again later.",
+      "descriptionWithCode": "Transaction with code {{orderCode}} was not completed.",
+      "tryAgain": "You can try again or contact support if you need assistance.",
+      "tryAgainButton": "Try Again",
+      "backToHome": "Back to Home"
     }
   },
   "support": {

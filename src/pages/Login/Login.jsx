@@ -30,6 +30,11 @@ const Login = () => {
     const payload = { email, password };
     try {
       const response = await api.post("/login", payload);
+
+      // Debug: Log response structure để hiểu cấu trúc data
+      console.log("Login response structure:", response.data);
+      console.log("Response keys:", Object.keys(response.data));
+
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Login data saved successfully");
@@ -48,6 +53,11 @@ const Login = () => {
       const response = await api.post("/google", {
         token: credentialResponse.credential,
       });
+
+      // Debug: Log Google response structure
+      console.log("Google login response structure:", response.data);
+      console.log("Google response keys:", Object.keys(response.data));
+
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Google login data saved successfully");
