@@ -881,6 +881,7 @@
     "brand": "KnowVa",
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
+    "sendFeedback": "Gửi Feedback",
     "customers": "Khách hàng",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
@@ -1118,5 +1119,25 @@
       "error": "Đã xảy ra lỗi",
       "success": "Thao tác hoàn thành thành công"
     }
+  },
+  "feedback": {
+    "title": "Gửi Feedback",
+    "ratingLabel": "Đánh giá của bạn",
+    "selectStars": "Vui lòng chọn số sao",
+    "rating1": "Rất không hài lòng",
+    "rating2": "Không hài lòng",
+    "rating3": "Bình thường",
+    "rating4": "Hài lòng",
+    "rating5": "Rất hài lòng",
+    "messageLabel": "Nội dung feedback",
+    "messagePlaceholder": "Hãy chia sẻ ý kiến của bạn về dịch vụ của chúng tôi...",
+    "messageRequired": "Vui lòng nhập nội dung feedback",
+    "messageMinLength": "Nội dung phải có ít nhất 10 ký tự",
+    "messageMaxLength": "Nội dung không được quá 500 ký tự",
+    "selectRating": "Vui lòng chọn đánh giá của bạn",
+    "successMessage": "Cảm ơn bạn đã gửi feedback! Chúng tôi sẽ xem xét và cải thiện dịch vụ.",
+    "errorMessage": "Có lỗi xảy ra khi gửi feedback. Vui lòng thử lại sau.",
+    "cancel": "Hủy",
+    "submit": "Gửi Feedback"
   }
 }

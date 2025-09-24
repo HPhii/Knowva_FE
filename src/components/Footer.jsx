@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import FeedbackModal from "./FeedbackModal";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
 
   return (
     <footer className="relative bg-slate-900 text-white overflow-hidden">
@@ -59,8 +61,11 @@ const Footer = () => {
                   {t("footer.brandDesc")}
                 </p>
               </div>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm uppercase tracking-wide">
-                {t("footer.exploreMore")}
+              <button 
+                onClick={() => setFeedbackModalVisible(true)}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm uppercase tracking-wide"
+              >
+                {t("footer.sendFeedback")}
               </button>
             </div>
 
@@ -262,6 +267,12 @@ const Footer = () => {
           animation: float-fast 4s ease-in-out infinite;
         }
       `}</style>
+      
+      {/* Feedback Modal */}
+      <FeedbackModal 
+        visible={feedbackModalVisible}
+        onCancel={() => setFeedbackModalVisible(false)}
+      />
     </footer>
   );
 };

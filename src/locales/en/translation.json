@@ -890,6 +890,7 @@
     "brand": "KnowVa",
     "brandDesc": "Empowering learning through interactive quizzes, flashcards, and comprehensive tests.",
     "exploreMore": "Explore More",
+    "sendFeedback": "Send Feedback",
     "customers": "Customers",
     "pricing": "Pricing",
     "support": "Support",
@@ -1127,5 +1128,25 @@
       "error": "Error occurred",
       "success": "Operation completed successfully"
     }
+  },
+  "feedback": {
+    "title": "Send Feedback",
+    "ratingLabel": "Your Rating",
+    "selectStars": "Please select stars",
+    "rating1": "Very Dissatisfied",
+    "rating2": "Dissatisfied",
+    "rating3": "Neutral",
+    "rating4": "Satisfied",
+    "rating5": "Very Satisfied",
+    "messageLabel": "Feedback Content",
+    "messagePlaceholder": "Please share your thoughts about our service...",
+    "messageRequired": "Please enter feedback content",
+    "messageMinLength": "Content must be at least 10 characters",
+    "messageMaxLength": "Content cannot exceed 500 characters",
+    "selectRating": "Please select your rating",
+    "successMessage": "Thank you for your feedback! We will review and improve our service.",
+    "errorMessage": "An error occurred while sending feedback. Please try again later.",
+    "cancel": "Cancel",
+    "submit": "Send Feedback"
   }
 }

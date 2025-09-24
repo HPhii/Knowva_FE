@@ -74,7 +74,7 @@ const FeedbackManagement = () => {
       console.log('✅ API response:', response.data);
 
       // 📊 Extract feedback data from API response
-      const { content: feedbackData, totalElements: total, totalPages: pages, currentPage: current } = response.data;
+      const { feedbacks: feedbackData, totalElements: total, totalPages: pages, currentPage: current } = response.data;
       
       // 💾 Update state with fetched data (fallback values for safety)
       setFeedbacks(feedbackData || []);
@@ -162,12 +162,12 @@ const FeedbackManagement = () => {
     },
     {
       title: 'User',
-      dataIndex: 'user',
-      key: 'user',
+      dataIndex: 'userId',
+      key: 'userId',
       sorter: false,
       width: 200,
-      render: (user, record) => {
-        if (!user) {
+      render: (userId, record) => {
+        if (!userId) {
           return (
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Avatar 
@@ -175,7 +175,7 @@ const FeedbackManagement = () => {
                 size="small"
                 style={{ backgroundColor: '#f5f5f5', color: '#999' }}
               />
-              <span style={{ fontWeight: 500, color: '#8c8c8c' }}>Anonymous</span>
+              <span style={{ fontWeight: 500, color: '#8c8c8c' }}>Ẩn danh</span>
             </div>
           );
         }
@@ -183,23 +183,34 @@ const FeedbackManagement = () => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Avatar 
-              src={user.avatarUrl} 
               icon={<UserOutlined />}
               size="small"
+              style={{ backgroundColor: '#1890ff' }}
             />
             <div>
               <div style={{ fontWeight: 500, fontSize: '14px' }}>
-                {user.fullName || user.username || 'Unknown User'}
+                {record.username || 'User'}
               </div>
-              {user.email && (
-                <Text type="secondary" style={{ fontSize: '12px' }}>
-                  {user.email}
-                </Text>
-              )}
+              <Text type="secondary" style={{ fontSize: '12px' }}>
+                ID: {userId}
+              </Text>
             </div>
           </div>
         );
       },
+    },
+    {
+      title: 'Rating',
+      dataIndex: 'rating',
+      key: 'rating',
+      sorter: true,
+      width: 100,
+      render: (rating) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ fontSize: '16px' }}>⭐</span>
+          <span style={{ fontWeight: 500 }}>{rating || 'N/A'}</span>
+        </div>
+      ),
     },
     {
       title: 'Message',
@@ -328,13 +339,13 @@ const FeedbackManagement = () => {
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 600, color: '#52c41a' }}>
-                {feedbacks.filter(f => f.user).length}
+                {feedbacks.filter(f => f.userId).length}
               </div>
               <Text type="secondary">Feedback có thông tin user</Text>
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 600, color: '#faad14' }}>
-                {feedbacks.filter(f => !f.user).length}
+                {feedbacks.filter(f => !f.userId).length}
               </div>
               <Text type="secondary">Feedback ẩn danh</Text>
             </div>
