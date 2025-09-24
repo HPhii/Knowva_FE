@@ -28,6 +28,8 @@ import VerifyEmail from "../pages/User/VerifyEmail";
 import VerifyComplete from "../pages/User/VerifyComplete";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
+import PaymentCancel from "../pages/Payment/PaymentCancel";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +53,8 @@ const router = createBrowserRouter([
       { path: "privacy", element: <Privacy /> },
       { path: "documentation", element: <Documentation /> },
       { path: "cookies", element: <Cookies /> },
+      { path: "payment-success", element: <PaymentSuccess /> },
+      { path: "payment-cancelled", element: <PaymentCancel /> },
       //
       { path: "user/edit", element: <EditProfile /> },
 
