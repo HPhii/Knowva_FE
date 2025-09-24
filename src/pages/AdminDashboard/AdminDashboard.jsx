@@ -14,12 +14,15 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { clearLoginData } from '../../utils/auth';
+import api from '../../config/axios';
 import UserManagement from './components/UserManagement';
 import BlogManagement from './components/BlogManagement';
 import ReportManagement from './components/ReportManagement';
 import Statistics from './components/Statistics';
 import SystemNotification from './components/SystemNotification';
 import FeedbackManagement from './components/FeedbackManagement';
+import AdminProfileSettings from './components/AdminProfileSettings';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
@@ -39,6 +42,7 @@ const AdminDashboard = () => {
     if (path === '/admin/statistics') return 'statistics';
     if (path === '/admin/notifications') return 'systemNotification';
     if (path === '/admin/feedback') return 'feedbackManagement';
+    if (path === '/admin/profile') return 'adminProfile';
     return 'userManagement'; // default
   };
   
@@ -126,20 +130,30 @@ const AdminDashboard = () => {
 
   /**
    * 🚪 Handle admin logout
-   * TODO: Implement actual logout logic with API call
    */
-  const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
+  const handleLogout = async () => {
+    try {
+      // 🔗 API Call: POST /logout
+      await api.post('/logout');
+      console.log('Logout API called successfully');
+    } catch (error) {
+      console.error('Logout API error:', error);
+      // Continue with logout even if API call fails
+    } finally {
+      // 🧹 Clear login data from localStorage
+      clearLoginData();
+      
+      // 🔄 Navigate to home page
+      navigate('/');
+    }
   };
 
   /**
    * ⚙️ Handle admin profile settings
-   * TODO: Implement profile management logic
    */
   const handleProfile = () => {
-    // TODO: Implement profile logic
-    console.log('Profile clicked');
+    setSelectedMenu('adminProfile');
+    navigate('/admin/profile');
   };
 
   // User dropdown menu
@@ -170,6 +184,8 @@ const AdminDashboard = () => {
         return 'System Notifications';
       case 'feedbackManagement':
         return 'Feedback Management';
+      case 'adminProfile':
+        return 'Admin Profile Settings';
       default:
         return 'User Management';
     }
@@ -190,6 +206,8 @@ const AdminDashboard = () => {
         return <SystemNotification />;
       case 'feedbackManagement':
         return <FeedbackManagement />;
+      case 'adminProfile':
+        return <AdminProfileSettings />;
       default:
         return <UserManagement />;
     }

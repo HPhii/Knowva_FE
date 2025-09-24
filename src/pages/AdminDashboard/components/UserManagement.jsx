@@ -97,7 +97,10 @@ const UserManagement = () => {
       
       if (response.data) {
         // Handle different API response formats
-        if (response.data.users) {
+        if (response.data.accounts) {
+          // Format: { accounts: [...], totalElements: 100, totalPages: 10, currentPage: 0 }
+          ({ accounts: userData, totalElements: total, totalPages: pages, currentPage: current } = response.data);
+        } else if (response.data.users) {
           // Format: { users: [...], totalElements: 100, totalPages: 10, currentPage: 0 }
           ({ users: userData, totalElements: total, totalPages: pages, currentPage: current } = response.data);
         } else if (response.data.content) {
@@ -154,13 +157,13 @@ const UserManagement = () => {
 
   /**
    * 👁️ Fetch and view detailed user information
-   * @param {number} id - User ID
+   * @param {number} userId - User ID
    */
-  const handleViewUser = async (id) => {
+  const handleViewUser = async (userId) => {
     setViewLoading(true);
     try {
-      // 🔗 API Call: GET /users/{id}
-      const response = await api.get(`/users/${id}`);
+      // 🔗 API Call: GET /users/{userId}
+      const response = await api.get(`/users/${userId}`);
       
       // 💾 Update state and show user details drawer
       setViewingUser(response.data);
@@ -186,14 +189,14 @@ const UserManagement = () => {
 
   /**
    * 🗑️ Delete/Deactivate user by ID
-   * @param {number} id - User ID to delete/deactivate
+   * @param {number} userId - User ID to delete/deactivate
    */
-  const handleDeleteUser = async (id) => {
-    console.log('Attempting to delete user with ID:', id);
-    setDeletingUserId(id);
+  const handleDeleteUser = async (userId) => {
+    console.log('Attempting to delete user with ID:', userId);
+    setDeletingUserId(userId);
     try {
-      // 🔗 API Call: DELETE /users/{id}
-      const response = await api.delete(`/users/${id}`);
+      // 🔗 API Call: DELETE /users/{userId}
+      const response = await api.delete(`/users/${userId}`);
       console.log('Delete response:', response);
       message.success('Xóa user thành công');
       
@@ -214,18 +217,18 @@ const UserManagement = () => {
 
   /**
    * 👑 Upgrade user to Premium
-   * @param {number} accountId - User ID to upgrade to premium
+   * @param {number} userId - User ID to upgrade to premium
    */
-  const handleUpgradeToPremium = async (accountId) => {
-    setUpgradingUserId(accountId);
+  const handleUpgradeToPremium = async (userId) => {
+    setUpgradingUserId(userId);
     try {
-      // 🔗 API Call: PATCH /admin/upgrade-to-premium/{accountId}
-      await api.patch(`/admin/upgrade-to-premium/${accountId}`);
+      // 🔗 API Call: PATCH /admin/upgrade-to-premium/{userId}
+      await api.patch(`/admin/upgrade-to-premium/${userId}`);
       message.success('User has been upgraded to Premium successfully');
       
       // 🔄 Refresh user details to show updated status
-      if (viewingUser && viewingUser.id === accountId) {
-        await handleViewUser(accountId);
+      if (viewingUser && viewingUser.userId === userId) {
+        await handleViewUser(userId);
       }
       
       // 🔄 Also refresh the user list
@@ -264,8 +267,8 @@ const UserManagement = () => {
     try {
       if (editingUser) {
         // ✏️ Update existing user
-        // 🔗 API Call: PUT /users/{id}
-        await api.put(`/users/${editingUser.id}`, values);
+        // 🔗 API Call: PUT /users/{userId}
+        await api.put(`/users/${editingUser.userId}`, values);
         message.success('User updated successfully');
       } else {
         // ➕ Create new user
@@ -317,25 +320,43 @@ const UserManagement = () => {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'userId',
+      key: 'userId',
       sorter: true,
       width: 80,
     },
     {
-      title: 'Full Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
       sorter: true,
-      render: (fullName, record) => (
+      render: (username, record) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Avatar 
             src={record.avatarUrl} 
             icon={<UserOutlined />}
             size="small"
           />
-          <span style={{ fontWeight: 500 }}>{fullName || 'N/A'}</span>
+          <span style={{ fontWeight: 500 }}>{username || 'N/A'}</span>
         </div>
+      ),
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      sorter: true,
+      render: (email) => (
+        <span>{email || 'N/A'}</span>
+      ),
+    },
+    {
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      key: 'fullName',
+      sorter: true,
+      render: (fullName) => (
+        <span>{fullName || 'N/A'}</span>
       ),
     },
     {
@@ -348,26 +369,33 @@ const UserManagement = () => {
       ),
     },
     {
-      title: 'Birthdate',
-      dataIndex: 'birthdate',
-      key: 'birthdate',
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
       sorter: true,
-      render: (birthdate) => (
-        <span>{birthdate ? new Date(birthdate).toLocaleDateString() : 'N/A'}</span>
+      filters: [
+        { text: 'ADMIN', value: 'ADMIN' },
+        { text: 'REGULAR', value: 'REGULAR' },
+        { text: 'VIP', value: 'VIP' },
+      ],
+      render: (role) => (
+        <Tag color={role === 'ADMIN' ? 'red' : role === 'VIP' ? 'gold' : 'blue'}>
+          {role || 'N/A'}
+        </Tag>
       ),
     },
     {
-      title: 'Gender',
-      dataIndex: 'gender',
-      key: 'gender',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      sorter: true,
       filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-        { text: 'Other', value: 'other' },
+        { text: 'ACTIVE', value: 'ACTIVE' },
+        { text: 'INACTIVE', value: 'INACTIVE' },
       ],
-      render: (gender) => (
-        <Tag color={gender === 'male' ? 'blue' : gender === 'female' ? 'pink' : 'default'}>
-          {gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : 'N/A'}
+      render: (status) => (
+        <Tag color={status === 'ACTIVE' ? 'green' : 'orange'}>
+          {status || 'N/A'}
         </Tag>
       ),
     },
@@ -382,7 +410,7 @@ const UserManagement = () => {
             icon={<EyeOutlined />}
             size="small"
             title="View"
-            onClick={() => handleViewUser(record.id)}
+            onClick={() => handleViewUser(record.userId)}
             loading={viewLoading}
           />
           <Button 
@@ -394,10 +422,10 @@ const UserManagement = () => {
           />
           <Popconfirm
             title="Bạn có chắc muốn vô hiệu hóa user này không?"
-            onConfirm={() => handleDeleteUser(record.id)}
+            onConfirm={() => handleDeleteUser(record.userId)}
             okText="Có"
             cancelText="Không"
-            disabled={deletingUserId === record.id}
+            disabled={deletingUserId === record.userId}
           >
             <Button 
               type="text" 
@@ -405,8 +433,8 @@ const UserManagement = () => {
               size="small"
               danger
               title="Delete"
-              loading={deletingUserId === record.id}
-              disabled={deletingUserId === record.id}
+              loading={deletingUserId === record.userId}
+              disabled={deletingUserId === record.userId}
             />
           </Popconfirm>
         </Space>
@@ -443,7 +471,7 @@ const UserManagement = () => {
       <Table
         columns={columns}
         dataSource={users}
-        rowKey="id"
+        rowKey="userId"
         loading={loading}
         onChange={handleTableChange}
         pagination={{
@@ -540,9 +568,9 @@ const UserManagement = () => {
               <Button
                 type="primary"
                 icon={<CrownOutlined />}
-                onClick={() => handleUpgradeToPremium(viewingUser.id)}
-                loading={upgradingUserId === viewingUser.id}
-                disabled={upgradingUserId === viewingUser.id}
+                onClick={() => handleUpgradeToPremium(viewingUser.userId)}
+                loading={upgradingUserId === viewingUser.userId}
+                disabled={upgradingUserId === viewingUser.userId}
                 style={{ 
                   background: 'linear-gradient(45deg, #ffd700, #ffed4e)',
                   borderColor: '#ffd700',
@@ -562,17 +590,17 @@ const UserManagement = () => {
             {viewingUser && (
               <Popconfirm
                 title="Bạn có chắc muốn đăng xuất bắt buộc user này không?"
-                onConfirm={() => handleForceLogout(viewingUser.id)}
+                onConfirm={() => handleForceLogout(viewingUser.userId)}
                 okText="Có"
                 cancelText="Không"
-                disabled={forceLogoutUserId === viewingUser.id}
+                disabled={forceLogoutUserId === viewingUser.userId}
               >
                 <Button
                   type="primary"
                   danger
                   icon={<LogoutOutlined />}
-                  loading={forceLogoutUserId === viewingUser.id}
-                  disabled={forceLogoutUserId === viewingUser.id}
+                  loading={forceLogoutUserId === viewingUser.userId}
+                  disabled={forceLogoutUserId === viewingUser.userId}
                 >
                   Đăng xuất bắt buộc
                 </Button>
@@ -601,7 +629,7 @@ const UserManagement = () => {
                     {viewingUser.fullName || 'N/A'}
                   </div>
                   <div style={{ color: '#8c8c8c' }}>
-                    ID: {viewingUser.id}
+                    ID: {viewingUser.userId}
                   </div>
                 </div>
               </div>

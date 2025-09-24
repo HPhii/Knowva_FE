@@ -266,7 +266,7 @@ const Header = () => {
           <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
             <Link
               to="/"
-              className="text-[#000] text-lg transition-colors duration-300 group-hover:text-white"
+              className="text-white text-lg transition-colors duration-300 group-hover:text-white"
             >
               {t("header.home")}
             </Link>
