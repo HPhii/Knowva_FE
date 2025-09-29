@@ -104,6 +104,14 @@ a {
   font-family: "Manrope", sans-serif;
 }
 
+input:not(#global-search-input), textarea {
+    color: #333;
+}
+
+#global-search-input {
+    color: white;
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
