@@ -278,7 +278,11 @@ const Header = () => {
           >
             <Link
               to="/"
+<<<<<<< HEAD
               className="text-[#fff] text-lg transition-colors duration-300 group-hover:text-white"
+=======
+              className="text-white text-lg transition-colors duration-300 group-hover:text-white"
+>>>>>>> 96f141955655bb2104fd84f5352b623414b982cf
             >
               {t("header.home")}
             </Link>

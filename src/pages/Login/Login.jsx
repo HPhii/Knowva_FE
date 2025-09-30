@@ -31,15 +31,21 @@ const Login = () => {
     try {
       const response = await api.post("/login", payload);
 
-      // Debug: Log response structure để hiểu cấu trúc data
-      console.log("Login response structure:", response.data);
-      console.log("Response keys:", Object.keys(response.data));
-
+      if (response.data.status && response.data.status !== 'ACTIVE') {
+        setError("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.");
+        return;
+      }
+      
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Login data saved successfully");
       }
-      navigate("/");
+
+      if (response.data.role === 'ADMIN') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(getLoginErrorMessage(err));
     } finally {
@@ -54,15 +60,21 @@ const Login = () => {
         token: credentialResponse.credential,
       });
 
-      // Debug: Log Google response structure
-      console.log("Google login response structure:", response.data);
-      console.log("Google response keys:", Object.keys(response.data));
-
+      if (response.data.status && response.data.status !== 'ACTIVE') {
+        setError("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.");
+        return;
+      }
+      
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Google login data saved successfully");
       }
-      navigate("/");
+
+      if (response.data.role === 'ADMIN') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(getLoginErrorMessage(err));
     } finally {
