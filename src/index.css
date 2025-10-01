@@ -1,5 +1,5 @@
-/* Import Manrope font từ Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+/* Import Quicksand font từ Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 /* Import Sora font for brand wordmark */
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap");
 /* Import Merienda for script brand */
@@ -11,8 +11,8 @@
 @font-face {
   font-family: "Risthi Script";
   src: url("/fonts/risthi-script.woff2") format("woff2"),
-       url("/fonts/risthi-script.woff") format("woff"),
-       url("/fonts/risthi-script.ttf") format("truetype");
+    url("/fonts/risthi-script.woff") format("woff"),
+    url("/fonts/risthi-script.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @theme {
   /* Font */
-  --font-display: "Manrope", sans-serif;
+  --font-display: "Quicksand", sans-serif;
 
   --color-background: #ffffff; /* background color */
 
@@ -48,38 +48,40 @@
   --color-grey-dark: #dbe0e5;
 }
 
-/* Set Manrope làm font mặc định cho toàn bộ dự án */
+/* Set Quicksand làm font mặc định cho toàn bộ dự án */
 * {
-  font-family: "Manrope", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
-/* Brand wordmark utility (Sora) */
+/* Brand wordmark utility (Quicksand) */
 .font-brand {
-  font-family: "Sora", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif !important;
+  font-family: "Quicksand", system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    sans-serif !important;
   letter-spacing: 0.4px;
 }
 
 /* Brand wordmark utility (Risthi Script) */
 .font-brand-risthi {
-  font-family: "Risthi Script", "Sora", cursive !important;
+  font-family: "Risthi Script", "Quicksand", cursive !important;
   letter-spacing: 0.2px;
 }
 
-/* Brand wordmark utility (Merienda Script) */
+/* Brand wordmark utility (Quicksand Script) */
 .font-brand-script {
-  font-family: "Merienda", cursive !important;
+  font-family: "Quicksand", sans-serif !important;
   letter-spacing: 0.2px;
 }
 
 body {
-  font-family: "Manrope", sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 400;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Đảm bảo tất cả text elements sử dụng Manrope */
+/* Đảm bảo tất cả text elements sử dụng Quicksand */
 h1,
 h2,
 h3,
@@ -94,14 +96,14 @@ input,
 textarea,
 select,
 a {
-  font-family: "Manrope", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
 /* TipTap Editor Styles */
 .ProseMirror {
   outline: none;
   min-height: 300px;
-  font-family: "Manrope", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -128,8 +130,9 @@ a {
   color: #374151;
 }
 
-.ProseMirror ul, .ProseMirror ol {
-  margin-top: 0.5rem;
+.ProseMirror ul,
+.ProseMirror ol {
+  margin-top: 5rem;
   margin-bottom: 0.5rem;
   padding-left: 1.5rem;
 }

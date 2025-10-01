@@ -30,6 +30,8 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
+import MyLibrary from "../pages/MyLibrary/MyLibrary";
+import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
+      { path: "my-library", element: <MyLibrary /> },
+      { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
       { path: "explore", element: <Explore /> },
       { path: "quizzes", element: <Quiz /> },

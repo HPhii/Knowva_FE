@@ -233,16 +233,22 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-900 h-[70px] w-full py-0 px-4 sm:px-6 flex items-center justify-between shadow-md relative overflow-hidden">
+    <header className="sticky top-0 z-50 bg-slate-900 h-[70px] w-full py-0 px-4 sm:px-6 flex items-center justify-between shadow-md relative overflow-hidden select-none">
       {/* Animated Background with Universe Effect */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating particles with CSS animations */}
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/30 rounded-full animate-float-slow"></div>
         <div className="absolute top-2/3 right-1/3 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-float-medium"></div>
         <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/30 rounded-full animate-float-fast"></div>
-        <div className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/30 rounded-full animate-float-slow" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/30 rounded-full animate-float-medium" style={{ animationDelay: '0.5s' }}></div>
-        
+        <div
+          className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/30 rounded-full animate-float-slow"
+          style={{ animationDelay: "1.5s" }}
+        ></div>
+        <div
+          className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/30 rounded-full animate-float-medium"
+          style={{ animationDelay: "0.5s" }}
+        ></div>
+
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 via-purple-900/5 to-pink-900/5"></div>
       </div>
@@ -250,7 +256,7 @@ const Header = () => {
       {/* === LEFT SECTION: BRAND & MAIN FEATURES === */}
       <div className="flex items-center space-x-6 relative z-10">
         {/* Brand Logo & Name */}
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2 select-none">
           {/* Local logo image */}
           <img src={logoImage} alt="KnowVa Logo" className="h-8 w-8" />
           <span className="hidden sm:block text-2xl md:text-3xl font-extrabold text-white tracking-tight font-brand-script">
@@ -263,7 +269,13 @@ const Header = () => {
         {/* Public navigation links */}
         <nav className="h-full hidden lg:flex items-center ml-4 pl-6">
           {/* Home */}
-          <div className="cursor-pointer flex items-center h-full transition-colors duration-300 group hover:bg-[var(--color-blue)] px-8">
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/"
               className="text-white text-lg transition-colors duration-300 group-hover:text-white"
@@ -272,12 +284,30 @@ const Header = () => {
             </Link>
           </div>
 
+          {/* My Library */}
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/my-library")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
+            <Link
+              to="/my-library"
+              className="text-white text-lg transition-all duration-300 font-medium"
+            >
+              {t("header.myLibrary")}
+            </Link>
+          </div>
+
           {/* Quizzes */}
-          <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
-            isCurrentPage("/quizzes") 
-              ? "bg-white/20 border-b-2 border-white/40" 
-              : "hover:bg-white/10"
-          }`}>
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/quizzes")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/quizzes"
               className="text-white text-lg transition-all duration-300 font-medium"
@@ -287,11 +317,13 @@ const Header = () => {
           </div>
 
           {/* Flashcards */}
-          <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
-            isCurrentPage("/flashcards") 
-              ? "bg-white/20 border-b-2 border-white/40" 
-              : "hover:bg-white/10"
-          }`}>
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/flashcards")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/flashcards"
               className="text-white text-lg transition-all duration-300 font-medium"
@@ -301,11 +333,13 @@ const Header = () => {
           </div>
 
           {/* Tests */}
-          <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
-            isCurrentPage("/tests") 
-              ? "bg-white/20 border-b-2 border-white/40" 
-              : "hover:bg-white/10"
-          }`}>
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/tests")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/tests"
               className="text-white text-lg transition-all duration-300 font-medium"
@@ -315,11 +349,13 @@ const Header = () => {
           </div>
 
           {/* Blog */}
-          <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
-            isCurrentPage("/blog") 
-              ? "bg-white/20 border-b-2 border-white/40" 
-              : "hover:bg-white/10"
-          }`}>
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/blog")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/blog"
               className="text-white text-lg transition-all duration-300 font-medium"
@@ -329,11 +365,13 @@ const Header = () => {
           </div>
 
           {/* Explore */}
-          <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-8 ${
-            isCurrentPage("/Explore") 
-              ? "bg-white/20 border-b-2 border-white/40" 
-              : "hover:bg-white/10"
-          }`}>
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-5 select-none ${
+              isCurrentPage("/Explore")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
             <Link
               to="/Explore"
               className="text-white text-lg transition-all duration-300 font-medium"
@@ -349,7 +387,7 @@ const Header = () => {
         {/* Language Toggle */}
         <button
           onClick={toggleLanguage}
-          className="cursor-pointer flex items-center space-x-1 font-semibold !text-white py-2 px-3 rounded-full hover:bg-white/10 transition-all duration-300 text-sm sm:text-base hover:scale-105"
+          className="cursor-pointer flex items-center space-x-1 font-semibold !text-white py-2 px-3 rounded-full hover:bg-white/10 transition-all duration-300 text-sm sm:text-base hover:scale-105 select-none"
         >
           <span>{language}</span>
           <svg
@@ -378,7 +416,7 @@ const Header = () => {
                 arrow
                 trigger={["click"]}
               >
-                <button className="cursor-pointer relative flex items-center justify-center w-10 h-10 hover:bg-white/10 rounded-full transition-all duration-300 hover:scale-110 !text-white">
+                <button className="cursor-pointer relative flex items-center justify-center w-10 h-10 hover:bg-white/10 rounded-full transition-all duration-300 hover:scale-110 !text-white select-none">
                   <BellOutlined className="text-[23px] text-white" />
                   {notifications.filter((n) => !n.read).length > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
@@ -396,7 +434,7 @@ const Header = () => {
               arrow
               trigger={["click"]}
             >
-              <button className="cursor-pointer flex items-center space-x-2 hover:bg-white/10 rounded-full p-2 transition-all duration-300 hover:scale-105">
+              <button className="cursor-pointer flex items-center space-x-2 hover:bg-white/10 rounded-full p-2 transition-all duration-300 hover:scale-105 select-none">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
                   {userInfo?.avatarUrl ? (
                     <img
@@ -429,12 +467,12 @@ const Header = () => {
           // Login & Sign Up Buttons when not logged in
           <div className="flex items-center space-x-2 ml-2">
             <Link to="/login">
-              <button className="cursor-pointer !text-white py-2 px-6 rounded-full hover:bg-white/10 transition-all duration-300 text-[18px] font-medium hover:scale-105 border border-white/20 hover:border-white/40">
+              <button className="cursor-pointer !text-white py-2 px-6 rounded-full hover:bg-white/10 transition-all duration-300 text-[18px] font-medium hover:scale-105 border border-white/20 hover:border-white/40 select-none">
                 Sign in
               </button>
             </Link>
             <Link to="/signup">
-              <div className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 text-base font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <div className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 text-base font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 select-none">
                 {t("header.signup")}
               </div>
             </Link>
@@ -445,31 +483,52 @@ const Header = () => {
       {/* Custom CSS for animations */}
       <style jsx>{`
         @keyframes float-slow {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-8px) translateX(4px); }
-          50% { transform: translateY(-4px) translateX(-6px); }
-          75% { transform: translateY(-12px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          25% {
+            transform: translateY(-8px) translateX(4px);
+          }
+          50% {
+            transform: translateY(-4px) translateX(-6px);
+          }
+          75% {
+            transform: translateY(-12px) translateX(2px);
+          }
         }
-        
+
         @keyframes float-medium {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          33% { transform: translateY(-6px) translateX(3px); }
-          66% { transform: translateY(-10px) translateX(-5px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          33% {
+            transform: translateY(-6px) translateX(3px);
+          }
+          66% {
+            transform: translateY(-10px) translateX(-5px);
+          }
         }
-        
+
         @keyframes float-fast {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          50% { transform: translateY(-5px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          50% {
+            transform: translateY(-5px) translateX(2px);
+          }
         }
-        
+
         .animate-float-slow {
           animation: float-slow 8s ease-in-out infinite;
         }
-        
+
         .animate-float-medium {
           animation: float-medium 6s ease-in-out infinite;
         }
-        
+
         .animate-float-fast {
           animation: float-fast 4s ease-in-out infinite;
         }
