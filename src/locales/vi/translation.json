@@ -1173,5 +1173,14 @@
     "errorMessage": "Có lỗi xảy ra khi gửi feedback. Vui lòng thử lại sau.",
     "cancel": "Hủy",
     "submit": "Gửi Feedback"
+  },
+  "globalSearch": {
+    "quiz": "Câu hỏi",
+    "flashcard": "Thẻ ghi nhớ",
+    "user": "Người dùng",
+    "searchPlaceholder": "Tìm kiếm {{type}}...",
+    "searchFor": "Tìm kiếm {{type}}",
+    "searching": "Đang tìm...",
+    "noResults": "Không tìm thấy kết quả."
   }
 }

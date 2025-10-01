@@ -1182,5 +1182,14 @@
     "errorMessage": "An error occurred while sending feedback. Please try again later.",
     "cancel": "Cancel",
     "submit": "Send Feedback"
+  },
+  "globalSearch": {
+    "quiz": "Quiz",
+    "flashcard": "Flashcard",
+    "user": "User",
+    "searchPlaceholder": "Search {{type}}...",
+    "searchFor": "Search for {{type}}",
+    "searching": "Searching...",
+    "noResults": "No results found."
   }
 }
