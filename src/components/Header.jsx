@@ -244,7 +244,6 @@ const Header = () => {
                 <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/30 rounded-full animate-float-fast"></div>
                 <div className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/30 rounded-full animate-float-slow" style={{ animationDelay: '1.5s' }}></div>
                 <div className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/30 rounded-full animate-float-medium" style={{ animationDelay: '0.5s' }}></div>
-
                 {/* Subtle gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 via-purple-900/5 to-pink-900/5"></div>
             </div>
@@ -361,6 +360,7 @@ const Header = () => {
                                     <BellOutlined className="text-[23px] text-white" />
                                     {notifications.filter((n) => !n.read).length > 0 && (
                                         <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
+
                       {notifications.filter((n) => !n.read).length}
                     </span>
                                     )}
@@ -424,31 +424,52 @@ const Header = () => {
             {/* Custom CSS for animations */}
             <style jsx>{`
         @keyframes float-slow {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-8px) translateX(4px); }
-          50% { transform: translateY(-4px) translateX(-6px); }
-          75% { transform: translateY(-12px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          25% {
+            transform: translateY(-8px) translateX(4px);
+          }
+          50% {
+            transform: translateY(-4px) translateX(-6px);
+          }
+          75% {
+            transform: translateY(-12px) translateX(2px);
+          }
         }
-        
+
         @keyframes float-medium {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          33% { transform: translateY(-6px) translateX(3px); }
-          66% { transform: translateY(-10px) translateX(-5px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          33% {
+            transform: translateY(-6px) translateX(3px);
+          }
+          66% {
+            transform: translateY(-10px) translateX(-5px);
+          }
         }
-        
+
         @keyframes float-fast {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          50% { transform: translateY(-5px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          50% {
+            transform: translateY(-5px) translateX(2px);
+          }
         }
-        
+
         .animate-float-slow {
           animation: float-slow 8s ease-in-out infinite;
         }
-        
+
         .animate-float-medium {
           animation: float-medium 6s ease-in-out infinite;
         }
-        
+
         .animate-float-fast {
           animation: float-fast 4s ease-in-out infinite;
         }
