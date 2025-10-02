@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -9,6 +9,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import api from '../../config/axios';
 import { getCategoriesForSelect } from '../../utils/blogCategories';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { message } from 'antd';
 
 const PostBlog = () => {
     const { t } = useTranslation();
@@ -23,6 +25,8 @@ const PostBlog = () => {
         status: 'DRAFT'
     });
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef();
     // Get categories from utility file
     const categories = getCategoriesForSelect(t);
 
@@ -46,6 +50,53 @@ const PostBlog = () => {
         toast.textContent = message;
         document.body.appendChild(toast);
         setTimeout(() => { document.body.removeChild(toast); }, 3000);
+    };
+
+    const handleImageUpload = async (file) => {
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        if (!isJpgOrPng) {
+            message.error(
+                t("imageTypeError") || "You can only upload JPG/PNG files!"
+            );
+            return false;
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error(t("imageSizeError") || "Image must be smaller than 2MB!");
+            return false;
+        }
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "SDN_Blog");
+            formData.append("cloud_name", "dejilsup7");
+
+            const response = await fetch(
+                "https://api.cloudinary.com/v1_1/dejilsup7/image/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Upload failed");
+            }
+
+            const result = await response.json();
+            setFormData(prev => ({ ...prev, imageUrl: result.secure_url }));
+            message.success(
+                t("imageUploadSuccess") || "Image uploaded successfully!"
+            );
+        } catch (err) {
+            console.error("Upload error:", err);
+            message.error(t("imageUploadError") || "Failed to upload image");
+        } finally {
+            setUploading(false);
+        }
+        return false; // Prevent default upload behavior
     };
 
     const handleSubmit = async (status) => {
@@ -155,30 +206,102 @@ const PostBlog = () => {
                         </div>
                         
                         <div className="mb-6">
-                            <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                 {t('postBlog.form.imageUrl')}
                             </label>
-                             <input
-                                type="text"
-                                id="imageUrl"
-                                name="imageUrl"
-                                value={formData.imageUrl}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                placeholder="https://example.com/image.jpg"
-                            />
-                            {formData.imageUrl && (
-                                <div className="mt-4">
-                                    <p className="text-sm text-gray-500 mb-2">Xem trước ảnh:</p>
-                                    <img 
-                                        src={formData.imageUrl} 
-                                        alt="Preview" 
-                                        className="max-w-xs rounded-lg shadow-sm"
-                                        onError={(e) => e.target.style.display='none'}
-                                        onLoad={(e) => e.target.style.display='block'}
-                                    />
-                                </div>
-                            )}
+                            
+                            {/* Upload Area */}
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                                {formData.imageUrl ? (
+                                    <div className="space-y-4">
+                                        <div className="relative inline-block">
+                                            <img 
+                                                src={formData.imageUrl} 
+                                                alt="Preview" 
+                                                className="max-w-xs max-h-48 rounded-lg shadow-sm mx-auto"
+                                                onError={(e) => e.target.style.display='none'}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
+                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                        <p className="text-sm text-gray-500">
+                                            {t('postBlog.form.imageUploaded') || 'Ảnh đã được tải lên'}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                                            <UploadOutlined className="text-2xl text-gray-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-600 mb-2">
+                                                {t('postBlog.form.dragDropImage') || 'Kéo thả ảnh vào đây hoặc click để chọn'}
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                                {t('postBlog.form.imageFormat') || 'JPG, PNG tối đa 2MB'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileInputRef}
+                                    style={{ display: "none" }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            await handleImageUpload(file);
+                                            e.target.value = ""; // reset input so same file can be selected again
+                                        }
+                                    }}
+                                />
+                                
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (fileInputRef.current) {
+                                            fileInputRef.current.click();
+                                        }
+                                    }}
+                                    disabled={uploading}
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {uploading ? (
+                                        <span className="flex items-center">
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                            {t('postBlog.form.uploading') || 'Đang tải lên...'}
+                                        </span>
+                                    ) : (
+                                        t('postBlog.form.selectImage') || 'Chọn ảnh'
+                                    )}
+                                </button>
+                            </div>
+                            
+                            {/* Paste URL option */}
+                            <div className="mt-4">
+                                <details className="group">
+                                    <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
+                                        {t('postBlog.form.orPasteUrl') || 'Hoặc dán URL ảnh'}
+                                    </summary>
+                                    <div className="mt-2">
+                                        <input
+                                            type="text"
+                                            value={formData.imageUrl}
+                                            onChange={handleInputChange}
+                                            name="imageUrl"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                            placeholder="https://example.com/image.jpg"
+                                        />
+                                    </div>
+                                </details>
+                            </div>
                         </div>
 
                         <div className="mb-8">

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 import { 
   processBirthdate, 
   isLocalDateError, 
   getLocalDateErrorMessage 
 } from "../../utils/dateUtils";
+import QuizSet from "./QuizSet";
+import FlashcardSet from "./FlashcardSet";
+import Transaction from "./Transaction";
+import UserActivities from "./UserActivities";
 
 // Icons
 import { 
@@ -36,6 +40,15 @@ const UserDetails = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Initialize active tab from URL
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && ['overview', 'quizzes', 'flashcards', 'transactions', 'activities'].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // Scroll to top when component mounts
@@ -84,6 +97,11 @@ const UserDetails = () => {
     } else {
       setShowVerifyModal(true);
     }
+  };
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
   };
 
   // Redirect to profile route if accessing /user
@@ -151,7 +169,7 @@ const UserDetails = () => {
     { id: "quizzes", label: t("quizzes") || "Quiz", icon: Brain },
     { id: "flashcards", label: t("flashcards") || "Flashcard", icon: BookOpen },
     { id: "transactions", label: t("transactions") || "Giao dịch", icon: CreditCard },
-    { id: "settings", label: t("settings") || "Cài đặt", icon: Settings },
+    { id: "activities", label: t("activities.title") || "Hoạt động", icon: Activity },
   ];
 
   // Render tab content
@@ -266,79 +284,53 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Recent Activity */}
+            {/* Quick Actions */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Activity className="w-5 h-5 mr-2 text-gray-600" />
-                Hoạt động gần đây
+                <Settings className="w-5 h-5 mr-2 text-gray-600" />
+                Thao tác nhanh
               </h3>
               <div className="space-y-3">
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">Đăng nhập lần cuối: Hôm nay</p>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">Quiz gần nhất: 2 ngày trước</p>
-                </div>
+                <button 
+                  onClick={() => onEditProfileClick()}
+                  className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Edit3 className="w-5 h-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">Chỉnh sửa hồ sơ</span>
+                  </div>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={() => handleTabChange('activities')}
+                  className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Activity className="w-5 h-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">Xem hoạt động chi tiết</span>
+                  </div>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         );
       
       case "quizzes":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quiz Sets của bạn</h3>
-            <div className="text-center py-12">
-              <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có quiz nào được tạo</p>
-            </div>
-          </div>
-        );
+        return <QuizSet />;
       
       case "flashcards":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Flashcard Sets của bạn</h3>
-            <div className="text-center py-12">
-              <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có flashcard nào được tạo</p>
-            </div>
-          </div>
-        );
+        return <FlashcardSet />;
       
       case "transactions":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Lịch sử giao dịch</h3>
-            <div className="text-center py-12">
-              <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có giao dịch nào</p>
-            </div>
-          </div>
-        );
+        return <Transaction />;
       
-      case "settings":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cài đặt tài khoản</h3>
-            <div className="space-y-4">
-              <button 
-                onClick={() => onEditProfileClick()}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center space-x-3">
-                  <Edit3 className="w-5 h-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">Chỉnh sửa hồ sơ</span>
-                </div>
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        );
+      case "activities":
+        return <UserActivities />;
       
       default:
         return null;
@@ -409,7 +401,7 @@ const UserDetails = () => {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     className={`py-4 px-4 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors ${
                       activeTab === tab.id
                         ? "border-blue-500 text-blue-600"

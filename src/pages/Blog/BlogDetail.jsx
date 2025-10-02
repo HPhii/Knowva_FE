@@ -459,12 +459,12 @@ const BlogDetail = () => {
                   <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.averageRating', 'Điểm trung bình')}</h4>
                   <div className="flex items-center space-x-3">
                     <Rate 
-                      value={summaryData.averageRating} 
+                      value={summaryData.averageRating || 0} 
                       disabled 
                       style={{ fontSize: '20px' }}
                     />
                     <span className="text-2xl font-bold text-yellow-600">
-                      {summaryData.averageRating.toFixed(1)}
+                      {(summaryData.averageRating || 0).toFixed(1)}
                     </span>
                   </div>
                 </div>
@@ -473,7 +473,7 @@ const BlogDetail = () => {
                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                   <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.totalRatings', 'Tổng đánh giá')}</h4>
                   <div className="text-3xl font-bold text-blue-600">
-                    {summaryData.totalRatings}
+                    {summaryData.totalRatings || 0}
                   </div>
                   <p className="text-sm text-gray-500 mt-1">{t('blog.statistics.ratingsCount', 'lượt đánh giá')}</p>
                 </div>
@@ -482,7 +482,7 @@ const BlogDetail = () => {
                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                   <h4 className="text-lg font-semibold text-gray-900 mb-3">{t('blog.statistics.totalComments', 'Tổng bình luận')}</h4>
                   <div className="text-3xl font-bold text-green-600">
-                    {summaryData.totalComments}
+                    {summaryData.totalComments || 0}
                   </div>
                   <p className="text-sm text-gray-500 mt-1">{t('blog.statistics.commentsCount', 'bình luận')}</p>
                 </div>
@@ -493,8 +493,10 @@ const BlogDetail = () => {
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">{t('blog.statistics.ratingDistribution', 'Phân bố đánh giá')}</h4>
                 <div className="space-y-4">
                   {[5, 4, 3, 2, 1].map((stars) => {
-                    const count = summaryData.ratingDistribution[`${stars === 1 ? 'one' : stars === 2 ? 'two' : stars === 3 ? 'three' : stars === 4 ? 'four' : 'five'}Star`];
-                    const percentage = summaryData.totalRatings > 0 ? (count / summaryData.totalRatings) * 100 : 0;
+                    const ratingDistribution = summaryData.ratingDistribution || {};
+                    const count = ratingDistribution[`${stars === 1 ? 'one' : stars === 2 ? 'two' : stars === 3 ? 'three' : stars === 4 ? 'four' : 'five'}Star`] || 0;
+                    const totalRatings = summaryData.totalRatings || 0;
+                    const percentage = totalRatings > 0 ? (count / totalRatings) * 100 : 0;
                     
                     return (
                       <div key={stars} className="grid grid-cols-12 gap-4 items-center">
