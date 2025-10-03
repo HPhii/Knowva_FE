@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
-import {
-  processBirthdate,
-  isLocalDateError,
-  getLocalDateErrorMessage,
+import { 
+  processBirthdate, 
+  isLocalDateError, 
+  getLocalDateErrorMessage 
 } from "../../utils/dateUtils";
 import QuizSet from "./QuizSet";
 import FlashcardSet from "./FlashcardSet";
@@ -14,21 +14,21 @@ import Transaction from "./Transaction";
 import UserActivities from "./UserActivities";
 
 // Icons
-import {
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  Crown,
-  Clock,
-  BarChart3,
-  BookOpen,
-  Brain,
-  CreditCard,
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  Calendar, 
+  Crown, 
+  Clock, 
+  BarChart3, 
+  BookOpen, 
+  Brain, 
+  CreditCard, 
   Settings,
   Edit3,
   TrendingUp,
-  Activity,
+  Activity
 } from "lucide-react";
 
 const UserDetails = () => {
@@ -64,15 +64,15 @@ const UserDetails = () => {
         setLoading(true);
         setError(null);
         const response = await api.get("/users/me");
-
+        
         // 🔧 Handle potential LocalDate serialization issues using utility function
         let processedUserData = { ...response.data };
         processedUserData.birthdate = processBirthdate(response.data.birthdate);
-
+        
         setUserData(processedUserData);
       } catch (err) {
         console.error("❌ Error fetching user data:", err);
-
+        
         // 🔍 Check for specific error types using utility function
         const localDateError = getLocalDateErrorMessage(err);
         if (localDateError) {
@@ -165,17 +165,11 @@ const UserDetails = () => {
 
   // Tab navigation items
   const tabs = [
-    { id: "overview", label: t("overview") || "Tổng quan", icon: BarChart3 },
-    { id: "quizzes", label: t("quizzes") || "Quiz", icon: Brain },
-    { id: "flashcards", label: t("flashcards") || "Flashcard", icon: BookOpen },
-    { id: "transactions", label: t("transactions") || "Giao dịch", icon: CreditCard },
+    { id: "overview", label: t("Overview") || "Tổng quan", icon: BarChart3 },
+    { id: "quizzes", label: t("Quizzes") || "Quiz", icon: Brain },
+    { id: "flashcards", label: t("Flashcards") || "Flashcard", icon: BookOpen },
+    { id: "transactions", label: t("Transactions") || "Giao dịch", icon: CreditCard },
     { id: "activities", label: t("activities.title") || "Hoạt động", icon: Activity },
-    {
-      id: "transactions",
-      label: t("transactions") || "Giao dịch",
-      icon: CreditCard,
-    },
-    { id: "settings", label: t("settings") || "Cài đặt", icon: Settings },
   ];
 
   // Render tab content
@@ -189,45 +183,33 @@ const UserDetails = () => {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      {t("flashcardSets")}
-                    </p>
-                    <p className="text-3xl font-bold text-emerald-600">
-                      {userData.stats.totalFlashcardSets}
-                    </p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">{t("flashcardSets")}</p>
+                    <p className="text-3xl font-bold text-emerald-600">{userData.stats.totalFlashcardSets}</p>
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-xl">
                     <BookOpen className="w-6 h-6 text-emerald-600" />
                   </div>
                 </div>
               </div>
-
+              
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      {t("quizSets")}
-                    </p>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {userData.stats.totalQuizSets}
-                    </p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">{t("quizSets")}</p>
+                    <p className="text-3xl font-bold text-blue-600">{userData.stats.totalQuizSets}</p>
                   </div>
                   <div className="p-3 bg-blue-50 rounded-xl">
                     <Brain className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
               </div>
-
+              
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      {t("avgQuizScore")}
-                    </p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">{t("avgQuizScore")}</p>
                     <p className="text-3xl font-bold text-orange-600">
-                      {userData.stats.averageQuizScore
-                        ? `${userData.stats.averageQuizScore}%`
-                        : "N/A"}
+                      {userData.stats.averageQuizScore ? `${userData.stats.averageQuizScore}%` : "N/A"}
                     </p>
                   </div>
                   <div className="p-3 bg-orange-50 rounded-xl">
@@ -249,38 +231,28 @@ const UserDetails = () => {
                     <User className="w-4 h-4 text-gray-400" />
                     <div>
                       <p className="text-sm text-gray-600">{t("fullName")}</p>
-                      <p className="font-medium text-gray-900">
-                        {userData.fullName || t("notSet")}
-                      </p>
+                      <p className="font-medium text-gray-900">{userData.fullName || t("notSet")}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="w-4 h-4 text-gray-400" />
                     <div>
                       <p className="text-sm text-gray-600">{t("email")}</p>
-                      <p className="font-medium text-gray-900">
-                        {userData.email}
-                      </p>
+                      <p className="font-medium text-gray-900">{userData.email}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Phone className="w-4 h-4 text-gray-400" />
                     <div>
-                      <p className="text-sm text-gray-600">
-                        {t("phoneNumber")}
-                      </p>
-                      <p className="font-medium text-gray-900">
-                        {userData.phoneNumber || t("notSet")}
-                      </p>
+                      <p className="text-sm text-gray-600">{t("phoneNumber")}</p>
+                      <p className="font-medium text-gray-900">{userData.phoneNumber || t("notSet")}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <div>
                       <p className="text-sm text-gray-600">{t("birthdate")}</p>
-                      <p className="font-medium text-gray-900">
-                        {userData.birthdate || t("notSet")}
-                      </p>
+                      <p className="font-medium text-gray-900">{userData.birthdate || t("notSet")}</p>
                     </div>
                   </div>
                 </div>
@@ -295,24 +267,16 @@ const UserDetails = () => {
                   <div className="flex items-center space-x-3">
                     <Crown className="w-4 h-4 text-gray-400" />
                     <div>
-                      <p className="text-sm text-gray-600">
-                        {t("accountStatus")}
-                      </p>
-                      <p className="font-medium text-green-600">
-                        {t("active")}
-                      </p>
+                      <p className="text-sm text-gray-600">{t("accountStatus")}</p>
+                      <p className="font-medium text-green-600">{t("active")}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Clock className="w-4 h-4 text-gray-400" />
                     <div>
-                      <p className="text-sm text-gray-600">
-                        {t("vipDaysLeft")}
-                      </p>
+                      <p className="text-sm text-gray-600">{t("vipDaysLeft")}</p>
                       <p className="font-medium text-gray-900">
-                        {userData.vipDaysLeft
-                          ? `${userData.vipDaysLeft} ${t("days")}`
-                          : t("noVIP")}
+                        {userData.vipDaysLeft ? `${userData.vipDaysLeft} ${t("days")}` : t("noVIP")}
                       </p>
                     </div>
                   </div>
@@ -351,23 +315,11 @@ const UserDetails = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">
-                    Đăng nhập lần cuối: Hôm nay
-                  </p>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">
-                    Quiz gần nhất: 2 ngày trước
-                  </p>
-                </div>
               </div>
             </div>
           </div>
         );
-
+      
       case "quizzes":
         return <QuizSet />;
       
@@ -380,79 +332,6 @@ const UserDetails = () => {
       case "activities":
         return <UserActivities />;
       
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Quiz Sets của bạn
-            </h3>
-            <div className="text-center py-12">
-              <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có quiz nào được tạo</p>
-            </div>
-          </div>
-        );
-
-      case "flashcards":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Flashcard Sets của bạn
-            </h3>
-            <div className="text-center py-12">
-              <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có flashcard nào được tạo</p>
-            </div>
-          </div>
-        );
-
-      case "transactions":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Lịch sử giao dịch
-            </h3>
-            <div className="text-center py-12">
-              <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chưa có giao dịch nào</p>
-            </div>
-          </div>
-        );
-
-      case "settings":
-        return (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Cài đặt tài khoản
-            </h3>
-            <div className="space-y-4">
-              <button
-                onClick={() => onEditProfileClick()}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center space-x-3">
-                  <Edit3 className="w-5 h-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">
-                    Chỉnh sửa hồ sơ
-                  </span>
-                </div>
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
@@ -476,9 +355,7 @@ const UserDetails = () => {
                   </div>
                 ) : (
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
-                    {userData?.fullName
-                      ? userData?.fullName.charAt(0).toUpperCase()
-                      : "U"}
+                    {userData?.fullName ? userData?.fullName.charAt(0).toUpperCase() : "U"}
                   </div>
                 )}
               </div>
@@ -488,13 +365,11 @@ const UserDetails = () => {
                 </h1>
                 <p className="text-gray-600 mb-2">{userData.email}</p>
                 <div className="flex items-center space-x-4">
-                  <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      userData.vipDaysLeft
-                        ? "bg-gradient-to-r from-yellow-400 to-yellow-500 text-white"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    userData.vipDaysLeft 
+                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}>
                     <Crown className="w-4 h-4 mr-1" />
                     {userData.vipDaysLeft ? t("vipMember") : t("freeUser")}
                   </span>
@@ -520,10 +395,7 @@ const UserDetails = () => {
         {/* Tab Navigation */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8">
           <div className="border-b border-gray-100">
-            <nav
-              className="flex justify-center space-x-12 px-8"
-              aria-label="Tabs"
-            >
+            <nav className="flex justify-center space-x-12 px-8" aria-label="Tabs">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -546,7 +418,9 @@ const UserDetails = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="mb-8">{renderTabContent()}</div>
+        <div className="mb-8">
+          {renderTabContent()}
+        </div>
       </div>
 
       <RequireEmailVerificationModal
