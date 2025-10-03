@@ -1,14 +1,14 @@
 {
   "header": {
     "home": "Home",
-    "quizzes": "Quizzes",
-    "flashcards": "Flashcards",
+    "quizzes": "Quizz",
+    "flashcards": "Flashcard",
     "tests": "Tests",
     "blog": "Blog",
     "explore": "Explore",
-    "login": "Login",
+    "login": "Sign in",
     "signup": "Sign Up",
-    "logout": "Logout",
+    "logout": "Sign out",
     "userDetails": "User Details",
     "verifyEmail": "Verify Email"
   },
@@ -1157,5 +1157,11 @@
     "searchFor": "Search for {{type}}",
     "searching": "Searching...",
     "noResults": "No results found."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Hmmm...",
+    "description": "It looks like one of the developers fell asleep",
+    "goHome": "Go Back Home"
   }
 }

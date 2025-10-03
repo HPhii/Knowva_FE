@@ -250,73 +250,93 @@ const Header = () => {
             </div>
 
             {/* === LEFT SECTION: BRAND & MAIN NAVIGATION === */}
-            <div className="flex items-center space-x-6 relative z-10">
+            <div className="flex items-center space-x-6 relative z-10 h-full">
                 {/* Brand Logo & Name */}
                 <Link to="/" className="flex items-center space-x-2">
                     {/* Local logo image */}
                     <img src={logoImage} alt="KnowVa Logo" className="h-8 w-8" />
                     <span className="hidden sm:block text-2xl md:text-3xl font-extrabold text-white tracking-tight font-brand-script">
-            KnowVa
-          </span>
+                        KnowVa
+                      </span>
                 </Link>
 
                 {/* Main Navigation - chỉ giữ lại các link chính */}
                 <nav className="h-full hidden lg:flex items-center">
                     {/* Quizzes */}
-                    <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
-                        isCurrentPage("/quizzes")
-                            ? "bg-white/20 border-b-2 border-white/40"
-                            : "hover:bg-white/10"
-                    }`}>
-                        <Link
-                            to="/quizzes"
-                            className="text-white text-lg transition-all duration-300 font-medium"
-                        >
-                            {t("header.quizzes")}
-                        </Link>
-                    </div>
+                    <Link
+                        to="/quizzes"
+                        className={`relative group flex items-center h-full px-6 text-lg transition-colors duration-300 font-medium ${
+                            isCurrentPage("/quizzes")
+                                ? "text-white"
+                                : "text-gray-300 hover:text-white"
+                        }`}
+                    >
+                        <span>{t("header.quizzes")}</span>
+                        <span
+                            className={`absolute bottom-0 left-0 block h-[3px] bg-white/70 transition-all duration-300 ${
+                                isCurrentPage("/quizzes")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        ></span>
+                    </Link>
 
                     {/* Flashcards */}
-                    <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
-                        isCurrentPage("/flashcards")
-                            ? "bg-white/20 border-b-2 border-white/40"
-                            : "hover:bg-white/10"
-                    }`}>
-                        <Link
-                            to="/flashcards"
-                            className="text-white text-lg transition-all duration-300 font-medium"
-                        >
-                            {t("header.flashcards")}
-                        </Link>
-                    </div>
+                    <Link
+                        to="/flashcards"
+                        className={`relative group flex items-center h-full px-6 text-lg transition-colors duration-300 font-medium ${
+                            isCurrentPage("/flashcards")
+                                ? "text-white"
+                                : "text-gray-300 hover:text-white"
+                        }`}
+                    >
+                        <span>{t("header.flashcards")}</span>
+                        <span
+                            className={`absolute bottom-0 left-0 block h-[3px] bg-white/70 transition-all duration-300 ${
+                                isCurrentPage("/flashcards")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        ></span>
+                    </Link>
 
                     {/* Blog */}
-                    <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
-                        isCurrentPage("/blog")
-                            ? "bg-white/20 border-b-2 border-white/40"
-                            : "hover:bg-white/10"
-                    }`}>
-                        <Link
-                            to="/blog"
-                            className="text-white text-lg transition-all duration-300 font-medium"
-                        >
-                            {t("header.blog")}
-                        </Link>
-                    </div>
+                    <Link
+                        to="/blog"
+                        className={`relative group flex items-center h-full px-6 text-lg transition-colors duration-300 font-medium ${
+                            isCurrentPage("/blog")
+                                ? "text-white"
+                                : "text-gray-300 hover:text-white"
+                        }`}
+                    >
+                        <span>{t("header.blog")}</span>
+                        <span
+                            className={`absolute bottom-0 left-0 block h-[3px] bg-white/70 transition-all duration-300 ${
+                                isCurrentPage("/blog")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        ></span>
+                    </Link>
 
                     {/* Explore */}
-                    <div className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
-                        isCurrentPage("/Explore")
-                            ? "bg-white/20 border-b-2 border-white/40"
-                            : "hover:bg-white/10"
-                    }`}>
-                        <Link
-                            to="/Explore"
-                            className="text-white text-lg transition-all duration-300 font-medium"
-                        >
-                            {t("header.explore")}
-                        </Link>
-                    </div>
+                    <Link
+                        to="/Explore"
+                        className={`relative group flex items-center h-full px-6 text-lg transition-colors duration-300 font-medium ${
+                            isCurrentPage("/Explore")
+                                ? "text-white"
+                                : "text-gray-300 hover:text-white"
+                        }`}
+                    >
+                        <span>{t("header.explore")}</span>
+                        <span
+                            className={`absolute bottom-0 left-0 block h-[3px] bg-white/70 transition-all duration-300 ${
+                                isCurrentPage("/Explore")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        ></span>
+                    </Link>
                 </nav>
             </div>
 
@@ -409,7 +429,7 @@ const Header = () => {
                     <div className="flex items-center space-x-2">
                         <Link to="/login">
                             <button className="cursor-pointer !text-white py-2 px-5 rounded-full hover:bg-white/10 transition-all duration-300 text-[16px] font-medium hover:scale-105 border border-white/20 hover:border-white/40">
-                                Sign in
+                                {t("header.login")}
                             </button>
                         </Link>
                         <Link to="/signup">
