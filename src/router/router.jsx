@@ -3,9 +3,6 @@ import App from "../App";
 import Home from "../pages/Home/Home";
 import UserApp from "../pages/User/UserApp";
 import UserDetails from "../pages/User/UserDetails";
-import QuizSet from "../pages/User/QuizSet";
-import FlashcardSet from "../pages/User/FlashcardSet";
-import Transaction from "../pages/User/Transaction";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import Explore from "../pages/Explore/Explore";
@@ -30,6 +27,8 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
+import QuizDetail from "../pages/Quiz/QuizDetail";
+import EditQuiz from "../pages/Quiz/EditQuiz";
 import NotFound from "../pages/NotFound/NotFound";
 
 import MyLibrary from "../pages/MyLibrary/MyLibrary";
@@ -46,6 +45,8 @@ const router = createBrowserRouter([
       { path: "user", element: <UserDetails /> },
       { path: "explore", element: <Explore /> },
       { path: "quizzes", element: <Quiz /> },
+      { path: "quiz/:id", element: <QuizDetail /> },
+      { path: "quiz/:id/edit", element: <EditQuiz /> },
       { path: "flashcards", element: <Flashcard /> },
       { path: "tests", element: <Test /> },
       { path: "pricing", element: <Pricing /> },
@@ -90,9 +91,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <UserDetails /> },
       { path: "profile", element: <UserDetails /> },
-      { path: "quiz-set", element: <QuizSet /> },
-      { path: "flashcard-set", element: <FlashcardSet /> },
-      { path: "transaction", element: <Transaction /> },
       { path: "edit", element: <EditProfile /> },
     ],
   },
