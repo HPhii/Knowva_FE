@@ -1182,5 +1182,11 @@
     "searchFor": "Tìm kiếm {{type}}",
     "searching": "Đang tìm...",
     "noResults": "Không tìm thấy kết quả."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Hmmm... Có vẻ lạc đường rồi!",
+    "description": "Có vẻ như một trong những lập trình viên của chúng tôi đã ngủ gật mất rồi.",
+    "goHome": "Quay Về Trang Chủ"
   }
 }
