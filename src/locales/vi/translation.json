@@ -1,5 +1,7 @@
 {
   "header": {
+    "home": "Trang chủ",
+    "myLibrary": "Thư viện của tôi",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
     "tests": "Bài kiểm tra",
@@ -131,38 +133,66 @@
     "storyText3": "Sứ mệnh của chúng tôi rất rõ ràng: giúp người học ghi nhớ tốt hơn, ôn luyện hiệu quả hơn, và làm chủ quá trình tự học – đặc biệt trong bối cảnh giáo dục ngày càng chú trọng đến khả năng tự học. Với KnowVa, chúng tôi không chỉ tạo ra một công cụ – mà là định hình lại cách sinh viên học từ hình ảnh."
   },
   "pricing": {
-    "title": "Chọn Gói Của Bạn",
+    "title": "Chọn Gói Dịch Vụ",
     "subtitle": "Chọn gói hoàn hảo cho nhu cầu học tập của bạn. Bắt đầu miễn phí và nâng cấp bất cứ lúc nào.",
     "faqTitle": "Câu Hỏi Thường Gặp",
     "mostPopular": "Phổ Biến Nhất",
+    "free": "Miễn phí",
     "getStarted": "Bắt Đầu",
-    "getVIP": "Lấy VIP",
-    "regular": "Thường",
+    "getVIP": "Nâng Cấp VIP",
+    "regular": "Cơ Bản",
     "vip": "VIP",
     "perMonth": "/tháng",
+    "processing": "Đang xử lý...",
     "features": {
-      "upTo50Flashcards": "Tối đa 50 flashcard mỗi bộ",
+      "upTo50Flashcards": "Tối đa 50 thẻ ghi nhớ mỗi bộ",
       "basicQuizGeneration": "Tạo quiz cơ bản",
-      "standardTestCreation": "Tạo bài kiểm tra chuẩn",
+      "standardTestCreation": "Tạo bài kiểm tra tiêu chuẩn",
       "emailSupport": "Hỗ trợ qua email",
       "basicAnalytics": "Phân tích cơ bản",
-      "2GBStorage": "2GB lưu trữ",
-      "unlimitedFlashcards": "Flashcard không giới hạn",
+      "2GBStorage": "Lưu trữ 2GB",
+      "unlimitedFlashcards": "Thẻ ghi nhớ không giới hạn",
       "advancedAIQuiz": "Tạo quiz AI nâng cao",
       "premiumTestCreation": "Tạo bài kiểm tra cao cấp",
       "prioritySupport": "Hỗ trợ ưu tiên",
       "advancedAnalytics": "Phân tích nâng cao",
-      "10GBStorage": "10GB lưu trữ",
+      "10GBStorage": "Lưu trữ 10GB",
       "customBranding": "Tùy chỉnh thương hiệu",
       "apiAccess": "Truy cập API"
     },
+    "errors": {
+      "loginRequired": "Vui lòng đăng nhập để mua gói dịch vụ",
+      "paymentLinkFailed": "Không thể tạo liên kết thanh toán",
+      "paymentFailed": "Thanh toán thất bại. Vui lòng thử lại.",
+      "renewalFailed": "Gia hạn thanh toán thất bại. Vui lòng thử lại."
+    },
     "faq": {
-      "changePlanTitle": "Tôi có thể thay đổi gói bất cứ lúc nào không?",
-      "changePlanAnswer": "Có, bạn có thể nâng cấp hoặc hạ cấp gói của mình bất cứ lúc nào. Thay đổi sẽ được áp dụng trong chu kỳ thanh toán tiếp theo.",
+      "changePlanTitle": "Tôi có thể thay đổi gói dịch vụ bất cứ lúc nào không?",
+      "changePlanAnswer": "Có, bạn có thể nâng cấp hoặc hạ cấp gói dịch vụ bất cứ lúc nào. Thay đổi sẽ có hiệu lực trong chu kỳ thanh toán tiếp theo.",
       "freeTrialTitle": "Có dùng thử miễn phí không?",
       "freeTrialAnswer": "Chúng tôi cung cấp dùng thử miễn phí 7 ngày cho tất cả các gói. Không cần thẻ tín dụng để bắt đầu dùng thử.",
-      "paymentMethodsTitle": "Bạn chấp nhận phương thức thanh toán nào?",
-      "paymentMethodsAnswer": "Chúng tôi chấp nhận tất cả thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói hàng năm."
+      "paymentMethodsTitle": "Bạn chấp nhận những phương thức thanh toán nào?",
+      "paymentMethodsAnswer": "Chúng tôi chấp nhận tất cả các thẻ tín dụng chính, PayPal và chuyển khoản ngân hàng cho các gói hàng năm."
+    }
+  },
+  "payment": {
+    "success": {
+      "title": "Thanh toán thành công!",
+      "description": "Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi.",
+      "status": "Trạng thái",
+      "completed": "Hoàn thành",
+      "orderCode": "Mã đơn hàng",
+      "amount": "Số tiền",
+      "backToHome": "Quay về trang chủ",
+      "goToDashboard": "Đi đến bảng điều khiển"
+    },
+    "cancel": {
+      "title": "Thanh toán đã bị hủy",
+      "description": "Thanh toán không được hoàn tất. Bạn có thể thử lại sau.",
+      "descriptionWithCode": "Giao dịch với mã {{orderCode}} đã không được hoàn tất.",
+      "tryAgain": "Bạn có thể thử lại hoặc liên hệ hỗ trợ nếu cần trợ giúp.",
+      "tryAgainButton": "Thử lại",
+      "backToHome": "Quay về trang chủ"
     }
   },
   "support": {
@@ -257,12 +287,59 @@
     "emptySubtitle": "Chúng tôi đang chuẩn bị nội dung chất lượng. Vui lòng quay lại sau.",
     "emailPlaceholder": "Nhập email của bạn",
     "readMore": "Đọc Thêm →",
+    "postBlog": "Đăng bài viết",
     "categories": {
       "all": "Tất cả",
-      "learningScience": "Khoa học học tập",
-      "technology": "Công nghệ",
-      "studyTips": "Mẹo học tập",
-      "edTech": "Công nghệ giáo dục"
+      "studySkills": "Kỹ năng học tập",
+      "flashcardQuizTips": "Mẹo Flashcard & Quiz",
+      "learningTools": "Công cụ học tập",
+      "freeResources": "Tài nguyên miễn phí",
+      "memoryScience": "Khoa học trí nhớ",
+      "inspiringStories": "Câu chuyện truyền cảm hứng",
+      "uncategorized": "Chưa phân loại",
+      "unknown": "Danh mục không xác định"
+    },
+    "actions": {
+      "tryAgain": "Thử lại",
+      "backToBlog": "Quay lại Blog",
+      "backToList": "Quay lại danh sách Blog",
+      "createNewPost": "Đăng bài mới"
+    },
+    "status": {
+      "published": "Đã xuất bản"
+    },
+    "defaultAuthorInitial": "A",
+    "comments": {
+      "title": "Bình luận",
+      "subtitle": "Chia sẻ suy nghĩ của bạn về bài viết này",
+      "cannotDisplay": "Không thể hiển thị bình luận - thiếu ID bài viết"
+    },
+    "errors": {
+      "cannotLoadPosts": "Không thể tải danh sách bài viết. Vui lòng thử lại sau.",
+      "cannotLoadPost": "Không thể tải bài viết. Vui lòng thử lại sau.",
+      "tryDifferentKeyword": "Vui lòng thử lại với từ khóa hoặc danh mục khác."
+    },
+    "sort": {
+      "sortBy": "Sắp xếp theo:",
+      "direction": "Thứ tự:",
+      "current": "Hiện tại:",
+      "publishedAt": "Ngày xuất bản",
+      "title": "Tiêu đề",
+      "authorName": "Tác giả",
+      "readTime": "Thời gian đọc",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật",
+      "desc": "Giảm dần",
+      "asc": "Tăng dần"
+    },
+    "url": {
+      "current": "URL hiện tại:"
+    },
+    "results": {
+      "title": "Kết quả tìm kiếm",
+      "found": "Tìm thấy",
+      "posts": "bài viết",
+      "for": "cho"
     },
     "posts": {
       "post1": {
@@ -473,22 +550,38 @@
       "essential": {
         "title": "Cookie Cần Thiết",
         "description": "Những cookie này cần thiết để trang web hoạt động bình thường.",
-        "examples": ["Cookie xác thực", "Quản lý phiên làm việc", "Tính năng bảo mật"]
+        "examples": [
+          "Cookie xác thực",
+          "Quản lý phiên làm việc",
+          "Tính năng bảo mật"
+        ]
       },
       "analytics": {
         "title": "Cookie Phân Tích",
         "description": "Những cookie này giúp chúng tôi hiểu cách khách truy cập tương tác với trang web của chúng tôi.",
-        "examples": ["Google Analytics", "Theo dõi hành vi người dùng", "Giám sát hiệu suất"]
+        "examples": [
+          "Google Analytics",
+          "Theo dõi hành vi người dùng",
+          "Giám sát hiệu suất"
+        ]
       },
       "functional": {
         "title": "Cookie Chức Năng",
         "description": "Những cookie này cho phép chức năng nâng cao và cá nhân hóa.",
-        "examples": ["Tùy chọn ngôn ngữ", "Cài đặt giao diện", "Tùy chọn người dùng"]
+        "examples": [
+          "Tùy chọn ngôn ngữ",
+          "Cài đặt giao diện",
+          "Tùy chọn người dùng"
+        ]
       },
       "marketing": {
         "title": "Cookie Tiếp Thị",
         "description": "Những cookie này được sử dụng để cung cấp quảng cáo liên quan.",
-        "examples": ["Nhắm mục tiêu quảng cáo", "Tích hợp mạng xã hội", "Chiến dịch tiếp thị"]
+        "examples": [
+          "Nhắm mục tiêu quảng cáo",
+          "Tích hợp mạng xã hội",
+          "Chiến dịch tiếp thị"
+        ]
       }
     },
     "necessary": "Cần Thiết",
@@ -618,10 +711,233 @@
     "description": "Email của bạn đã được xác thực. Bây giờ bạn có thể truy cập tất cả tính năng của ứng dụng.",
     "goToHome": "Về trang chủ"
   },
+  "quiz": {
+    "title": "Tạo Quiz",
+    "tabs": {
+      "text": "Văn bản",
+      "document": "Tài liệu",
+      "image": "Hình ảnh",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Dán nội dung ghi chú hoặc tài liệu của bạn",
+      "characterCount": "ký tự",
+      "minCharacters": "Cần tối thiểu 150 ký tự",
+      "readyToCreate": "Sẵn sàng tạo quiz"
+    },
+    "documentInput": {
+      "selectFile": "Chọn một tệp PDF để tạo quiz",
+      "fileSelected": "Đã chọn:",
+      "readyToCreate": "Sẵn sàng tạo từ PDF",
+      "noFileSelected": "Chưa chọn file PDF"
+    },
+    "buttons": {
+      "next": "Tiếp theo",
+      "options": "Tùy chọn",
+      "generate": "Tạo",
+      "save": "Lưu Quiz",
+      "edit": "Chỉnh sửa",
+      "cancel": "Hủy",
+      "saveChanges": "Lưu thay đổi",
+      "delete": "Xóa"
+    },
+    "modal": {
+      "title": "Tạo Quiz",
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề",
+        "description": "Mô tả",
+        "descriptionPlaceholder": "Nhập mô tả",
+        "language": "Ngôn ngữ",
+        "questionType": "Loại câu hỏi",
+        "maxQuestions": "Số câu hỏi tối đa",
+        "visibility": "Quyền hiển thị",
+        "category": "Danh mục (chọn nhiều)",
+        "categoryPlaceholder": "Chọn danh mục",
+        "timeLimit": "Thời gian (phút)"
+      },
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "questionTypeRequired": "Vui lòng chọn loại câu hỏi",
+        "maxQuestionsRequired": "Vui lòng nhập số câu hỏi",
+        "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+        "categoryRequired": "Vui lòng chọn ít nhất 1 danh mục",
+        "timeLimitRequired": "Vui lòng nhập thời gian"
+      }
+    },
+    "generatedQuiz": {
+      "title": "Quiz đã tạo",
+      "fields": {
+        "title": "Tiêu đề:",
+        "category": "Danh mục:",
+        "questionType": "Loại câu hỏi:",
+        "timeLimit": "Thời gian:",
+        "visibility": "Quyền hiển thị:",
+        "description": "Mô tả:",
+        "questions": "Câu hỏi:"
+      },
+      "question": {
+        "label": "Câu hỏi",
+        "answers": "Đáp án:",
+        "correct": "Đúng",
+        "wrong": "Sai"
+      },
+      "messages": {
+        "generateSuccess": "Tạo quiz thành công",
+        "generateError": "Tạo quiz thất bại. Vui lòng thử lại.",
+        "saveSuccess": "Lưu quiz thành công",
+        "saveError": "Lưu quiz thất bại. Vui lòng thử lại.",
+        "updateSuccess": "Cập nhật quiz thành công",
+        "noQuizToSave": "Không có quiz để lưu",
+        "textRequired": "Vui lòng nhập nội dung văn bản trước.",
+        "fileRequired": "Vui lòng chọn một tệp tài liệu.",
+        "pdfOnly": "Chỉ hỗ trợ tệp PDF."
+      }
+    },
+    "detail": {
+      "title": "Chi tiết Quiz",
+      "backToProfile": "Quay lại Profile",
+      "backToQuizzes": "Quay lại Danh sách Quiz",
+      "totalQuestions": "Tổng câu hỏi",
+      "questions": "Câu hỏi",
+      "createdAt": "Ngày tạo",
+      "status": "Trạng thái",
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động",
+      "questionList": "Danh sách câu hỏi",
+      "actions": {
+        "tryAgain": "Thử lại",
+        "backToProfile": "Quay lại Profile",
+        "createNew": "Tạo Quiz Mới",
+        "editQuiz": "Sửa Quiz"
+      },
+      "edit": {
+        "title": "Sửa Quiz",
+        "form": {
+          "title": "Tiêu đề",
+          "titlePlaceholder": "Nhập tiêu đề quiz",
+          "description": "Mô tả",
+          "descriptionPlaceholder": "Nhập mô tả quiz",
+          "timeLimit": "Thời gian (phút)",
+          "questionType": "Loại câu hỏi",
+          "questionTypePlaceholder": "Chọn loại câu hỏi",
+          "visibility": "Quyền hiển thị",
+          "visibilityPlaceholder": "Chọn quyền hiển thị",
+          "category": "Danh mục",
+          "categoryPlaceholder": "Chọn danh mục"
+        },
+        "options": {
+          "multipleChoice": "Trắc nghiệm",
+          "trueFalse": "Đúng/Sai",
+          "public": "Công khai",
+          "private": "Riêng tư",
+          "technology": "Công nghệ",
+          "science": "Khoa học",
+          "history": "Lịch sử",
+          "literature": "Văn học",
+          "math": "Toán học",
+          "language": "Ngôn ngữ",
+          "other": "Khác"
+        },
+        "buttons": {
+          "cancel": "Hủy",
+          "save": "Lưu thay đổi"
+        },
+        "messages": {
+          "success": "Cập nhật quiz thành công!",
+          "error": "Cập nhật quiz thất bại"
+        }
+      }
+    }
+  },
+  "flashcard": {
+    "title": "Tạo Flashcard",
+    "tabs": {
+      "text": "Văn bản",
+      "document": "Tài liệu",
+      "image": "Hình ảnh",
+      "video": "Video"
+    },
+    "textInput": {
+      "placeholder": "Dán nội dung ghi chú hoặc tài liệu của bạn",
+      "characterCount": "ký tự",
+      "minCharacters": "Cần tối thiểu 150 ký tự",
+      "readyToCreate": "Sẵn sàng tạo flashcard"
+    },
+    "documentInput": {
+      "selectFile": "Chọn một tệp PDF để tạo flashcard",
+      "fileSelected": "Đã chọn:",
+      "readyToCreate": "Sẵn sàng tạo từ PDF",
+      "noFileSelected": "Chưa chọn file PDF"
+    },
+    "buttons": {
+      "next": "Tiếp theo",
+      "options": "Tùy chọn",
+      "generate": "Tạo",
+      "save": "Lưu Flashcard",
+      "edit": "Chỉnh sửa",
+      "cancel": "Hủy",
+      "saveChanges": "Lưu thay đổi",
+      "delete": "Xóa"
+    },
+    "modal": {
+      "title": "Tạo Flashcard",
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề",
+        "description": "Mô tả",
+        "descriptionPlaceholder": "Nhập mô tả",
+        "language": "Ngôn ngữ",
+        "cardType": "Loại thẻ",
+        "maxCards": "Số thẻ tối đa",
+        "visibility": "Quyền hiển thị",
+        "category": "Danh mục (chọn nhiều)",
+        "categoryPlaceholder": "Chọn danh mục",
+        "difficulty": "Độ khó"
+      },
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "cardTypeRequired": "Vui lòng chọn loại thẻ",
+        "maxCardsRequired": "Vui lòng nhập số thẻ",
+        "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+        "categoryRequired": "Vui lòng chọn ít nhất 1 danh mục",
+        "difficultyRequired": "Vui lòng chọn độ khó"
+      }
+    },
+    "generatedFlashcard": {
+      "title": "Flashcard đã tạo",
+      "fields": {
+        "title": "Tiêu đề:",
+        "category": "Danh mục:",
+        "cardType": "Loại thẻ:",
+        "difficulty": "Độ khó:",
+        "visibility": "Quyền hiển thị:",
+        "description": "Mô tả:",
+        "cards": "Thẻ:"
+      },
+      "card": {
+        "label": "Thẻ",
+        "front": "Mặt trước:",
+        "back": "Mặt sau:"
+      },
+      "messages": {
+        "generateSuccess": "Tạo flashcard thành công",
+        "generateError": "Tạo flashcard thất bại. Vui lòng thử lại.",
+        "saveSuccess": "Lưu flashcard thành công",
+        "saveError": "Lưu flashcard thất bại. Vui lòng thử lại.",
+        "updateSuccess": "Cập nhật flashcard thành công",
+        "noFlashcardToSave": "Không có flashcard để lưu",
+        "textRequired": "Vui lòng nhập nội dung văn bản trước.",
+        "fileRequired": "Vui lòng chọn một tệp tài liệu.",
+        "pdfOnly": "Chỉ hỗ trợ tệp PDF."
+      }
+    }
+  },
   "footer": {
     "brand": "KnowVa",
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
+    "sendFeedback": "Gửi Feedback",
     "customers": "Khách hàng",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
@@ -638,5 +954,378 @@
     "twitter": "Twitter",
     "facebook": "Facebook",
     "linkedin": "LinkedIn"
+  },
+  "postBlog": {
+    "title": "Tạo bài viết blog mới",
+    "subtitle": "Chia sẻ kiến thức và hiểu biết của bạn với cộng đồng KnowVa",
+    "backToBlog": "Quay lại Blog",
+    "form": {
+      "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề bài viết blog của bạn",
+      "excerpt": "Tóm tắt",
+      "excerptPlaceholder": "Viết tóm tắt ngắn gọn về bài viết của bạn",
+      "category": "Danh mục",
+      "selectCategory": "Chọn danh mục",
+      "imageUrl": "Ảnh đại diện",
+      "imageUploaded": "Ảnh đã được tải lên",
+      "dragDropImage": "Kéo thả ảnh vào đây hoặc click để chọn",
+      "imageFormat": "JPG, PNG tối đa 2MB",
+      "selectImage": "Chọn ảnh",
+      "uploading": "Đang tải lên...",
+      "orPasteUrl": "Hoặc dán URL ảnh",
+      "status": "Trạng thái",
+      "draft": "Bản nháp",
+      "published": "Đã xuất bản",
+      "content": "Nội dung",
+      "contentPlaceholder": "Viết nội dung bài viết blog của bạn tại đây...",
+      "saveDraft": "Lưu bản nháp",
+      "submitForApproval": "Gửi để duyệt",
+      "saving": "Đang lưu...",
+      "submitting": "Đang gửi..."
+    },
+
+    "success": {
+      "postCreated": "Tạo bài viết blog thành công!"
+    },
+    "errors": {
+      "fillRequiredFields": "Vui lòng điền đầy đủ các trường bắt buộc",
+      "createFailed": "Không thể tạo bài viết blog. Vui lòng thử lại."
+    }
+  },
+  "__comment_comments": "=== Comment System Translations ===",
+  "comments": {
+    "title": "Bình luận",
+    "flashcardTitle": "Bình luận Flashcard",
+    "quizTitle": "Bình luận Quiz",
+    "noComments": "Chưa có bình luận nào",
+    "noCommentsSubtitle": "Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!",
+    "loadingComments": "Đang tải bình luận...",
+    "writeComment": "Viết bình luận...",
+    "writeReply": "Viết phản hồi của bạn...",
+    "imageUrlPlaceholder": "URL hình ảnh (tùy chọn)",
+    "attachImage": "Đính kèm ảnh",
+    "uploadImage": "Click để upload ảnh",
+    "postComment": "Gửi bình luận",
+    "addComment": "Thêm bình luận",
+    "submitComment": "Gửi bình luận",
+    "sendReply": "Gửi phản hồi",
+    "reply": "Trả lời",
+    "replyingTo": "Trả lời",
+    "cancel": "Hủy",
+    "posting": "Đang gửi...",
+    "sending": "Đang gửi...",
+    "commentPosted": "Bình luận đã gửi thành công!",
+    "replyPosted": "Phản hồi đã gửi thành công!",
+    "pleaseLogin": "Vui lòng đăng nhập để bình luận",
+    "pleaseLoginReply": "Vui lòng đăng nhập để phản hồi",
+    "enterComment": "Vui lòng nhập bình luận",
+    "enterReply": "Vui lòng nhập phản hồi",
+    "userNotFound": "Không tìm thấy thông tin người dùng",
+    "errorPosting": "Lỗi khi gửi bình luận",
+    "errorPostingReply": "Lỗi khi gửi phản hồi",
+    "refreshComments": "Làm mới bình luận",
+    "refreshTooltip": "Làm mới bình luận",
+    "cannotLoad": "Không thể tải bình luận - thiếu ID bài viết"
+  },
+  "rating": {
+    "pleaseLoginToRate": "Vui lòng đăng nhập để đánh giá",
+    "ratingSubmittedSuccessfully": "Đánh giá đã được gửi thành công",
+    "errorSubmittingRating": "Lỗi khi gửi đánh giá",
+    "rateThis": "Đánh giá cái này",
+    "sendingRating": "Đang gửi đánh giá...",
+    "yourRating": "Đánh giá của bạn",
+    "currentRating": "Đánh giá hiện tại"
+  },
+  "__comment_admin": "=== Admin Dashboard Translations ===",
+  "myLibrary": {
+    "title": "Thư viện của tôi",
+    "subtitle": "Quản lý và tổ chức tài liệu học tập của bạn",
+    "searchPlaceholder": "Tìm kiếm trong thư viện...",
+    "filterBy": "Lọc theo",
+    "sortBy": "Sắp xếp theo",
+    "all": "Tất cả",
+    "favorites": "Yêu thích",
+    "recent": "Gần đây",
+    "beginner": "Cơ bản",
+    "intermediate": "Trung bình",
+    "advanced": "Nâng cao",
+    "alphabetical": "A-Z",
+    "progress": "Tiến độ",
+    "difficulty": "Độ khó",
+    "flashcards": "Thẻ ghi nhớ",
+    "quizzes": "Câu hỏi",
+    "tests": "Bài kiểm tra",
+    "cards": "Thẻ",
+    "questions": "Câu hỏi",
+    "studied": "Đã học",
+    "score": "Điểm",
+    "created": "Tạo lúc",
+    "lastStudied": "Lần cuối học",
+    "lastTaken": "Lần cuối làm",
+    "view": "Xem",
+    "study": "Học",
+    "createNew": "Tạo mới",
+    "flashcardSet": "Bộ thẻ ghi nhớ",
+    "quiz": "Câu hỏi",
+    "test": "Bài kiểm tra",
+    "noItemsFound": "Không tìm thấy mục nào"
+  },
+  "admin": {
+    "dashboard": "Bảng điều khiển Admin",
+    "systemName": "KnowVa Admin",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "menu": {
+      "userManagement": "Quản lý User 👤",
+      "blogManagement": "Quản lý Blog 📝",
+      "reportManagement": "Quản lý Báo cáo lỗi ⚠️"
+    },
+    "userManagement": {
+      "title": "Quản lý User",
+      "searchPlaceholder": "Tìm kiếm user...",
+      "filterByRole": "Lọc theo Vai trò",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "avatar": "Ảnh đại diện",
+        "name": "Tên",
+        "email": "Email",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "moderator": "Moderator"
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "suspended": "Bị đình chỉ",
+        "pending": "Chờ xử lý"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "suspend": "Đình chỉ",
+        "activate": "Kích hoạt"
+      },
+      "editUser": "Chỉnh sửa User",
+      "deleteUser": "Xóa User",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa user này?",
+      "deleteSuccess": "Đã xóa user thành công",
+      "deleteError": "Không thể xóa user",
+      "updateSuccess": "Đã cập nhật user thành công",
+      "updateError": "Không thể cập nhật user"
+    },
+    "blogManagement": {
+      "title": "Quản lý Blog",
+      "addNewBlog": "Thêm Blog mới",
+      "searchPlaceholder": "Tìm kiếm blog...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "title": "Tiêu đề",
+        "author": "Tác giả",
+        "createdAt": "Ngày tạo",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "draft": "Bản nháp",
+        "published": "Đã xuất bản",
+        "archived": "Đã lưu trữ"
+      },
+      "actions": {
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "publish": "Xuất bản",
+        "unpublish": "Hủy xuất bản"
+      },
+      "form": {
+        "title": "Tiêu đề",
+        "titlePlaceholder": "Nhập tiêu đề blog",
+        "excerpt": "Tóm tắt",
+        "excerptPlaceholder": "Nhập tóm tắt blog",
+        "category": "Danh mục",
+        "selectCategory": "Chọn danh mục",
+        "content": "Nội dung",
+        "contentPlaceholder": "Viết nội dung blog của bạn ở đây...",
+        "status": "Trạng thái",
+        "save": "Lưu",
+        "publish": "Xuất bản",
+        "saving": "Đang lưu...",
+        "publishing": "Đang xuất bản..."
+      },
+      "addSuccess": "Đã thêm blog thành công",
+      "addError": "Không thể thêm blog",
+      "updateSuccess": "Đã cập nhật blog thành công",
+      "updateError": "Không thể cập nhật blog",
+      "deleteSuccess": "Đã xóa blog thành công",
+      "deleteError": "Không thể xóa blog",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa blog này?"
+    },
+    "reportManagement": {
+      "title": "Quản lý Báo cáo lỗi",
+      "searchPlaceholder": "Tìm kiếm báo cáo...",
+      "filterByStatus": "Lọc theo Trạng thái",
+      "table": {
+        "reporter": "Người báo cáo",
+        "description": "Mô tả",
+        "date": "Ngày",
+        "status": "Trạng thái",
+        "actions": "Hành động"
+      },
+      "status": {
+        "pending": "Chờ xử lý",
+        "inProgress": "Đang xử lý",
+        "resolved": "Đã giải quyết",
+        "closed": "Đã đóng"
+      },
+      "actions": {
+        "view": "Xem",
+        "updateStatus": "Cập nhật trạng thái",
+        "resolve": "Giải quyết",
+        "close": "Đóng"
+      },
+      "viewReport": "Xem báo cáo",
+      "updateStatus": "Cập nhật trạng thái",
+      "statusUpdateSuccess": "Đã cập nhật trạng thái thành công",
+      "statusUpdateError": "Không thể cập nhật trạng thái",
+      "reportDetails": "Chi tiết báo cáo",
+      "priority": "Độ ưu tiên",
+      "priorities": {
+        "low": "Thấp",
+        "medium": "Trung bình",
+        "high": "Cao",
+        "critical": "Quan trọng"
+      }
+    },
+    "common": {
+      "search": "Tìm kiếm",
+      "filter": "Lọc",
+      "clear": "Xóa",
+      "apply": "Áp dụng",
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "view": "Xem",
+      "actions": "Hành động",
+      "noData": "Không có dữ liệu",
+      "loading": "Đang tải...",
+      "error": "Đã xảy ra lỗi",
+      "success": "Thao tác hoàn thành thành công"
+    }
+  },
+  "feedback": {
+    "title": "Gửi Feedback",
+    "ratingLabel": "Đánh giá của bạn",
+    "selectStars": "Vui lòng chọn số sao",
+    "rating1": "Rất không hài lòng",
+    "rating2": "Không hài lòng",
+    "rating3": "Bình thường",
+    "rating4": "Hài lòng",
+    "rating5": "Rất hài lòng",
+    "messageLabel": "Nội dung feedback",
+    "messagePlaceholder": "Hãy chia sẻ ý kiến của bạn về dịch vụ của chúng tôi...",
+    "messageRequired": "Vui lòng nhập nội dung feedback",
+    "messageMinLength": "Nội dung phải có ít nhất 10 ký tự",
+    "messageMaxLength": "Nội dung không được quá 500 ký tự",
+    "selectRating": "Vui lòng chọn đánh giá của bạn",
+    "successMessage": "Cảm ơn bạn đã gửi feedback! Chúng tôi sẽ xem xét và cải thiện dịch vụ.",
+    "errorMessage": "Có lỗi xảy ra khi gửi feedback. Vui lòng thử lại sau.",
+    "cancel": "Hủy",
+    "submit": "Gửi Feedback"
+  },
+  "__comment_explore": "=== Explore Page Translations ===",
+  "explore": {
+    "title": "Khám phá nội dung học tập",
+    "subtitle": "Tìm hiểu các bộ câu hỏi và bộ thẻ ghi nhớ để nâng cao việc học của bạn",
+    "quizSets": "Bộ câu hỏi",
+    "flashcardSets": "Bộ thẻ ghi nhớ",
+    "searchPlaceholder": "Tìm kiếm bộ câu hỏi hoặc bộ thẻ ghi nhớ...",
+    "filters": "Bộ lọc",
+    "showFilters": "Hiện bộ lọc",
+    "hideFilters": "Ẩn bộ lọc",
+    "clearAll": "Xóa tất cả",
+    "clearAllFilters": "Xóa tất cả bộ lọc",
+    "allCategories": "Tất cả danh mục",
+    "sortNewest": "Mới nhất",
+    "sortOldest": "Cũ nhất",
+    "sortMostPlayed": "Chơi nhiều nhất",
+    "sortTitle": "Tên A-Z",
+    "difficulty": "Độ khó",
+    "allDifficulties": "Tất cả độ khó",
+    "beginner": "Cơ bản",
+    "intermediate": "Trung bình",
+    "advanced": "Nâng cao",
+    "timeRange": "Khoảng thời gian",
+    "anyTime": "Bất kỳ thời gian nào",
+    "under15min": "Dưới 15 phút",
+    "15to30min": "15-30 phút",
+    "30to60min": "30-60 phút",
+    "over60min": "Trên 60 phút",
+    "rating": "Đánh giá tối thiểu",
+    "anyRating": "Bất kỳ đánh giá nào",
+    "ratingAtLeast": "Đánh giá ≥",
+    "resultsCount": "Hiển thị",
+    "noQuizSets": "Không tìm thấy bộ câu hỏi nào",
+    "noFlashcardSets": "Không tìm thấy bộ thẻ ghi nhớ nào",
+    "noResults": "Không tìm thấy kết quả",
+    "noResultsDesc": "Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn",
+    "view": "XEM",
+    "edit": "CHỈNH SỬA",
+    "questions": "câu hỏi",
+    "cards": "thẻ",
+    "minutes": "phút",
+    "created": "Tạo:",
+    "author": "Tác giả",
+    "unknownAuthor": "Tác giả không xác định",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "tryAgain": "Thử lại",
+    "retry": "Thử lại"
+  },
+  "activities": {
+    "title": "Hoạt động gần đây",
+    "totalActivities": "Tổng cộng {count} hoạt động",
+    "searchPlaceholder": "Tìm kiếm hoạt động...",
+    "filter": "Bộ lọc",
+    "clearFilters": "Xóa bộ lọc",
+    "loading": "Đang tải hoạt động...",
+    "error": "Không thể tải hoạt động. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "noActivities": "Chưa có hoạt động nào",
+    "noActivitiesDesc": "Bắt đầu sử dụng ứng dụng để xem hoạt động của bạn ở đây.",
+    "page": "Trang",
+    "of": "trên",
+    "activities": "hoạt động",
+    "previous": "Trước",
+    "next": "Sau",
+    "types": {
+      "CREATE_QUIZ_SET": "Tạo quiz mới",
+      "ATTEMPT_QUIZ": "Làm quiz",
+      "CREATE_FLASHCARD_SET": "Tạo flashcard",
+      "STUDY_FLASHCARD_SET": "Học flashcard",
+      "CREATE_BLOG_POST": "Viết blog",
+      "PUBLISH_BLOG_POST": "Đăng blog",
+      "RATE_CONTENT": "Đánh giá nội dung",
+      "COMMENT_ON_CONTENT": "Bình luận"
+    }
+},
+  "globalSearch": {
+    "quiz": "Câu hỏi",
+    "flashcard": "Thẻ ghi nhớ",
+    "user": "Người dùng",
+    "searchPlaceholder": "Tìm kiếm {{type}}...",
+    "searchFor": "Tìm kiếm {{type}}",
+    "searching": "Đang tìm...",
+    "noResults": "Không tìm thấy kết quả."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Hmmm... Có vẻ lạc đường rồi!",
+    "description": "Có vẻ như một trong những lập trình viên của chúng tôi đã ngủ gật mất rồi.",
+    "goHome": "Quay Về Trang Chủ"
   }
 }
