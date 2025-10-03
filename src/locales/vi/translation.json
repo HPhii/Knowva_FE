@@ -1,6 +1,7 @@
 {
   "header": {
     "home": "Trang chủ",
+    "myLibrary": "Thư viện của tôi",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
     "tests": "Bài kiểm tra",
@@ -1036,6 +1037,39 @@
     "currentRating": "Đánh giá hiện tại"
   },
   "__comment_admin": "=== Admin Dashboard Translations ===",
+  "myLibrary": {
+    "title": "Thư viện của tôi",
+    "subtitle": "Quản lý và tổ chức tài liệu học tập của bạn",
+    "searchPlaceholder": "Tìm kiếm trong thư viện...",
+    "filterBy": "Lọc theo",
+    "sortBy": "Sắp xếp theo",
+    "all": "Tất cả",
+    "favorites": "Yêu thích",
+    "recent": "Gần đây",
+    "beginner": "Cơ bản",
+    "intermediate": "Trung bình",
+    "advanced": "Nâng cao",
+    "alphabetical": "A-Z",
+    "progress": "Tiến độ",
+    "difficulty": "Độ khó",
+    "flashcards": "Thẻ ghi nhớ",
+    "quizzes": "Câu hỏi",
+    "tests": "Bài kiểm tra",
+    "cards": "Thẻ",
+    "questions": "Câu hỏi",
+    "studied": "Đã học",
+    "score": "Điểm",
+    "created": "Tạo lúc",
+    "lastStudied": "Lần cuối học",
+    "lastTaken": "Lần cuối làm",
+    "view": "Xem",
+    "study": "Học",
+    "createNew": "Tạo mới",
+    "flashcardSet": "Bộ thẻ ghi nhớ",
+    "quiz": "Câu hỏi",
+    "test": "Bài kiểm tra",
+    "noItemsFound": "Không tìm thấy mục nào"
+  },
   "admin": {
     "dashboard": "Bảng điều khiển Admin",
     "systemName": "KnowVa Admin",
@@ -1278,5 +1312,19 @@
       "RATE_CONTENT": "Đánh giá nội dung",
       "COMMENT_ON_CONTENT": "Bình luận"
     }
+  "globalSearch": {
+    "quiz": "Câu hỏi",
+    "flashcard": "Thẻ ghi nhớ",
+    "user": "Người dùng",
+    "searchPlaceholder": "Tìm kiếm {{type}}...",
+    "searchFor": "Tìm kiếm {{type}}",
+    "searching": "Đang tìm...",
+    "noResults": "Không tìm thấy kết quả."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Hmmm... Có vẻ lạc đường rồi!",
+    "description": "Có vẻ như một trong những lập trình viên của chúng tôi đã ngủ gật mất rồi.",
+    "goHome": "Quay Về Trang Chủ"
   }
 }

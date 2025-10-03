@@ -29,6 +29,10 @@ import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
 import QuizDetail from "../pages/Quiz/QuizDetail";
 import EditQuiz from "../pages/Quiz/EditQuiz";
+import NotFound from "../pages/NotFound/NotFound";
+
+import MyLibrary from "../pages/MyLibrary/MyLibrary";
+import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
+      { path: "my-library", element: <MyLibrary /> },
+      { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
       { path: "explore", element: <Explore /> },
       { path: "quizzes", element: <Quiz /> },
@@ -58,6 +64,7 @@ const router = createBrowserRouter([
       { path: "payment-cancelled", element: <PaymentCancel /> },
       //
       { path: "user/edit", element: <EditProfile /> },
+      { path: "*", element: <NotFound /> },
 
       // { path: "blog", element: <Blog /> },
       // { path: "contact", element: <Contact /> },
@@ -89,7 +96,7 @@ const router = createBrowserRouter([
   },
   // { path: "/login", element: <Login /> },
   // { path: "/register", element: <Register /> },
-  // { path: "*", element: <NotFound /> }, // fallback nếu không có route khớp
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default router;
