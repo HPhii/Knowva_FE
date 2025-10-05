@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import QuizCard from "../../components/QuizCard";
 import FlashcardCard from "../../components/FlashcardCard";
-import FilterBar from "../../components/FilterBar";
+import quizShiba from "../../assets/images/quiz_shiba.png";
+import flashcardShiba from "../../assets/images/flashcard_shiba.png";
 
 const Explore = () => {
   const { t } = useTranslation();
@@ -12,15 +13,50 @@ const Explore = () => {
   
   // State management
   const [activeTab, setActiveTab] = useState("quiz"); // "quiz" or "flashcard"
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [showAllCategories, setShowAllCategories] = useState(false);
   
   // Data states
   const [quizSets, setQuizSets] = useState([]);
   const [flashcardSets, setFlashcardSets] = useState([]);
-  const [categories, setCategories] = useState([]);
+  
+  // Main categories - hiển thị mặc định (6 items)
+  const mainCategories = [
+    { id: "ALL", name: "All", icon: "🌐" },
+    { id: "MATHEMATICS", name: "Math", icon: "📐" },
+    { id: "LITERATURE", name: "Literature", icon: "📚" },
+    { id: "PHYSICS", name: "Physics", icon: "⚛️" },
+    { id: "CHEMISTRY", name: "Chemistry", icon: "🧪" },
+    { id: "LANGUAGE", name: "Language", icon: "🗣️" }
+  ];
+
+  // All categories - hiển thị khi click ">" (18 items - chia đều 2 hàng)
+  const allCategories = [
+    // Hàng 1 (9 items)
+    { id: "ALL", name: "All Categories", icon: "🌐" },
+    { id: "MATHEMATICS", name: "Mathematics", icon: "📐" },
+    { id: "PHYSICS", name: "Physics", icon: "⚛️" },
+    { id: "CHEMISTRY", name: "Chemistry", icon: "🧪" },
+    { id: "BIOLOGY", name: "Biology", icon: "🧬" },
+    { id: "COMPUTER_SCIENCE", name: "Computer Science", icon: "💻" },
+    { id: "HISTORY", name: "History", icon: "📜" },
+    { id: "GEOGRAPHY", name: "Geography", icon: "🌍" },
+    { id: "LITERATURE", name: "Literature", icon: "📚" },
+    // Hàng 2 (9 items)
+    { id: "LANGUAGE", name: "Language", icon: "🗣️" },
+    { id: "BUSINESS", name: "Business", icon: "💼" },
+    { id: "ECONOMICS", name: "Economics", icon: "📊" },
+    { id: "PSYCHOLOGY", name: "Psychology", icon: "🧠" },
+    { id: "MEDICINE", name: "Medicine", icon: "🏥" },
+    { id: "LAW", name: "Law", icon: "⚖️" },
+    { id: "ENGINEERING", name: "Engineering", icon: "⚙️" },
+    { id: "ARTS", name: "Arts", icon: "🎨" },
+    { id: "MUSIC", name: "Music", icon: "🎵" },
+    { id: "OTHER", name: "Other", icon: "🔖" }
+  ];
+
+  // Categories hiển thị hiện tại
+  const displayCategories = showAllCategories ? allCategories : mainCategories;
   
   // Loading states
   const [loading, setLoading] = useState(true);
@@ -45,19 +81,6 @@ const Explore = () => {
       setQuizSets(quizResponse.data || []);
       setFlashcardSets(flashcardResponse.data || []);
       
-      // Extract categories from both datasets
-      const allCategories = new Set();
-      [...(quizResponse.data || []), ...(flashcardResponse.data || [])].forEach(item => {
-        if (item.categoryName) {
-          allCategories.add(item.categoryName);
-        }
-      });
-      
-      setCategories(Array.from(allCategories).map((name, index) => ({
-        id: name.toLowerCase().replace(/\s+/g, '-'),
-        name: name
-      })));
-      
     } catch (err) {
       console.error('Error fetching data:', err);
       setError(err.response?.data?.message || 'Không thể tải dữ liệu');
@@ -66,34 +89,29 @@ const Explore = () => {
     }
   };
 
-  // Filter and sort data
+  // Filter data by category
   const getFilteredData = () => {
     const data = activeTab === "quiz" ? quizSets : flashcardSets;
     
-    let filtered = data.filter(item => {
-      const matchesSearch = item.title?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
-      const matchesCategory = !selectedCategory || item.categoryName === selectedCategory;
+    if (selectedCategory === "ALL") {
+      return data;
+    }
+    
+    return data.filter(item => {
+      // Kiểm tra nhiều field có thể chứa category
+      const itemCategory = item.categoryName || item.category || item.categoryType;
       
-      return matchesSearch && matchesCategory;
+      // Log để debug
+      console.log('Filtering:', {
+        selectedCategory,
+        itemCategory,
+        itemTitle: item.title,
+        matches: itemCategory === selectedCategory,
+        item: item
+      });
+      
+      return itemCategory === selectedCategory;
     });
-
-    // Sort data
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'newest':
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        case 'oldest':
-          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
-        case 'mostPlayed':
-          return (b.playCount || 0) - (a.playCount || 0);
-        case 'title':
-          return (a.title || '').localeCompare(b.title || '');
-        default:
-    return 0;
-      }
-    });
-
-    return filtered;
   };
 
   const filteredData = getFilteredData();
@@ -187,75 +205,206 @@ const Explore = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
-          <button
-            onClick={() => setActiveTab("quiz")}
-            className={`px-6 py-3 rounded-md font-medium transition-colors ${
-              activeTab === "quiz"
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            {t("explore.quizSets", "Quiz Sets")} ({quizSets.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("flashcard")}
-            className={`px-6 py-3 rounded-md font-medium transition-colors ${
-              activeTab === "flashcard"
-                ? "bg-white text-green-600 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            {t("explore.flashcardSets", "Flashcard Sets")} ({flashcardSets.length})
+    <div className="min-h-screen bg-gray-50">
+      {/* Category Header - Full Width */}
+      <div className="w-full bg-gray-50 px-2 sm:px-4 py-4 sm:py-6">
+        {!showAllCategories ? (
+          // Main categories - 1 hàng
+          <div className="flex flex-wrap gap-1 sm:gap-2 justify-center">
+            {displayCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                  selectedCategory === category.id
+                    ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                }`}
+              >
+                <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                <span className="hidden sm:inline">{category.name}</span>
+                <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+              </button>
+            ))}
+            
+            {/* Show More Button */}
+            <button
+              onClick={() => setShowAllCategories(true)}
+              className="flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 transition-all duration-200"
+            >
+              <span className="mr-1 sm:mr-2 text-sm sm:text-lg">›</span>
+              <span className="hidden sm:inline">More</span>
+              <span className="sm:hidden">›</span>
+            </button>
+          </div>
+        ) : (
+          // All categories - 2 hàng đều nhau
+          <div className="space-y-2">
+            {/* Hàng 1 - 9 items đầu tiên */}
+            <div className="flex flex-wrap gap-1 sm:gap-2 justify-center">
+              {displayCategories.slice(0, 9).map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === category.id
+                      ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                  }`}
+                >
+                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                  <span className="hidden sm:inline">{category.name}</span>
+                  <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                </button>
+              ))}
+            </div>
+            
+            {/* Hàng 2 - 9 items còn lại + nút Less */}
+            <div className="flex flex-wrap gap-1 sm:gap-2 justify-center">
+              {displayCategories.slice(9).map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === category.id
+                      ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                  }`}
+                >
+                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                  <span className="hidden sm:inline">{category.name}</span>
+                  <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                </button>
+              ))}
+              
+              {/* Show Less Button */}
+              <button
+                onClick={() => setShowAllCategories(false)}
+                className="flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 transition-all duration-200"
+              >
+                <span className="mr-1 sm:mr-2 text-sm sm:text-lg">‹</span>
+                <span className="hidden sm:inline">Less</span>
+                <span className="sm:hidden">‹</span>
               </button>
             </div>
+          </div>
+        )}
+      </div>
 
-        {/* Filter Bar */}
-        <FilterBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          showFilters={showFilters}
-          onToggleFilters={() => setShowFilters(!showFilters)}
-        />
+      {/* Image Tab Navigation - Vertical Left Side */}
+      <div className="w-full bg-gray-50 px-4 py-6">
+        <div className="max-w-7xl mx-auto flex">
+          {/* Left Side - Vertical Image Navigation */}
+          <div className="flex flex-col space-y-4 mr-6">
+            {/* Quiz Tab */}
+            <div 
+              onClick={() => setActiveTab("quiz")}
+              className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                activeTab === "quiz" 
+                  ? "scale-110 drop-shadow-lg" 
+                  : "hover:drop-shadow-md"
+              }`}
+            >
+              <div className="relative">
+                <img 
+                  src={quizShiba} 
+                  alt="Quiz Sets" 
+                  className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-300 ${
+                    activeTab === "quiz" 
+                      ? "brightness-110 contrast-110" 
+                      : "brightness-90 hover:brightness-100"
+                  }`}
+                />
+                {/* Active indicator */}
+                {activeTab === "quiz" && (
+                  <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                )}
+              </div>
+              <div className="text-center mt-1">
+                <p className={`text-xs font-medium transition-colors duration-200 ${
+                  activeTab === "quiz" 
+                    ? "text-green-600" 
+                    : "text-gray-600"
+                }`}>
+                  {t("explore.quizSets", "Quiz")}
+                </p>
+                <p className="text-xs text-gray-500">({quizSets.length})</p>
+              </div>
+            </div>
 
+            {/* Flashcard Tab */}
+            <div 
+              onClick={() => setActiveTab("flashcard")}
+              className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                activeTab === "flashcard" 
+                  ? "scale-110 drop-shadow-lg" 
+                  : "hover:drop-shadow-md"
+              }`}
+            >
+              <div className="relative">
+                <img 
+                  src={flashcardShiba} 
+                  alt="Flashcard Sets" 
+                  className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-300 ${
+                    activeTab === "flashcard" 
+                      ? "brightness-110 contrast-110" 
+                      : "brightness-90 hover:brightness-100"
+                  }`}
+                />
+                {/* Active indicator */}
+                {activeTab === "flashcard" && (
+                  <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                )}
+              </div>
+              <div className="text-center mt-1">
+                <p className={`text-xs font-medium transition-colors duration-200 ${
+                  activeTab === "flashcard" 
+                    ? "text-yellow-600" 
+                    : "text-gray-600"
+                }`}>
+                  {t("explore.flashcardSets", "Flashcard")}
+                </p>
+                <p className="text-xs text-gray-500">({flashcardSets.length})</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Content Area */}
+          <div className="flex-1">
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600">
-            {t("explore.resultsCount", "Showing")} {filteredData.length} {activeTab === "quiz" ? t("explore.quizSets", "quiz sets") : t("explore.flashcardSets", "flashcard sets")}
+                {t("explore.resultsCount", "Showing")} {filteredData.length} {activeTab === "quiz" ? t("explore.quizSets", "quiz sets") : t("explore.flashcardSets", "flashcard sets")}
+                {selectedCategory !== "ALL" && ` in ${displayCategories.find(cat => cat.id === selectedCategory)?.name}`}
               </p>
             </div>
 
-        {/* Content Grid */}
-        {filteredData.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredData.map((item) => (
-              activeTab === "quiz" ? (
-                <QuizCard
-                  key={item.id}
-                  quiz={item}
-                  onView={handleViewQuiz}
-                />
-              ) : (
-                <FlashcardCard
-                  key={item.id}
-                  flashcard={item}
-                  onView={handleViewFlashcard}
-                />
-              )
-            ))}
+            {/* Content Grid */}
+            {filteredData.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredData.map((item) => (
+                  activeTab === "quiz" ? (
+                    <QuizCard
+                      key={item.id}
+                      quiz={item}
+                      onView={handleViewQuiz}
+                    />
+                  ) : (
+                    <FlashcardCard
+                      key={item.id}
+                      flashcard={item}
+                      onView={handleViewFlashcard}
+                    />
+                  )
+                ))}
+              </div>
+            ) : (
+              <EmptyState />
+            )}
           </div>
-        ) : (
-          <EmptyState />
-        )}
+        </div>
       </div>
+
     </div>
   );
 };

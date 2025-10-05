@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
 import QuizAttempt from "./QuizAttempt";
 import CommentSection from "../../components/CommentSection";
+import { getLoginData } from "../../utils/auth";
 
 const QuizDetail = () => {
   const { id } = useParams();
@@ -19,17 +20,72 @@ const QuizDetail = () => {
   // Comments state
   const [comments, setComments] = useState([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
+  
+  // User state
+  const [currentUser, setCurrentUser] = useState(null);
+  const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
     fetchQuizDetail();
     fetchComments();
+    checkUserPermissions();
   }, [id]);
+
+  // Check user permissions for editing
+  const checkUserPermissions = () => {
+    try {
+      const loginData = getLoginData();
+      console.log("Login data from localStorage:", loginData);
+      
+      if (loginData) {
+        // Try multiple ways to get userId
+        const userId = loginData.userId || loginData.user?.id || loginData.user?.userId || loginData.id;
+        console.log("Extracted userId:", userId);
+        
+        if (userId) {
+          setCurrentUser({
+            ...loginData,
+            userId: userId,
+            id: userId
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error getting user data:", error);
+    }
+  };
+
+  // Check if current user can edit this quiz
+  useEffect(() => {
+    if (quiz && currentUser) {
+      const quizUserId = quiz.userId || quiz.authorId || quiz.createdBy;
+      const currentUserId = currentUser.userId || currentUser.id;
+      
+      // Convert both to strings for comparison to handle number/string mismatches
+      const quizUserIdStr = String(quizUserId || '');
+      const currentUserIdStr = String(currentUserId || '');
+      
+      console.log("Checking edit permissions:", {
+        quiz: quiz,
+        currentUser: currentUser,
+        quizUserId,
+        currentUserId,
+        quizUserIdStr,
+        currentUserIdStr,
+        canEdit: quizUserIdStr === currentUserIdStr,
+        strictEqual: quizUserId === currentUserId
+      });
+      
+      setCanEdit(quizUserIdStr === currentUserIdStr && quizUserIdStr !== '');
+    }
+  }, [quiz, currentUser]);
 
   const fetchQuizDetail = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await api.get(`/quiz-sets/${id}`);
+      console.log("Quiz API response:", response.data);
       setQuiz(response.data);
     } catch (err) {
       console.error("Error fetching quiz detail:", err);
@@ -209,7 +265,7 @@ const QuizDetail = () => {
             <div className="flex items-center space-x-3">
               <button
                 onClick={startQuizAttempt}
-                className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors group"
+                className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 !text-white rounded-lg transition-colors group"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -217,15 +273,38 @@ const QuizDetail = () => {
                 Bắt đầu làm quiz
               </button>
               
-              <button
-                onClick={() => navigate(`/quiz/${id}/edit`)}
-                className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors group"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Sửa Quiz
-              </button>
+              <div className="relative">
+                <button
+                  onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
+                  disabled={!canEdit}
+                  className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 group relative ${
+                    canEdit 
+                      ? "bg-green-600 hover:bg-green-700 !text-white cursor-pointer" 
+                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  }`}
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Sửa Quiz
+                  
+                  {/* Lock icon overlay when disabled */}
+                  {!canEdit && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-80 rounded-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                  )}
+                </button>
+                
+                {/* Tooltip for disabled state */}
+                {!canEdit && (
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    Chỉ tác giả mới có thể sửa quiz này
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
