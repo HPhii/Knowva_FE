@@ -13,6 +13,46 @@
     "userDetails": "Thông tin người dùng",
     "verifyEmail": "Xác thực Email"
   },
+  "notifications": {
+    "title": "Tất cả thông báo",
+    "loading": "Đang tải...",
+    "noNotifications": "Không có thông báo nào",
+    "noNotificationsDesc": "Bạn sẽ nhận được thông báo mới ở đây",
+    "filters": {
+      "title": "Bộ lọc",
+      "type": "Loại thông báo",
+      "status": "Trạng thái",
+      "startDate": "Từ ngày",
+      "endDate": "Đến ngày",
+      "clearFilters": "Xóa bộ lọc",
+      "allTypes": "Tất cả loại",
+      "allStatus": "Tất cả",
+      "unread": "Chưa đọc",
+      "read": "Đã đọc"
+    },
+    "types": {
+      "QUIZ_INVITE": "Mời làm quiz",
+      "FLASHCARD_INVITE": "Mời học flashcard",
+      "SYSTEM_ALERT": "Cảnh báo hệ thống",
+      "REMINDER": "Nhắc nhở",
+      "BUG_REPORT": "Báo lỗi"
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "of": "trong",
+      "notifications": "thông báo",
+      "page": "Trang",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "phút trước",
+      "hoursAgo": "giờ trước",
+      "daysAgo": "ngày trước",
+      "monthsAgo": "tháng trước"
+    }
+  },
   "upload": {
     "createStudyMaterials": "Tạo tài liệu học tập từ bài giảng của bạn",
     "description": "Tải lên hình ảnh hoặc PDF của slide bài giảng để tạo ra ghi chú học tập ngắn gọn, dễ hiểu.",
@@ -938,6 +978,8 @@
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
     "sendFeedback": "Gửi Feedback",
+    "reportBug": "Báo cáo lỗi",
+    "reportBugDesc": "Tìm thấy lỗi? Hãy giúp chúng tôi cải thiện ứng dụng",
     "customers": "Khách hàng",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
@@ -1236,6 +1278,35 @@
     "errorMessage": "Có lỗi xảy ra khi gửi feedback. Vui lòng thử lại sau.",
     "cancel": "Hủy",
     "submit": "Gửi Feedback"
+  },
+  "bugReport": {
+    "title": "Báo cáo lỗi",
+    "titleLabel": "Tiêu đề",
+    "titlePlaceholder": "Mô tả ngắn gọn về lỗi...",
+    "titleRequired": "Vui lòng nhập tiêu đề!",
+    "descriptionLabel": "Mô tả chi tiết",
+    "descriptionPlaceholder": "Mô tả chi tiết về lỗi, các bước để tái tạo lỗi, và kết quả mong đợi...",
+    "descriptionRequired": "Vui lòng nhập mô tả chi tiết!",
+    "categoryLabel": "Danh mục",
+    "priorityLabel": "Mức độ ưu tiên",
+    "categories": {
+      "UI": "UI/UX Issues",
+      "FUNCTIONALITY": "Functionality",
+      "PERFORMANCE": "Performance",
+      "PAYMENT": "Payment",
+      "SECURITY": "Security",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "successMessage": "Báo cáo lỗi đã được gửi thành công!",
+    "errorMessage": "Không thể gửi báo cáo lỗi. Vui lòng thử lại.",
+    "cancel": "Hủy",
+    "submit": "Gửi báo cáo"
   },
   "__comment_explore": "=== Explore Page Translations ===",
   "explore": {

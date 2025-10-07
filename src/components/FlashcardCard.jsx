@@ -35,14 +35,22 @@ const FlashcardCard = ({ flashcard, onView }) => {
         {/* Author */}
         <div className="flex items-center text-sm text-gray-500 mb-3">
           <UserOutlined className="mr-2" />
-          <span>{flashcard.authorName || t('explore.unknownAuthor', 'Unknown Author')}</span>
+          <span>{flashcard.username || flashcard.authorName || flashcard.author || t('explore.unknownAuthor', 'Unknown Author')}</span>
         </div>
 
         {/* Stats */}
         <div className="flex items-center justify-between text-sm text-gray-600">
           <div className="flex items-center">
             <FileTextOutlined className="mr-1" />
-            <span>{flashcard.maxQuestion || flashcard.cardCount || 0} {t('explore.cards', 'cards')}</span>
+            <span>{(() => {
+              // Tính số card dựa trên ID lớn nhất trong danh sách flashcards
+              if (flashcard.flashcards && Array.isArray(flashcard.flashcards) && flashcard.flashcards.length > 0) {
+                const maxId = Math.max(...flashcard.flashcards.map(card => card.id || 0));
+                return maxId;
+              }
+              // Fallback về các field khác nếu không có flashcards array
+              return flashcard.maxQuestion || flashcard.cardCount || 0;
+            })()} {t('explore.cards', 'cards')}</span>
           </div>
           {flashcard.estimatedTime && (
             <div className="flex items-center">

@@ -163,7 +163,7 @@ const Pricing = () => {
     return {
       symbol: isVietnamese ? '₫' : '$',
       regularPrice: isVietnamese ? '0' : '0', // Free plan
-      vipPrice: isVietnamese ? '499.000' : '19.99',
+      vipPrice: isVietnamese ? '49.000' : '1.90',
       period: t('pricing.perMonth')
     };
   };
