@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
 import QuizAttempt from "./QuizAttempt";
 import CommentSection from "../../components/CommentSection";
+import InviteModal from "../../components/InviteModal";
 import { getLoginData } from "../../utils/auth";
 
 const QuizDetail = () => {
@@ -24,6 +25,12 @@ const QuizDetail = () => {
   // User state
   const [currentUser, setCurrentUser] = useState(null);
   const [canEdit, setCanEdit] = useState(false);
+  
+  // Invite modal state
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  
+  // Copy link state
+  const [copyMessage, setCopyMessage] = useState("");
 
   useEffect(() => {
     fetchQuizDetail();
@@ -166,6 +173,36 @@ const QuizDetail = () => {
     fetchComments();
   };
 
+  // Handle invite success
+  const handleInviteSuccess = () => {
+    // You can add any additional logic here after successful invitation
+    console.log('Invitation sent successfully');
+  };
+
+  // Handle copy link
+  const handleCopyLink = async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL || 'https://knowva.me';
+      let link = `${baseUrl}/quiz/${id}`;
+      
+      // Check visibility and add token if needed
+      if (quiz.visibility === 'HIDDEN' && quiz.accessToken) {
+        link += `?token=${quiz.accessToken}`;
+      } else if (quiz.visibility === 'PRIVATE') {
+        setCopyMessage("Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ.");
+        return;
+      }
+      
+      await navigator.clipboard.writeText(link);
+      setCopyMessage("Đã sao chép link!");
+      setTimeout(() => setCopyMessage(""), 3000);
+    } catch (error) {
+      console.error('Error copying link:', error);
+      setCopyMessage("Không thể sao chép link");
+      setTimeout(() => setCopyMessage(""), 3000);
+    }
+  };
+
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
@@ -249,6 +286,17 @@ const QuizDetail = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
+          {/* Copy message */}
+          {copyMessage && (
+            <div className={`mb-4 p-3 rounded-lg text-center ${
+              copyMessage.includes('riêng tư') 
+                ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
+                : 'bg-green-100 text-green-800 border border-green-300'
+            }`}>
+              {copyMessage}
+            </div>
+          )}
+          
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
@@ -262,48 +310,72 @@ const QuizDetail = () => {
               <span className="font-medium">Quay lại</span>
             </button>
             
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={startQuizAttempt}
-                className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 !text-white rounded-lg transition-colors group"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Bắt đầu làm quiz
-              </button>
+            {/* Secondary Actions - Only show action buttons */}
+            <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
+              {/* Copy Link Button */}
+              <div className="relative group">
+                <button
+                  onClick={handleCopyLink}
+                  disabled={quiz.visibility === 'PRIVATE'}
+                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
+                    quiz.visibility === 'PRIVATE'
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 cursor-pointer shadow-md hover:shadow-lg"
+                  }`}
+                  title="Copy Link"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+                
+                {/* Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                  {quiz.visibility === 'PRIVATE' ? "Set này là riêng tư" : "Copy Link"}
+                </div>
+              </div>
+
+              {/* Invite Button - Only show for owner */}
+              {canEdit && (
+                <div className="relative group">
+                  <button
+                    onClick={() => setIsInviteModalOpen(true)}
+                    className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                    title="Mời người dùng"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                  </button>
+                  
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    Mời người dùng
+                  </div>
+                </div>
+              )}
               
-              <div className="relative">
+              {/* Edit Button */}
+              <div className="relative group">
                 <button
                   onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
                   disabled={!canEdit}
-                  className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 group relative ${
+                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
                     canEdit 
-                      ? "bg-green-600 hover:bg-green-700 !text-white cursor-pointer" 
-                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                      ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg" 
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
                   }`}
+                  title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Sửa Quiz
-                  
-                  {/* Lock icon overlay when disabled */}
-                  {!canEdit && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-80 rounded-lg">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                  )}
                 </button>
                 
-                {/* Tooltip for disabled state */}
-                {!canEdit && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    Chỉ tác giả mới có thể sửa quiz này
-                  </div>
-                )}
+                {/* Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                  {canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                </div>
               </div>
             </div>
           </div>
@@ -331,18 +403,33 @@ const QuizDetail = () => {
               </div>
               
               {/* Right side - Quiz Stats */}
-              <div className="flex flex-wrap gap-4">
-                <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-200">
-                  <div className="text-2xl font-bold text-blue-600">{quiz.maxQuestions ?? quiz.questionCount ?? 0}</div>
-                  <div className="text-sm text-blue-500">{t("quiz.detail.questions", "Câu hỏi")}</div>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-wrap gap-4">
+                  <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-200">
+                    <div className="text-2xl font-bold text-blue-600">{quiz.maxQuestions ?? quiz.questionCount ?? 0}</div>
+                    <div className="text-sm text-blue-500">{t("quiz.detail.questions", "Câu hỏi")}</div>
+                  </div>
+                  <div className="bg-green-50 rounded-xl px-4 py-3 border border-green-200">
+                    <div className="text-2xl font-bold text-green-600">{quiz.timeLimit || 30}</div>
+                    <div className="text-sm text-green-500">Phút</div>
+                  </div>
+                  <div className="bg-purple-50 rounded-xl px-4 py-3 border border-purple-200">
+                    <div className="text-2xl font-bold text-purple-600">{quiz.questionType === 'MULTIPLE_CHOICE' ? 'MC' : 'TF'}</div>
+                    <div className="text-sm text-purple-500">Loại</div>
+                  </div>
                 </div>
-                <div className="bg-green-50 rounded-xl px-4 py-3 border border-green-200">
-                  <div className="text-2xl font-bold text-green-600">{quiz.timeLimit || 30}</div>
-                  <div className="text-sm text-green-500">Phút</div>
-                </div>
-                <div className="bg-purple-50 rounded-xl px-4 py-3 border border-purple-200">
-                  <div className="text-2xl font-bold text-purple-600">{quiz.questionType === 'MULTIPLE_CHOICE' ? 'MC' : 'TF'}</div>
-                  <div className="text-sm text-purple-500">Loại</div>
+                
+                {/* Start Quiz Button */}
+                <div className="flex justify-center lg:justify-start">
+                  <button
+                    onClick={startQuizAttempt}
+                    className="flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 !text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 group"
+                  >
+                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Bắt đầu làm quiz
+                  </button>
                 </div>
               </div>
             </div>
@@ -435,6 +522,15 @@ const QuizDetail = () => {
         </div>
 
       </div>
+
+      {/* Invite Modal */}
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        entityId={id}
+        entityType="quiz"
+        onInviteSuccess={handleInviteSuccess}
+      />
 
     </div>
   );

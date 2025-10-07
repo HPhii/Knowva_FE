@@ -6,6 +6,7 @@ import QuizCard from "../../components/QuizCard";
 import FlashcardCard from "../../components/FlashcardCard";
 import quizShiba from "../../assets/images/quiz_shiba.png";
 import flashcardShiba from "../../assets/images/flashcard_shiba.png";
+import notFoundImage from "../../assets/images/NotFound.png";
 
 const Explore = () => {
   const { t } = useTranslation();
@@ -89,15 +90,22 @@ const Explore = () => {
     }
   };
 
-  // Filter data by category
+  // Filter data by category and visibility
   const getFilteredData = () => {
     const data = activeTab === "quiz" ? quizSets : flashcardSets;
     
+    // First filter by visibility - only show PUBLIC items
+    const publicData = data.filter(item => {
+      const visibility = item.visibility || item.visibilityStatus;
+      return visibility === "PUBLIC";
+    });
+    
+    // Then filter by category
     if (selectedCategory === "ALL") {
-      return data;
+      return publicData;
     }
     
-    return data.filter(item => {
+    return publicData.filter(item => {
       // Kiểm tra nhiều field có thể chứa category
       const itemCategory = item.categoryName || item.category || item.categoryType;
       
@@ -106,6 +114,7 @@ const Explore = () => {
         selectedCategory,
         itemCategory,
         itemTitle: item.title,
+        visibility: item.visibility || item.visibilityStatus,
         matches: itemCategory === selectedCategory,
         item: item
       });
@@ -181,9 +190,13 @@ const Explore = () => {
   // Empty state component
   const EmptyState = () => (
     <div className="text-center py-12">
-      <div className="text-gray-400 text-6xl mb-4">
-        {activeTab === "quiz" ? "📝" : "🗂️"}
-                </div>
+      <div className="flex justify-center mb-6">
+        <img 
+          src={notFoundImage} 
+          alt="Not Found" 
+          className="w-32 h-32 sm:w-40 sm:h-40 object-contain opacity-88 "
+        />
+      </div>
       <h3 className="text-xl font-semibold text-gray-900 mb-2">
         {activeTab === "quiz" 
           ? t("explore.noQuizSets", "No quiz sets found") 
@@ -193,7 +206,7 @@ const Explore = () => {
       <p className="text-gray-600">
         {t("explore.noResultsDesc", "Try adjusting your search or filters")}
       </p>
-              </div>
+    </div>
   );
 
   if (loading) {
@@ -328,7 +341,7 @@ const Explore = () => {
                 }`}>
                   {t("explore.quizSets", "Quiz")}
                 </p>
-                <p className="text-xs text-gray-500">({quizSets.length})</p>
+                <p className="text-xs text-gray-500">({quizSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC").length})</p>
               </div>
             </div>
 
@@ -364,7 +377,7 @@ const Explore = () => {
                 }`}>
                   {t("explore.flashcardSets", "Flashcard")}
                 </p>
-                <p className="text-xs text-gray-500">({flashcardSets.length})</p>
+                <p className="text-xs text-gray-500">({flashcardSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC").length})</p>
               </div>
             </div>
           </div>
