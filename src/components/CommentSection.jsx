@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../config/axios';
 import Rating from './Rating';
+import ImageUpload from './ImageUpload';
 
 const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', comments = [], onAddComment, isLoading = false, onRefreshComments, userRating: propUserRating = null }) => {
   const { t } = useTranslation();
@@ -10,12 +11,14 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   const [commentText, setCommentText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   
   // Reply state management
   const [replyText, setReplyText] = useState('');
   const [replyImageUrl, setReplyImageUrl] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const [isUploadingReplyImage, setIsUploadingReplyImage] = useState(false);
 
   // Rating edit state
   const [isEditingRating, setIsEditingRating] = useState(false);
@@ -30,6 +33,28 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // User rating state - use prop if provided, otherwise use local state
   const [userRating, setUserRating] = useState(propUserRating);
   const [isLoadingRating, setIsLoadingRating] = useState(false);
+
+  // Handle image upload for main comment
+  const handleImageUpload = (uploadedImageUrl) => {
+    setImageUrl(uploadedImageUrl);
+    setIsUploadingImage(false);
+  };
+
+  // Handle image upload for reply
+  const handleReplyImageUpload = (uploadedImageUrl) => {
+    setReplyImageUrl(uploadedImageUrl);
+    setIsUploadingReplyImage(false);
+  };
+
+  // Handle image upload start for main comment
+  const handleImageUploadStart = () => {
+    setIsUploadingImage(true);
+  };
+
+  // Handle image upload start for reply
+  const handleReplyImageUploadStart = () => {
+    setIsUploadingReplyImage(true);
+  };
 
 
   // Fetch user's rating on component mount (always fetch if entityId and entityType are available)
@@ -88,18 +113,20 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   const themes = {
     blog: {
       title: t('comments.title'),
-      borderColor: 'border-slate-200',
+      borderColor: 'border-blue-200',
       buttonBg: 'bg-blue-600',
       buttonHover: 'hover:bg-blue-700',
       buttonFocus: 'focus:ring-blue-500',
       accentColor: 'text-blue-600',
-      borderAccent: 'border-slate-200',
-      bgColor: 'bg-slate-50',
+      borderAccent: 'border-blue-200',
+      bgColor: 'bg-blue-50',
       icon: '💬',
-      likeColor: 'text-red-500',
-      likeHover: 'hover:text-red-600',
-      cardBg: 'bg-white',
-      cardHover: 'hover:bg-slate-50'
+      likeColor: 'text-pink-500',
+      likeHover: 'hover:text-pink-600',
+      cardBg: 'bg-blue-50/30',
+      cardHover: 'hover:bg-blue-100/50',
+      headerGradient: 'from-blue-500 to-blue-600',
+      avatarGradient: 'from-blue-500 to-blue-600'
     },
     flashcard: {
       title: t('comments.flashcardTitle'),
@@ -111,12 +138,14 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       borderAccent: 'border-purple-200',
       bgColor: 'bg-purple-50',
       icon: '📚',
-      likeColor: 'text-red-500',
-      likeHover: 'hover:text-red-600',
-      cardBg: 'bg-white',
-      cardHover: 'hover:bg-slate-50'
+      likeColor: 'text-rose-500',
+      likeHover: 'hover:text-rose-600',
+      cardBg: 'bg-purple-50/50',
+      cardHover: 'hover:bg-purple-100/60',
+      headerGradient: 'from-purple-500 to-purple-600',
+      avatarGradient: 'from-purple-500 to-purple-600'
     },
-    quiz: {
+    quizset: {
       title: t('comments.quizTitle'),
       borderColor: 'border-green-200',
       buttonBg: 'bg-green-600',
@@ -126,17 +155,24 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       borderAccent: 'border-green-200',
       bgColor: 'bg-green-50',
       icon: '🧩',
-      likeColor: 'text-red-500',
-      likeHover: 'hover:text-red-600',
-      cardBg: 'bg-white',
-      cardHover: 'hover:bg-slate-50'
+      likeColor: 'text-emerald-500',
+      likeHover: 'hover:text-emerald-600',
+      cardBg: 'bg-green-50/40',
+      cardHover: 'hover:bg-green-100/50',
+      headerGradient: 'from-green-500 to-green-600',
+      avatarGradient: 'from-green-500 to-green-600'
     }
   };
 
-  const theme = themes[variant];
+  const theme = themes[variant] || themes.blog;
 
   // Organize comments into parent comments with replies
   const organizeComments = (comments) => {
+    // Ensure comments is an array
+    if (!Array.isArray(comments)) {
+      return [];
+    }
+
     // If comments already have replies organized, use them directly
     if (comments.length > 0 && comments[0].replies !== undefined) {
       return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -245,6 +281,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       // Clear form
       setCommentText('');
       setImageUrl('');
+      setIsUploadingImage(false);
       
       // Show success message
       showToast(t('comments.commentPosted'), 'success');
@@ -332,6 +369,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       setReplyText('');
       setReplyImageUrl('');
       setReplyingTo(null);
+      setIsUploadingReplyImage(false);
       
       // Show success message
       showToast(t('comments.replyPosted'), 'success');
@@ -362,6 +400,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     setReplyText('');
     setReplyImageUrl('');
     setReplyingTo(null);
+    setIsUploadingReplyImage(false);
   };
 
   // Handle edit rating
@@ -623,7 +662,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
+          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.headerGradient} flex items-center justify-center text-white text-xl font-bold shadow-lg`}>
             {theme.icon}
           </div>
           <div>
@@ -752,33 +791,55 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       )}
       
       {/* Comment Form */}
-      <div className="mb-8 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+      <div className={`mb-8 p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm`}>
         <h4 className="text-lg font-semibold text-slate-800 mb-4 flex items-center">
           <span className="text-xl mr-2">✍️</span>
           {t('comments.addComment', 'Thêm bình luận')}
         </h4>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder={t('comments.writeComment')}
-              className="w-full p-4 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400"
-              rows="3"
-              disabled={isSubmitting}
-            />
-          </div>
-          
-          {/* Image URL Input */}
-          <div className="mb-4">
-            <input
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder={t('comments.imageUrlPlaceholder')}
-              className="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400"
-              disabled={isSubmitting}
-            />
+            <div className="flex gap-3">
+              {/* Textarea for comment */}
+              <div className="flex-1">
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder={t('comments.writeComment')}
+                  className={`w-full p-4 border ${theme.borderColor} rounded-xl resize-none focus:outline-none focus:ring-2 ${theme.buttonFocus} focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400`}
+                  rows="3"
+                  disabled={isSubmitting}
+                />
+              </div>
+              
+              {/* Image Upload - compact version */}
+              <div className="flex-shrink-0">
+                <div className="w-24 h-20">
+                  <ImageUpload
+                    onImageUpload={handleImageUpload}
+                    onUploadStart={handleImageUploadStart}
+                    isUploading={isUploadingImage}
+                    disabled={isSubmitting}
+                    compact={true}
+                  />
+                </div>
+                {imageUrl && (
+                  <div className="mt-1 flex items-center space-x-1">
+                    <img 
+                      src={imageUrl} 
+                      alt="Preview" 
+                      className="w-8 h-8 object-cover rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl('')}
+                      className="text-red-500 hover:text-red-700 text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           
           {/* Submit Button */}
@@ -786,7 +847,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             <button
               type="submit"
               disabled={!commentText.trim() || isSubmitting}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base"
+              className={`${theme.buttonBg} ${theme.buttonHover} text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base`}
             >
               {isSubmitting ? (
                 <>
@@ -841,10 +902,10 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             return (
               <div key={commentId} className="space-y-4">
                 {/* Parent Comment */}
-                <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
+                <div className={`p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm ${theme.cardHover} transition-all duration-300`}>
                   <div className="flex items-start space-x-4">
                     {/* Avatar */}
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-lg font-bold shadow-lg flex-shrink-0">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-lg font-bold shadow-lg flex-shrink-0`}>
                       {authorName.charAt(0).toUpperCase()}
                     </div>
                     
@@ -946,29 +1007,51 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
                   {/* Reply form */}
                   {replyingTo === commentId && (
-                    <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className={`mt-6 p-4 rounded-xl ${theme.bgColor} border ${theme.borderColor}`}>
                       <form onSubmit={(e) => handleReplySubmit(e, commentId)}>
                         <div className="mb-3">
-                          <textarea
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}
-                            placeholder={t('comments.writeReply')}
-                            className="w-full p-3 border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400"
-                            rows="2"
-                            disabled={isSubmittingReply}
-                          />
-                        </div>
-                        
-                        {/* Reply Image URL Input */}
-                        <div className="mb-3">
-                          <input
-                            type="url"
-                            value={replyImageUrl}
-                            onChange={(e) => setReplyImageUrl(e.target.value)}
-                            placeholder={t('comments.imageUrlPlaceholder')}
-                            className="w-full p-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400"
-                            disabled={isSubmittingReply}
-                          />
+                          <div className="flex gap-2">
+                            {/* Textarea for reply */}
+                            <div className="flex-1">
+                              <textarea
+                                value={replyText}
+                                onChange={(e) => setReplyText(e.target.value)}
+                                placeholder={t('comments.writeReply')}
+                                className={`w-full p-3 border ${theme.borderColor} rounded-xl resize-none focus:outline-none focus:ring-2 ${theme.buttonFocus} focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400`}
+                                rows="2"
+                                disabled={isSubmittingReply}
+                              />
+                            </div>
+                            
+                            {/* Reply Image Upload - compact version */}
+                            <div className="flex-shrink-0">
+                              <div className="w-20 h-16">
+                                <ImageUpload
+                                  onImageUpload={handleReplyImageUpload}
+                                  onUploadStart={handleReplyImageUploadStart}
+                                  isUploading={isUploadingReplyImage}
+                                  disabled={isSubmittingReply}
+                                  compact={true}
+                                />
+                              </div>
+                              {replyImageUrl && (
+                                <div className="mt-1 flex items-center space-x-1">
+                                  <img 
+                                    src={replyImageUrl} 
+                                    alt="Preview" 
+                                    className="w-6 h-6 object-cover rounded"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setReplyImageUrl('')}
+                                    className="text-red-500 hover:text-red-700 text-xs"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
                         
                         {/* Reply Submit/Cancel Buttons */}
@@ -983,7 +1066,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                           <button
                             type="submit"
                             disabled={!replyText.trim() || isSubmittingReply}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm"
+                            className={`${theme.buttonBg} ${theme.buttonHover} text-white px-6 py-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm`}
                           >
                             {isSubmittingReply ? (
                               <>
@@ -1017,10 +1100,10 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                       const replyDate = reply.createdAt || reply.created_at || reply.timestamp || reply.date || new Date().toISOString();
                       
                       return (
-                        <div key={replyId} className="p-4 rounded-xl border-l-4 border-blue-200 bg-slate-50 hover:bg-slate-100 transition-all duration-300">
+                        <div key={replyId} className={`p-4 rounded-xl border-l-4 ${theme.borderAccent} ${theme.bgColor} ${theme.cardHover} transition-all duration-300`}>
                           <div className="flex items-start space-x-3">
                             {/* Reply Avatar */}
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
+                            <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0`}>
                               {replyAuthorName.charAt(0).toUpperCase()}
                             </div>
                             

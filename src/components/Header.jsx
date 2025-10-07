@@ -607,7 +607,7 @@ const Header = () => {
           <div className="flex items-center space-x-2">
             <Link to="/login">
               <button className="cursor-pointer !text-white py-2 px-5 rounded-full hover:bg-white/10 transition-all duration-300 text-[16px] font-medium hover:scale-105 border border-white/20 hover:border-white/40">
-                Sign in
+                {t("header.login")}
               </button>
             </Link>
             <Link to="/signup">

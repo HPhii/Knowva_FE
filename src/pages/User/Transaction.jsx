@@ -5,12 +5,12 @@ const Transaction = () => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
           {t("transaction")}
-        </h1>
-        <p className="text-gray-600">
+        </h3>
+        <p className="text-gray-600 text-sm">
           {t("transactionDescription") ||
             "View your transaction history and payment details"}
         </p>
@@ -40,7 +40,7 @@ const Transaction = () => {
             "You haven't made any transactions yet. Your payment history will appear here once you make a purchase."}
         </p>
       </div>
-    </>
+    </div>
   );
 };
 
