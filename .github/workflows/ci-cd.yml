@@ -12,6 +12,8 @@ jobs:
   build:
     name: Build React App
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -26,13 +28,15 @@ jobs:
 
       - name: Set API URL for Production
         if: github.ref == 'refs/heads/main'
-        run: echo "VITE_SERVER_URL=${{ secrets.API_URL_PROD }}" > .env
-        run: echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_PROD }}" >> .env
+        run: |
+          echo "VITE_SERVER_URL=${{ secrets.API_URL_PROD }}" > .env
+          echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_PROD }}" >> .env
 
       - name: Set API URL for Development
         if: github.ref == 'refs/heads/develop'
-        run: echo "VITE_SERVER_URL=${{ secrets.API_URL_DEV }}" > .env
-        run: echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_DEV }}" >> .env
+        run: |
+          echo "VITE_SERVER_URL=${{ secrets.API_URL_DEV }}" > .env
+          echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_DEV }}" >> .env
 
       - name: Build React App
         run: npm run build
