@@ -14,6 +14,46 @@
     "userDetails": "User Details",
     "verifyEmail": "Verify Email"
   },
+  "notifications": {
+    "title": "All Notifications",
+    "loading": "Loading...",
+    "noNotifications": "No notifications",
+    "noNotificationsDesc": "You will receive new notifications here",
+    "filters": {
+      "title": "Filters",
+      "type": "Notification Type",
+      "status": "Status",
+      "startDate": "From Date",
+      "endDate": "To Date",
+      "clearFilters": "Clear Filters",
+      "allTypes": "All Types",
+      "allStatus": "All",
+      "unread": "Unread",
+      "read": "Read"
+    },
+    "types": {
+      "QUIZ_INVITE": "Quiz Invite",
+      "FLASHCARD_INVITE": "Flashcard Invite",
+      "SYSTEM_ALERT": "System Alert",
+      "REMINDER": "Reminder",
+      "BUG_REPORT": "Bug Report"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "notifications": "notifications",
+      "page": "Page",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "minutes ago",
+      "hoursAgo": "hours ago",
+      "daysAgo": "days ago",
+      "monthsAgo": "months ago"
+    }
+  },
   "upload": {
     "createStudyMaterials": "Create study materials from your lectures",
     "description": "Upload images or PDFs of your lecture slides to generate concise, easy-to-understand study notes.",
@@ -893,6 +933,8 @@
     "brandDesc": "Empowering learning through interactive quizzes, flashcards, and comprehensive tests.",
     "exploreMore": "Explore More",
     "sendFeedback": "Send Feedback",
+    "reportBug": "Report a Bug",
+    "reportBugDesc": "Found a bug? Help us improve the application",
     "customers": "Customers",
     "pricing": "Pricing",
     "support": "Support",
@@ -1192,6 +1234,35 @@
     "cancel": "Cancel",
     "submit": "Send Feedback"
   },
+  "bugReport": {
+    "title": "Report a Bug",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Brief description of the bug...",
+    "titleRequired": "Please enter a title!",
+    "descriptionLabel": "Detailed Description",
+    "descriptionPlaceholder": "Describe the bug in detail, steps to reproduce, and expected result...",
+    "descriptionRequired": "Please enter detailed description!",
+    "categoryLabel": "Category",
+    "priorityLabel": "Priority Level",
+    "categories": {
+      "UI": "UI/UX Issues",
+      "FUNCTIONALITY": "Functionality",
+      "PERFORMANCE": "Performance",
+      "PAYMENT": "Payment",
+      "SECURITY": "Security",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "successMessage": "Bug report has been submitted successfully!",
+    "errorMessage": "Unable to submit bug report. Please try again.",
+    "cancel": "Cancel",
+    "submit": "Submit Report"
+  },
   "__comment_explore": "=== Explore Page Translations ===",
   "explore": {
     "title": "Explore Learning Content",
@@ -1276,6 +1347,12 @@
     "searchFor": "Search for {{type}}",
     "searching": "Searching...",
     "noResults": "No results found."
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Hmmm...",
+    "description": "It looks like one of the developers fell asleep",
+    "goHome": "Go Back Home"
   },
   "notification": {
     "title": "Notifications",
@@ -1379,11 +1456,5 @@
       "saveError": "Unable to save settings. Please try again.",
       "reviewError": "Unable to save rating. Please try again."
     }
-  },
-  "notFound": {
-    "title": "404",
-    "subtitle": "Hmmm...",
-    "description": "It looks like one of the developers fell asleep",
-    "goHome": "Go Back Home"
   }
 }

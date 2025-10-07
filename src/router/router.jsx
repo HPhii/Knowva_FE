@@ -41,12 +41,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <Explore/> },
       { path: "my-library", element: <MyLibrary /> },
       { path: "edit-flashcard/:id", element: <EditFlashcard /> },
       { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
-      { path: "explore", element: <Explore /> },
       { path: "quizzes", element: <Quiz /> },
       { path: "quiz/:id", element: <QuizDetail /> },
       { path: "quiz/:id/edit", element: <EditQuiz /> },

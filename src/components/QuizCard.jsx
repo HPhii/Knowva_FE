@@ -35,14 +35,14 @@ const QuizCard = ({ quiz, onView }) => {
         {/* Author */}
         <div className="flex items-center text-sm text-gray-500 mb-3">
           <UserOutlined className="mr-2" />
-          <span>{quiz.authorName || t('explore.unknownAuthor', 'Unknown Author')}</span>
+          <span>{quiz.username || quiz.authorName || quiz.author || t('explore.unknownAuthor', 'Unknown Author')}</span>
         </div>
 
         {/* Stats */}
         <div className="flex items-center justify-between text-sm text-gray-600">
           <div className="flex items-center">
             <QuestionCircleOutlined className="mr-1" />
-            <span>{quiz.maxQuestion || quiz.questionCount || 0} {t('explore.questions', 'questions')}</span>
+            <span>{quiz.maxQuestions || quiz.maxQuestion || quiz.questionCount || 0} {t('explore.questions', 'questions')}</span>
           </div>
           {quiz.timeLimit && (
             <div className="flex items-center">
