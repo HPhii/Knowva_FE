@@ -26,11 +26,13 @@ jobs:
 
       - name: Set API URL for Production
         if: github.ref == 'refs/heads/main'
-        run: echo "VITE_API_URL=${{ secrets.API_URL_PROD }}" > .env
+        run: echo "VITE_SERVER_URL=${{ secrets.API_URL_PROD }}" > .env
+        run: echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_PROD }}" >> .env
 
       - name: Set API URL for Development
         if: github.ref == 'refs/heads/develop'
-        run: echo "VITE_API_URL=${{ secrets.API_URL_DEV }}" > .env
+        run: echo "VITE_SERVER_URL=${{ secrets.API_URL_DEV }}" > .env
+        run: echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_DEV }}" >> .env
 
       - name: Build React App
         run: npm run build
