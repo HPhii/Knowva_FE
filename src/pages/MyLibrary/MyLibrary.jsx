@@ -176,12 +176,18 @@ const MyLibrary = () => {
             </div>
           </div>
 
-          <div className="flex justify-end cursor-pointer text-white rounded-md">
+          <div className="flex justify-end gap-2 text-white rounded-md">
             <div
-              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px]"
+              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
               onClick={() => navigate(`/flashcard/${item.id}`)}
             >
               {t("myLibrary.study", "Study")}
+            </div>
+            <div
+              className="flex items-center justify-center bg-[#FFA500] hover:bg-[#FF8C00] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
+              onClick={() => navigate(`/edit-flashcard/${item.id}`)}
+            >
+              {t("myLibrary.edit", "Edit")}
             </div>
           </div>
         </div>

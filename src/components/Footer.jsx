@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import FeedbackModal from "./FeedbackModal";
+import BugReportModal from "./BugReportModal";
 
 const Footer = () => {
   const { t } = useTranslation();
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [bugReportModalVisible, setBugReportModalVisible] = useState(false);
 
   return (
     <footer className="relative bg-slate-900 text-white overflow-hidden">
@@ -61,12 +63,26 @@ const Footer = () => {
                   {t("footer.brandDesc")}
                 </p>
               </div>
-              <button 
-                onClick={() => setFeedbackModalVisible(true)}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm uppercase tracking-wide"
-              >
-                {t("footer.sendFeedback")}
-              </button>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => setFeedbackModalVisible(true)}
+                  className="w-40 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-xs uppercase tracking-wide"
+                >
+                  {t("footer.sendFeedback")}
+                </button>
+                
+                <button
+                  onClick={() => setBugReportModalVisible(true)}
+                  className="w-40 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs uppercase tracking-wide group"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg className="w-3 h-3 mr-1.5 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    {t("footer.reportBug")}
+                  </div>
+                </button>
+              </div>
             </div>
 
             {/* Customers Column */}
@@ -170,7 +186,7 @@ const Footer = () => {
           </div>
 
           {/* Bottom Section */}
-          <div className="mt-12 pt-8 border-t border-gray-700">
+          <div className="mt-8 pt-6 border-t border-gray-700">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-gray-400 text-sm">
                 {t("footer.copyright")}
@@ -272,6 +288,12 @@ const Footer = () => {
       <FeedbackModal 
         visible={feedbackModalVisible}
         onCancel={() => setFeedbackModalVisible(false)}
+      />
+      
+      {/* Bug Report Modal */}
+      <BugReportModal 
+        visible={bugReportModalVisible}
+        onCancel={() => setBugReportModalVisible(false)}
       />
     </footer>
   );

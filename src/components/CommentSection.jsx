@@ -847,7 +847,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             <button
               type="submit"
               disabled={!commentText.trim() || isSubmitting}
-              className={`${theme.buttonBg} ${theme.buttonHover} text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base`}
+              className={`${theme.buttonBg} ${theme.buttonHover} !text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base`}
             >
               {isSubmitting ? (
                 <>

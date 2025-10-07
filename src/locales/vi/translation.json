@@ -4,6 +4,7 @@
     "myLibrary": "Thư viện của tôi",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
+    "generate": "Tạo nội dung",
     "tests": "Bài kiểm tra",
     "blog": "Blog",
     "explore": "Khám phá",
@@ -12,6 +13,46 @@
     "logout": "Đăng xuất",
     "userDetails": "Thông tin người dùng",
     "verifyEmail": "Xác thực Email"
+  },
+  "notifications": {
+    "title": "Tất cả thông báo",
+    "loading": "Đang tải...",
+    "noNotifications": "Không có thông báo nào",
+    "noNotificationsDesc": "Bạn sẽ nhận được thông báo mới ở đây",
+    "filters": {
+      "title": "Bộ lọc",
+      "type": "Loại thông báo",
+      "status": "Trạng thái",
+      "startDate": "Từ ngày",
+      "endDate": "Đến ngày",
+      "clearFilters": "Xóa bộ lọc",
+      "allTypes": "Tất cả loại",
+      "allStatus": "Tất cả",
+      "unread": "Chưa đọc",
+      "read": "Đã đọc"
+    },
+    "types": {
+      "QUIZ_INVITE": "Mời làm quiz",
+      "FLASHCARD_INVITE": "Mời học flashcard",
+      "SYSTEM_ALERT": "Cảnh báo hệ thống",
+      "REMINDER": "Nhắc nhở",
+      "BUG_REPORT": "Báo lỗi"
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "of": "trong",
+      "notifications": "thông báo",
+      "page": "Trang",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "phút trước",
+      "hoursAgo": "giờ trước",
+      "daysAgo": "ngày trước",
+      "monthsAgo": "tháng trước"
+    }
   },
   "upload": {
     "createStudyMaterials": "Tạo tài liệu học tập từ bài giảng của bạn",
@@ -938,6 +979,8 @@
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
     "sendFeedback": "Gửi Feedback",
+    "reportBug": "Báo cáo lỗi",
+    "reportBugDesc": "Tìm thấy lỗi? Hãy giúp chúng tôi cải thiện ứng dụng",
     "customers": "Khách hàng",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
@@ -1237,6 +1280,35 @@
     "cancel": "Hủy",
     "submit": "Gửi Feedback"
   },
+  "bugReport": {
+    "title": "Báo cáo lỗi",
+    "titleLabel": "Tiêu đề",
+    "titlePlaceholder": "Mô tả ngắn gọn về lỗi...",
+    "titleRequired": "Vui lòng nhập tiêu đề!",
+    "descriptionLabel": "Mô tả chi tiết",
+    "descriptionPlaceholder": "Mô tả chi tiết về lỗi, các bước để tái tạo lỗi, và kết quả mong đợi...",
+    "descriptionRequired": "Vui lòng nhập mô tả chi tiết!",
+    "categoryLabel": "Danh mục",
+    "priorityLabel": "Mức độ ưu tiên",
+    "categories": {
+      "UI": "UI/UX Issues",
+      "FUNCTIONALITY": "Functionality",
+      "PERFORMANCE": "Performance",
+      "PAYMENT": "Payment",
+      "SECURITY": "Security",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "successMessage": "Báo cáo lỗi đã được gửi thành công!",
+    "errorMessage": "Không thể gửi báo cáo lỗi. Vui lòng thử lại.",
+    "cancel": "Hủy",
+    "submit": "Gửi báo cáo"
+  },
   "__comment_explore": "=== Explore Page Translations ===",
   "explore": {
     "title": "Khám phá nội dung học tập",
@@ -1322,10 +1394,114 @@
     "searching": "Đang tìm...",
     "noResults": "Không tìm thấy kết quả."
   },
+
   "notFound": {
     "title": "404",
     "subtitle": "Hmmm... Có vẻ lạc đường rồi!",
     "description": "Có vẻ như một trong những lập trình viên của chúng tôi đã ngủ gật mất rồi.",
     "goHome": "Quay Về Trang Chủ"
+  },
+  "notification": {
+    "title": "Thông báo",
+    "subtitle": "Quản lý và xem tất cả thông báo của bạn",
+    "searchPlaceholder": "Tìm kiếm thông báo...",
+    "filterByType": "Loại thông báo",
+    "filterByStatus": "Trạng thái",
+    "all": "Tất cả",
+    "unread": "Chưa đọc",
+    "read": "Đã đọc",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "markAsRead": "Đánh dấu đã đọc",
+    "noNotifications": "Không có thông báo nào",
+    "types": {
+      "REMINDER": "Nhắc nhở",
+      "QUIZ_RESULT": "Kết quả quiz",
+      "FLASHCARD_REMINDER": "Nhắc nhở flashcard",
+      "SYSTEM": "Thông báo hệ thống",
+      "ACHIEVEMENT": "Thành tích",
+      "COURSE_UPDATE": "Cập nhật khóa học"
+    },
+    "timeAgo": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "daysAgo": "{{count}} ngày trước"
+    },
+    "pagination": {
+      "showing": "Hiển thị {{start}}-{{end}} của {{total}} thông báo"
+    }
+  },
+  "studyFlashcard": {
+    "restart": "Bắt đầu lại",
+    "loading": "Đang tải...",
+    "notFound": "Không tìm thấy bộ flashcard",
+    "backToLibrary": "Quay lại thư viện",
+    "tabs": {
+      "flashcards": "Thẻ ghi nhớ",
+      "examMode": "Chế độ thi",
+      "spacedRepetition": "Lặp lại ngắt quãng"
+    },
+    "flashcard": {
+      "question": "Câu hỏi",
+      "answer": "Trả lời",
+      "clickToReveal": "Nhấn để xem đáp án",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "cardCounter": "Thẻ {{current}} / {{total}}",
+      "progress": "Tiến độ: {{percentage}}%",
+      "allCardsList": "Danh sách tất cả thẻ ({{count}} thẻ)"
+    },
+    "examMode": {
+      "title": "Chế độ thi",
+      "description": "Kiểm tra kiến thức của bạn với các câu hỏi trắc nghiệm"
+    },
+    "spacedRepetition": {
+      "title": "Lặp lại ngắt quãng",
+      "description": "Chế độ này giúp bạn ghi nhớ thông tin bằng cách ôn tập thẻ ghi nhớ ở các khoảng thời gian tối ưu",
+      "setup": {
+        "title": "Thiết lập lặp lại ngắt quãng",
+        "description": "Chọn số lượng thẻ mới bạn muốn học mỗi ngày",
+        "cardsPerDay": "Thẻ mỗi ngày",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "newDay": {
+        "title": "Ngày mới",
+        "newCards": "Bạn có {{count}} thẻ mới để học",
+        "reviewCards": "Bạn có {{count}} thẻ đã biết để ôn tập",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "session": {
+        "loading": "Đang tải phiên học...",
+        "noCards": "Không có thẻ nào để học",
+        "completed": "Hoàn thành!",
+        "congratulations": "🎉 Chúc mừng! Bạn đã hoàn thành tất cả thẻ học hôm nay!",
+        "performance": "Hiệu suất hôm nay",
+        "retentionRate": "Tỷ lệ ghi nhớ",
+        "totalAttempts": "Tổng số lần thử",
+        "know": "Biết",
+        "dontKnow": "Chưa biết"
+      },
+      "rating": {
+        "title": "Đánh giá mức độ ghi nhớ",
+        "description": "Bạn nhớ thông tin này như thế nào?",
+        "levels": {
+          "1": "Hoàn toàn quên",
+          "2": "Khó nhớ",
+          "3": "Khó nhớ một chút",
+          "4": "Dễ nhớ",
+          "5": "Rất dễ nhớ"
+        }
+      }
+    },
+    "errors": {
+      "loadError": "Không thể tải bộ flashcard. Vui lòng thử lại.",
+      "performanceError": "Không thể tải thống kê hiệu suất. Vui lòng thử lại.",
+      "modeDataError": "Không thể tải dữ liệu chế độ học. Vui lòng thử lại.",
+      "noFlashcards": "Không có flashcard nào để học trong phiên này. Bạn có thể thử lại sau hoặc kiểm tra lại bộ flashcard.",
+      "saveError": "Không thể lưu cài đặt. Vui lòng thử lại.",
+      "reviewError": "Không thể lưu đánh giá. Vui lòng thử lại."
+    }
   }
 }

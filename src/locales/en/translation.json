@@ -2,16 +2,57 @@
   "header": {
     "home": "Home",
     "myLibrary": "My Library",
-    "quizzes": "Quizz",
-    "flashcards": "Flashcard",
+    "quizzes": "Quizzes",
+    "flashcards": "Flashcards",
+    "generate": "Generate",
     "tests": "Tests",
     "blog": "Blog",
     "explore": "Explore",
     "login": "Sign in",
-    "signup": "Sign Up",
+    "signup": "Sign up",
     "logout": "Sign out",
     "userDetails": "User Details",
     "verifyEmail": "Verify Email"
+  },
+  "notifications": {
+    "title": "All Notifications",
+    "loading": "Loading...",
+    "noNotifications": "No notifications",
+    "noNotificationsDesc": "You will receive new notifications here",
+    "filters": {
+      "title": "Filters",
+      "type": "Notification Type",
+      "status": "Status",
+      "startDate": "From Date",
+      "endDate": "To Date",
+      "clearFilters": "Clear Filters",
+      "allTypes": "All Types",
+      "allStatus": "All",
+      "unread": "Unread",
+      "read": "Read"
+    },
+    "types": {
+      "QUIZ_INVITE": "Quiz Invite",
+      "FLASHCARD_INVITE": "Flashcard Invite",
+      "SYSTEM_ALERT": "System Alert",
+      "REMINDER": "Reminder",
+      "BUG_REPORT": "Bug Report"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "notifications": "notifications",
+      "page": "Page",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "time": {
+      "justNow": "Just now",
+      "minutesAgo": "minutes ago",
+      "hoursAgo": "hours ago",
+      "daysAgo": "days ago",
+      "monthsAgo": "months ago"
+    }
   },
   "upload": {
     "createStudyMaterials": "Create study materials from your lectures",
@@ -892,6 +933,8 @@
     "brandDesc": "Empowering learning through interactive quizzes, flashcards, and comprehensive tests.",
     "exploreMore": "Explore More",
     "sendFeedback": "Send Feedback",
+    "reportBug": "Report a Bug",
+    "reportBugDesc": "Found a bug? Help us improve the application",
     "customers": "Customers",
     "pricing": "Pricing",
     "support": "Support",
@@ -1191,6 +1234,35 @@
     "cancel": "Cancel",
     "submit": "Send Feedback"
   },
+  "bugReport": {
+    "title": "Report a Bug",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Brief description of the bug...",
+    "titleRequired": "Please enter a title!",
+    "descriptionLabel": "Detailed Description",
+    "descriptionPlaceholder": "Describe the bug in detail, steps to reproduce, and expected result...",
+    "descriptionRequired": "Please enter detailed description!",
+    "categoryLabel": "Category",
+    "priorityLabel": "Priority Level",
+    "categories": {
+      "UI": "UI/UX Issues",
+      "FUNCTIONALITY": "Functionality",
+      "PERFORMANCE": "Performance",
+      "PAYMENT": "Payment",
+      "SECURITY": "Security",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "successMessage": "Bug report has been submitted successfully!",
+    "errorMessage": "Unable to submit bug report. Please try again.",
+    "cancel": "Cancel",
+    "submit": "Submit Report"
+  },
   "__comment_explore": "=== Explore Page Translations ===",
   "explore": {
     "title": "Explore Learning Content",
@@ -1281,5 +1353,108 @@
     "subtitle": "Hmmm...",
     "description": "It looks like one of the developers fell asleep",
     "goHome": "Go Back Home"
+  },
+  "notification": {
+    "title": "Notifications",
+    "subtitle": "Manage and view all your notifications",
+    "searchPlaceholder": "Search notifications...",
+    "filterByType": "Notification Type",
+    "filterByStatus": "Status",
+    "all": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "markAllRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "noNotifications": "No notifications",
+    "types": {
+      "REMINDER": "Reminder",
+      "QUIZ_RESULT": "Quiz Result",
+      "FLASHCARD_REMINDER": "Flashcard Reminder",
+      "SYSTEM": "System Notification",
+      "ACHIEVEMENT": "Achievement",
+      "COURSE_UPDATE": "Course Update"
+    },
+    "timeAgo": {
+      "justNow": "Just now",
+      "minutesAgo": "{{count}} minutes ago",
+      "hoursAgo": "{{count}} hours ago",
+      "daysAgo": "{{count}} days ago"
+    },
+    "pagination": {
+      "showing": "Showing {{start}}-{{end}} of {{total}} notifications"
+    }
+  },
+  "studyFlashcard": {
+    "restart": "Restart",
+    "loading": "Loading...",
+    "notFound": "Flashcard set not found",
+    "backToLibrary": "Back to Library",
+    "tabs": {
+      "flashcards": "Flashcards",
+      "examMode": "Exam Mode",
+      "spacedRepetition": "Spaced Repetition"
+    },
+    "flashcard": {
+      "question": "Question",
+      "answer": "Answer",
+      "clickToReveal": "Click to reveal answer",
+      "previous": "Previous",
+      "next": "Next",
+      "cardCounter": "Card {{current}} / {{total}}",
+      "progress": "Progress: {{percentage}}%",
+      "allCardsList": "All Cards List ({{count}} cards)"
+    },
+    "examMode": {
+      "title": "Exam Mode",
+      "description": "Test your knowledge with multiple choice questions"
+    },
+    "spacedRepetition": {
+      "title": "Spaced Repetition",
+      "description": "This mode helps you retain information by reviewing flashcards at optimal intervals",
+      "setup": {
+        "title": "Spaced Repetition Setup",
+        "description": "Choose how many new cards you want to study each day",
+        "cardsPerDay": "Cards per day",
+        "start": "Start",
+        "cancel": "Cancel"
+      },
+      "newDay": {
+        "title": "New Day",
+        "newCards": "You have {{count}} new cards to study",
+        "reviewCards": "You have {{count}} known cards to review",
+        "start": "Start",
+        "cancel": "Cancel"
+      },
+      "session": {
+        "loading": "Loading study session...",
+        "noCards": "No cards to study",
+        "completed": "Completed!",
+        "congratulations": "🎉 Congratulations! You've completed all your cards for today!",
+        "performance": "Today's Performance",
+        "retentionRate": "Retention Rate",
+        "totalAttempts": "Total Attempts",
+        "know": "Know",
+        "dontKnow": "Don't Know"
+      },
+      "rating": {
+        "title": "Rate Your Memory",
+        "description": "How well did you remember this information?",
+        "levels": {
+          "1": "Complete Blackout",
+          "2": "Incorrect Response",
+          "3": "Incorrect Response (after hesitation)",
+          "4": "Correct Response (after hesitation)",
+          "5": "Perfect Response"
+        }
+      }
+    },
+    "errors": {
+      "loadError": "Unable to load flashcard set. Please try again.",
+      "performanceError": "Unable to load performance stats. Please try again.",
+      "modeDataError": "Unable to load study mode data. Please try again.",
+      "noFlashcards": "No flashcards available for study session. You can try again later or check your flashcard set.",
+      "saveError": "Unable to save settings. Please try again.",
+      "reviewError": "Unable to save rating. Please try again."
+    }
   }
 }

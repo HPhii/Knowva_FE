@@ -63,7 +63,7 @@ const NotFound = () => {
             <style>{`
                 .container {
                     height: 100vh;
-                    width: 100vw;
+                    width: 100%;
                     margin: 0;
                     background: linear-gradient(90deg, #2f3640 23%, #181b20 100%);
                     overflow: hidden;
