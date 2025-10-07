@@ -32,6 +32,8 @@ import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
 import MyLibrary from "../pages/MyLibrary/MyLibrary";
 import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
+import EditFlashcard from "../pages/Flashcard/components/EditFlashcard";
+import Notification from "../pages/Notification/Notification";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "my-library", element: <MyLibrary /> },
+      { path: "edit-flashcard/:id", element: <EditFlashcard /> },
       { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
       { path: "explore", element: <Explore /> },
@@ -59,6 +62,7 @@ const router = createBrowserRouter([
       { path: "cookies", element: <Cookies /> },
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancelled", element: <PaymentCancel /> },
+      { path: "notification", element: <Notification /> },
       //
       { path: "user/edit", element: <EditProfile /> },
 

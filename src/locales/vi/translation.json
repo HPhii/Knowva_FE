@@ -4,6 +4,7 @@
     "myLibrary": "Thư viện của tôi",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
+    "generate": "Tạo nội dung",
     "tests": "Bài kiểm tra",
     "blog": "Blog",
     "explore": "Khám phá",
@@ -1182,5 +1183,108 @@
     "searchFor": "Tìm kiếm {{type}}",
     "searching": "Đang tìm...",
     "noResults": "Không tìm thấy kết quả."
+  },
+  "notification": {
+    "title": "Thông báo",
+    "subtitle": "Quản lý và xem tất cả thông báo của bạn",
+    "searchPlaceholder": "Tìm kiếm thông báo...",
+    "filterByType": "Loại thông báo",
+    "filterByStatus": "Trạng thái",
+    "all": "Tất cả",
+    "unread": "Chưa đọc",
+    "read": "Đã đọc",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "markAsRead": "Đánh dấu đã đọc",
+    "noNotifications": "Không có thông báo nào",
+    "types": {
+      "REMINDER": "Nhắc nhở",
+      "QUIZ_RESULT": "Kết quả quiz",
+      "FLASHCARD_REMINDER": "Nhắc nhở flashcard",
+      "SYSTEM": "Thông báo hệ thống",
+      "ACHIEVEMENT": "Thành tích",
+      "COURSE_UPDATE": "Cập nhật khóa học"
+    },
+    "timeAgo": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "daysAgo": "{{count}} ngày trước"
+    },
+    "pagination": {
+      "showing": "Hiển thị {{start}}-{{end}} của {{total}} thông báo"
+    }
+  },
+  "studyFlashcard": {
+    "restart": "Bắt đầu lại",
+    "loading": "Đang tải...",
+    "notFound": "Không tìm thấy bộ flashcard",
+    "backToLibrary": "Quay lại thư viện",
+    "tabs": {
+      "flashcards": "Thẻ ghi nhớ",
+      "examMode": "Chế độ thi",
+      "spacedRepetition": "Lặp lại ngắt quãng"
+    },
+    "flashcard": {
+      "question": "Câu hỏi",
+      "answer": "Trả lời",
+      "clickToReveal": "Nhấn để xem đáp án",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "cardCounter": "Thẻ {{current}} / {{total}}",
+      "progress": "Tiến độ: {{percentage}}%",
+      "allCardsList": "Danh sách tất cả thẻ ({{count}} thẻ)"
+    },
+    "examMode": {
+      "title": "Chế độ thi",
+      "description": "Kiểm tra kiến thức của bạn với các câu hỏi trắc nghiệm"
+    },
+    "spacedRepetition": {
+      "title": "Lặp lại ngắt quãng",
+      "description": "Chế độ này giúp bạn ghi nhớ thông tin bằng cách ôn tập thẻ ghi nhớ ở các khoảng thời gian tối ưu",
+      "setup": {
+        "title": "Thiết lập lặp lại ngắt quãng",
+        "description": "Chọn số lượng thẻ mới bạn muốn học mỗi ngày",
+        "cardsPerDay": "Thẻ mỗi ngày",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "newDay": {
+        "title": "Ngày mới",
+        "newCards": "Bạn có {{count}} thẻ mới để học",
+        "reviewCards": "Bạn có {{count}} thẻ đã biết để ôn tập",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "session": {
+        "loading": "Đang tải phiên học...",
+        "noCards": "Không có thẻ nào để học",
+        "completed": "Hoàn thành!",
+        "congratulations": "🎉 Chúc mừng! Bạn đã hoàn thành tất cả thẻ học hôm nay!",
+        "performance": "Hiệu suất hôm nay",
+        "retentionRate": "Tỷ lệ ghi nhớ",
+        "totalAttempts": "Tổng số lần thử",
+        "know": "Biết",
+        "dontKnow": "Chưa biết"
+      },
+      "rating": {
+        "title": "Đánh giá mức độ ghi nhớ",
+        "description": "Bạn nhớ thông tin này như thế nào?",
+        "levels": {
+          "1": "Hoàn toàn quên",
+          "2": "Khó nhớ",
+          "3": "Khó nhớ một chút",
+          "4": "Dễ nhớ",
+          "5": "Rất dễ nhớ"
+        }
+      }
+    },
+    "errors": {
+      "loadError": "Không thể tải bộ flashcard. Vui lòng thử lại.",
+      "performanceError": "Không thể tải thống kê hiệu suất. Vui lòng thử lại.",
+      "modeDataError": "Không thể tải dữ liệu chế độ học. Vui lòng thử lại.",
+      "noFlashcards": "Không có flashcard nào để học trong phiên này. Bạn có thể thử lại sau hoặc kiểm tra lại bộ flashcard.",
+      "saveError": "Không thể lưu cài đặt. Vui lòng thử lại.",
+      "reviewError": "Không thể lưu đánh giá. Vui lòng thử lại."
+    }
   }
 }
