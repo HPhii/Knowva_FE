@@ -17,9 +17,15 @@ const Footer = () => {
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow"></div>
         <div className="absolute top-2/3 right-1/3 w-1.5 h-1.5 bg-purple-400/20 rounded-full animate-float-medium"></div>
         <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-cyan-400/20 rounded-full animate-float-fast"></div>
-        <div className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/20 rounded-full animate-float-slow" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/20 rounded-full animate-float-medium" style={{ animationDelay: '0.5s' }}></div>
-        
+        <div
+          className="absolute top-1/4 right-1/2 w-1.5 h-1.5 bg-pink-400/20 rounded-full animate-float-slow"
+          style={{ animationDelay: "1.5s" }}
+        ></div>
+        <div
+          className="absolute top-3/4 left-1/2 w-1 h-1 bg-blue-400/20 rounded-full animate-float-medium"
+          style={{ animationDelay: "0.5s" }}
+        ></div>
+
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 via-purple-900/5 to-pink-900/5"></div>
       </div>
@@ -63,57 +69,67 @@ const Footer = () => {
                   {t("footer.brandDesc")}
                 </p>
               </div>
-              <div className="space-y-3">
-                <button 
-                  onClick={() => setFeedbackModalVisible(true)}
-                  className="w-40 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-xs uppercase tracking-wide"
-                >
-                  {t("footer.sendFeedback")}
-                </button>
-                
-                <button
-                  onClick={() => setBugReportModalVisible(true)}
-                  className="w-40 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs uppercase tracking-wide group"
-                >
-                  <div className="flex items-center justify-center">
-                    <svg className="w-3 h-3 mr-1.5 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                    {t("footer.reportBug")}
-                  </div>
-                </button>
-              </div>
             </div>
 
-            {/* Customers Column */}
+            {/* Help & Support Column */}
             <div className="lg:col-span-1">
               <h4 className="text-lg font-bold text-white mb-6">
-                {t("footer.customers")}
+                {t("footer.helpSupport")}
               </h4>
               <ul className="space-y-3">
                 <li>
-                  <Link
-                    to="/pricing"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                  <button
+                    onClick={() => setFeedbackModalVisible(true)}
+                    className="flex items-center text-gray-300 hover:text-white transition-colors duration-200 text-sm relative group"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, transparent 0%, transparent calc(100% - 1px), #3b82f6 calc(100% - 1px)) 0 0 / 4px 2px repeat-x, linear-gradient(0deg, transparent 0%, transparent calc(100% - 1px), #3b82f6 calc(100% - 1px)) 0 0 / 2px 4px repeat-y",
+                      padding: "8px 12px",
+                      border: "1px solid #3b82f6",
+                    }}
                   >
-                    {t("footer.pricing")}
-                  </Link>
+                    <svg
+                      className="w-4 h-4 mr-2 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                      />
+                    </svg>
+                    {t("footer.sendFeedback")}
+                  </button>
                 </li>
                 <li>
-                  <Link
-                    to="/support"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
+                  <button
+                    onClick={() => setBugReportModalVisible(true)}
+                    className="flex items-center text-gray-300 hover:text-white transition-colors duration-200 text-sm relative group"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, transparent 0%, transparent calc(100% - 1px), #ef4444 calc(100% - 1px)) 0 0 / 4px 2px repeat-x, linear-gradient(0deg, transparent 0%, transparent calc(100% - 1px), #ef4444 calc(100% - 1px)) 0 0 / 2px 4px repeat-y",
+                      padding: "8px 12px",
+                      border: "1px solid #ef4444",
+                    }}
                   >
-                    {t("footer.support")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/documentation"
-                    className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
-                  >
-                    {t("footer.documentation")}
-                  </Link>
+                    <svg
+                      className="w-4 h-4 mr-2 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      />
+                    </svg>
+                    {t("footer.reportBug")}
+                  </button>
                 </li>
               </ul>
             </div>
@@ -193,22 +209,7 @@ const Footer = () => {
               </div>
               <div className="flex space-x-6">
                 <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  <span className="sr-only">{t("footer.twitter")}</span>
-                  <svg
-                    className="h-5 w-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61580405411638"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
@@ -227,12 +228,12 @@ const Footer = () => {
                   </svg>
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.google.com/maps/place/Tr%C6%B0%E1%BB%9Dng+%C4%90%E1%BA%A1i+h%E1%BB%8Dc+FPT+TP.+HCM/@10.8411329,106.8073081,17z/data=!3m1!4b1!4m6!3m5!1s0x31752731176b07b1:0xb752b24b379bae5e!8m2!3d10.8411276!4d106.809883!16s%2Fg%2F11j2zx_fz_!5m1!1e2?entry=ttu&g_ep=EgoyMDI1MTAwOC4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
-                  <span className="sr-only">{t("footer.linkedin")}</span>
+                  <span className="sr-only">{t("footer.location")}</span>
                   <svg
                     className="h-5 w-5"
                     fill="currentColor"
@@ -240,7 +241,7 @@ const Footer = () => {
                   >
                     <path
                       fillRule="evenodd"
-                      d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
+                      d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                       clipRule="evenodd"
                     />
                   </svg>
@@ -254,44 +255,65 @@ const Footer = () => {
       {/* Custom CSS for animations */}
       <style jsx>{`
         @keyframes float-slow {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-8px) translateX(4px); }
-          50% { transform: translateY(-4px) translateX(-6px); }
-          75% { transform: translateY(-12px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          25% {
+            transform: translateY(-8px) translateX(4px);
+          }
+          50% {
+            transform: translateY(-4px) translateX(-6px);
+          }
+          75% {
+            transform: translateY(-12px) translateX(2px);
+          }
         }
-        
+
         @keyframes float-medium {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          33% { transform: translateY(-6px) translateX(3px); }
-          66% { transform: translateY(-10px) translateX(-5px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          33% {
+            transform: translateY(-6px) translateX(3px);
+          }
+          66% {
+            transform: translateY(-10px) translateX(-5px);
+          }
         }
-        
+
         @keyframes float-fast {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          50% { transform: translateY(-5px) translateX(2px); }
+          0%,
+          100% {
+            transform: translateY(0px) translateX(0px);
+          }
+          50% {
+            transform: translateY(-5px) translateX(2px);
+          }
         }
-        
+
         .animate-float-slow {
           animation: float-slow 8s ease-in-out infinite;
         }
-        
+
         .animate-float-medium {
           animation: float-medium 6s ease-in-out infinite;
         }
-        
+
         .animate-float-fast {
           animation: float-fast 4s ease-in-out infinite;
         }
       `}</style>
-      
+
       {/* Feedback Modal */}
-      <FeedbackModal 
+      <FeedbackModal
         visible={feedbackModalVisible}
         onCancel={() => setFeedbackModalVisible(false)}
       />
-      
+
       {/* Bug Report Modal */}
-      <BugReportModal 
+      <BugReportModal
         visible={bugReportModalVisible}
         onCancel={() => setBugReportModalVisible(false)}
       />
