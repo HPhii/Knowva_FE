@@ -7,20 +7,23 @@ import FlashcardCard from "../../components/FlashcardCard";
 import quizShiba from "../../assets/images/quiz_shiba.png";
 import flashcardShiba from "../../assets/images/flashcard_shiba.png";
 import notFoundImage from "../../assets/images/NotFound.png";
+import DogLogoExploreQuiz from "../../components/DogLogoExploreQuiz";
+import DogLogoExploreFlashcard from "../../components/DogLogoExploreFlashcard";
+import tabBarIcon from "../../assets/images/tabBarIcon.png";
 
 const Explore = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   // State management
   const [activeTab, setActiveTab] = useState("quiz"); // "quiz" or "flashcard"
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [showAllCategories, setShowAllCategories] = useState(false);
-  
+
   // Data states
   const [quizSets, setQuizSets] = useState([]);
   const [flashcardSets, setFlashcardSets] = useState([]);
-  
+
   // Main categories - hiển thị mặc định (6 items)
   const mainCategories = [
     { id: "ALL", name: "All", icon: "🌐" },
@@ -28,7 +31,7 @@ const Explore = () => {
     { id: "LITERATURE", name: "Literature", icon: "📚" },
     { id: "PHYSICS", name: "Physics", icon: "⚛️" },
     { id: "CHEMISTRY", name: "Chemistry", icon: "🧪" },
-    { id: "LANGUAGE", name: "Language", icon: "🗣️" }
+    { id: "LANGUAGE", name: "Language", icon: "🗣️" },
   ];
 
   // All categories - hiển thị khi click ">" (18 items - chia đều 2 hàng)
@@ -53,12 +56,12 @@ const Explore = () => {
     { id: "ENGINEERING", name: "Engineering", icon: "⚙️" },
     { id: "ARTS", name: "Arts", icon: "🎨" },
     { id: "MUSIC", name: "Music", icon: "🎵" },
-    { id: "OTHER", name: "Other", icon: "🔖" }
+    { id: "OTHER", name: "Other", icon: "🔖" },
   ];
 
   // Categories hiển thị hiện tại
   const displayCategories = showAllCategories ? allCategories : mainCategories;
-  
+
   // Loading states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,19 +75,18 @@ const Explore = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Fetch quiz sets and flashcard sets in parallel
       const [quizResponse, flashcardResponse] = await Promise.all([
-        api.get('/quiz-sets/all'),
-        api.get('/flashcard-sets/all')
+        api.get("/quiz-sets/all"),
+        api.get("/flashcard-sets/all"),
       ]);
-      
+
       setQuizSets(quizResponse.data || []);
       setFlashcardSets(flashcardResponse.data || []);
-      
     } catch (err) {
-      console.error('Error fetching data:', err);
-      setError(err.response?.data?.message || 'Không thể tải dữ liệu');
+      console.error("Error fetching data:", err);
+      setError(err.response?.data?.message || "Không thể tải dữ liệu");
     } finally {
       setLoading(false);
     }
@@ -93,32 +95,33 @@ const Explore = () => {
   // Filter data by category and visibility
   const getFilteredData = () => {
     const data = activeTab === "quiz" ? quizSets : flashcardSets;
-    
+
     // First filter by visibility - only show PUBLIC items
-    const publicData = data.filter(item => {
+    const publicData = data.filter((item) => {
       const visibility = item.visibility || item.visibilityStatus;
       return visibility === "PUBLIC";
     });
-    
+
     // Then filter by category
     if (selectedCategory === "ALL") {
       return publicData;
     }
-    
-    return publicData.filter(item => {
+
+    return publicData.filter((item) => {
       // Kiểm tra nhiều field có thể chứa category
-      const itemCategory = item.categoryName || item.category || item.categoryType;
-      
+      const itemCategory =
+        item.categoryName || item.category || item.categoryType;
+
       // Log để debug
-      console.log('Filtering:', {
+      console.log("Filtering:", {
         selectedCategory,
         itemCategory,
         itemTitle: item.title,
         visibility: item.visibility || item.visibilityStatus,
         matches: itemCategory === selectedCategory,
-        item: item
+        item: item,
       });
-      
+
       return itemCategory === selectedCategory;
     });
   };
@@ -147,12 +150,15 @@ const Explore = () => {
         <div className="flex space-x-4 mb-6">
           <div className="h-12 w-24 bg-gray-200 rounded animate-pulse"></div>
           <div className="h-12 w-32 bg-gray-200 rounded animate-pulse"></div>
-              </div>
+        </div>
 
         {/* Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            >
               <div className="h-48 bg-gray-200 animate-pulse"></div>
               <div className="p-4">
                 <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
@@ -160,9 +166,9 @@ const Explore = () => {
                 <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
               </div>
             </div>
-                  ))}
-                </div>
-              </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 
@@ -171,37 +177,48 @@ const Explore = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-4">
         <div className="mx-auto w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
-          <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          <svg
+            className="w-10 h-10 text-red-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+            />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('explore.error', 'Đã xảy ra lỗi')}</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-3">
+          {t("explore.error", "Đã xảy ra lỗi")}
+        </h3>
         <p className="text-gray-600 mb-6">{error}</p>
         <button
           onClick={fetchData}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
         >
-          {t('explore.tryAgain', 'Thử lại')}
+          {t("explore.tryAgain", "Thử lại")}
         </button>
-                </div>
-              </div>
+      </div>
+    </div>
   );
 
   // Empty state component
   const EmptyState = () => (
     <div className="text-center py-12">
       <div className="flex justify-center mb-6">
-        <img 
-          src={notFoundImage} 
-          alt="Not Found" 
+        <img
+          src={notFoundImage}
+          alt="Not Found"
           className="w-32 h-32 sm:w-40 sm:h-40 object-contain opacity-88 "
         />
       </div>
       <h3 className="text-xl font-semibold text-gray-900 mb-2">
-        {activeTab === "quiz" 
-          ? t("explore.noQuizSets", "No quiz sets found") 
-          : t("explore.noFlashcardSets", "No flashcard sets found")
-        }
+        {activeTab === "quiz"
+          ? t("explore.noQuizSets", "No quiz sets found")
+          : t("explore.noFlashcardSets", "No flashcard sets found")}
       </h3>
       <p className="text-gray-600">
         {t("explore.noResultsDesc", "Try adjusting your search or filters")}
@@ -230,16 +247,18 @@ const Explore = () => {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                   selectedCategory === category.id
-                    ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                    ? "bg-blue-600 !text-white shadow-lg transform scale-105"
+                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900"
                 }`}
               >
-                <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                <span className="mr-1 sm:mr-2 text-sm sm:text-lg">
+                  {category.icon}
+                </span>
                 <span className="hidden sm:inline">{category.name}</span>
-                <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                <span className="sm:hidden">{category.name.split(" ")[0]}</span>
               </button>
             ))}
-            
+
             {/* Show More Button */}
             <button
               onClick={() => setShowAllCategories(true)}
@@ -261,17 +280,21 @@ const Explore = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                     selectedCategory === category.id
-                      ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                      ? "bg-blue-600 !text-white shadow-lg transform scale-105"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900"
                   }`}
                 >
-                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">
+                    {category.icon}
+                  </span>
                   <span className="hidden sm:inline">{category.name}</span>
-                  <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                  <span className="sm:hidden">
+                    {category.name.split(" ")[0]}
+                  </span>
                 </button>
               ))}
             </div>
-            
+
             {/* Hàng 2 - 9 items còn lại + nút Less */}
             <div className="flex flex-wrap gap-1 sm:gap-2 justify-center">
               {displayCategories.slice(9).map((category) => (
@@ -280,16 +303,20 @@ const Explore = () => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                     selectedCategory === category.id
-                      ? 'bg-blue-600 !text-white shadow-lg transform scale-105'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900'
+                      ? "bg-blue-600 !text-white shadow-lg transform scale-105"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-blue-300 hover:text-gray-900"
                   }`}
                 >
-                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">{category.icon}</span>
+                  <span className="mr-1 sm:mr-2 text-sm sm:text-lg">
+                    {category.icon}
+                  </span>
                   <span className="hidden sm:inline">{category.name}</span>
-                  <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                  <span className="sm:hidden">
+                    {category.name.split(" ")[0]}
+                  </span>
                 </button>
               ))}
-              
+
               {/* Show Less Button */}
               <button
                 onClick={() => setShowAllCategories(false)}
@@ -303,81 +330,104 @@ const Explore = () => {
           </div>
         )}
       </div>
-
+      {/* ------------------------TEST------------------------------- */}
+      {/* <div className="ml-50">
+        <img src={tabBarIcon} alt="tabBarIcon" className="w-50 h-50" />
+      </div> */}
+      {/* --------------------------------------------------------------- */}
       {/* Image Tab Navigation - Vertical Left Side */}
       <div className="w-full bg-gray-50 px-4 py-6">
-        <div className="max-w-7xl mx-auto flex">
+        <div className="max-w-7xl mx-auto">
           {/* Left Side - Vertical Image Navigation */}
-          <div className="flex flex-col space-y-4 mr-6">
-            {/* Quiz Tab */}
-            <div 
-              onClick={() => setActiveTab("quiz")}
-              className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                activeTab === "quiz" 
-                  ? "scale-110 drop-shadow-lg" 
-                  : "hover:drop-shadow-md"
-              }`}
-            >
-              <div className="relative">
-                <img 
-                  src={quizShiba} 
-                  alt="Quiz Sets" 
-                  className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-300 ${
-                    activeTab === "quiz" 
-                      ? "brightness-110 contrast-110" 
-                      : "brightness-90 hover:brightness-100"
-                  }`}
-                />
-                {/* Active indicator */}
-                {activeTab === "quiz" && (
-                  <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                )}
-              </div>
-              <div className="text-center mt-1">
-                <p className={`text-xs font-medium transition-colors duration-200 ${
-                  activeTab === "quiz" 
-                    ? "text-green-600" 
-                    : "text-gray-600"
-                }`}>
-                  {t("explore.quizSets", "Quiz")}
-                </p>
-                <p className="text-xs text-gray-500">({quizSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC").length})</p>
-              </div>
-            </div>
+          <div className="flex w-full h-21 space-y-4 mr-6 mt-13">
+            {/* div bao quanh 2 cai nut  */}
+            <div className="flex justify-center items-center w-full h-full gap-8">
+              {/* Quiz Tab */}
+              <div className="w-full h-full">
+                {/* div bao quanh nut quiz  */}
+                <div className="flex justify-end items-center h-full w-50%">
+                  <div className="w-[45%] h-full relative">
+                    <div
+                      onClick={() => setActiveTab("quiz")}
+                      className={`z-20 absolute cursor-pointer flex justify-center items-center bg-[#2F3353] h-full rounded-full py-1 px-2 w-[100%] transition-all duration-300 hover:bg-[#414990] hover:scale-105 ${
+                        activeTab === "quiz" ? "scale-105 bg-[#414990]" : ""
+                      }`}
+                    >
+                      <p className="!mb-0 font-bold !text-white !text-[35px] select-none">
+                        Quiz
+                      </p>
+                    </div>
 
-            {/* Flashcard Tab */}
-            <div 
-              onClick={() => setActiveTab("flashcard")}
-              className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                activeTab === "flashcard" 
-                  ? "scale-110 drop-shadow-lg" 
-                  : "hover:drop-shadow-md"
-              }`}
-            >
-              <div className="relative">
-                <img 
-                  src={flashcardShiba} 
-                  alt="Flashcard Sets" 
-                  className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-300 ${
-                    activeTab === "flashcard" 
-                      ? "brightness-110 contrast-110" 
-                      : "brightness-90 hover:brightness-100"
-                  }`}
-                />
-                {/* Active indicator */}
-                {activeTab === "flashcard" && (
-                  <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-                )}
+                    {/* logo con cho quiz  */}
+                    <div
+                      onClick={() => setActiveTab("quiz")}
+                      className={`select-none z-10 absolute rotate-335 cursor-pointer transition-all duration-500 ${
+                        activeTab === "quiz"
+                          ? "top-[-67px] left-[-37px]"
+                          : "top-[0px] left-[5px]"
+                      }`}
+                    >
+                      <DogLogoExploreQuiz activeTab={activeTab} />
+                    </div>
+                    <div
+                      onClick={() => setActiveTab("quiz")}
+                      className={`select-none z-10 absolute rotate-20 cursor-pointer transition-all duration-500 ${
+                        activeTab === "quiz"
+                          ? "top-[-67px] right-[-37px]"
+                          : "top-[0px] right-[5px]"
+                      }`}
+                    >
+                      <DogLogoExploreQuiz activeTab={activeTab} />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="text-center mt-1">
-                <p className={`text-xs font-medium transition-colors duration-200 ${
-                  activeTab === "flashcard" 
-                    ? "text-yellow-600" 
-                    : "text-gray-600"
-                }`}>
-                  {t("explore.flashcardSets", "Flashcard")}
-                </p>
-                <p className="text-xs text-gray-500">({flashcardSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC").length})</p>
+
+              {/* Flashcard Tab */}
+              <div className="w-full h-full">
+                {/* div bao quanh nut flashcard  */}
+                <div className="flex justify-baseline items-center h-full w-50%">
+                  <div className="w-[45%] h-full relative">
+                    <div
+                      onClick={() => setActiveTab("flashcard")}
+                      className={`z-20 absolute cursor-pointer flex justify-center items-center bg-[#2F3353] h-full rounded-full py-1 px-2 w-full transition-all duration-300 hover:bg-[#414990] hover:scale-105 ${
+                        activeTab === "flashcard"
+                          ? "scale-105 bg-[#414990]"
+                          : ""
+                      }`}
+                    >
+                      <p className="!mb-0 font-bold !text-white !text-[35px] select-none">
+                        Flashcard
+                      </p>
+                    </div>
+                    {/* lo go con cho flashcard  */}
+                    <div
+                      onClick={() => setActiveTab("flashcard")}
+                      className={`select-none z-10 absolute rotate-15 cursor-pointer transition-all duration-500 ${
+                        activeTab === "flashcard"
+                          ? "top-[-67px] right-[-30px]"
+                          : "top-[0px] right-[5px]"
+                      }`}
+                    >
+                      <div className="relative">
+                        <DogLogoExploreFlashcard activeTab={activeTab} />
+                      </div>
+                      <div className="text-center mt-1"></div>
+                    </div>
+                    <div
+                      onClick={() => setActiveTab("flashcard")}
+                      className={`select-none z-10 absolute rotate-335 cursor-pointer transition-all duration-500 ${
+                        activeTab === "flashcard"
+                          ? "top-[-67px] left-[-30px]"
+                          : "top-[0px] left-[5px]"
+                      }`}
+                    >
+                      <div className="relative">
+                        <DogLogoExploreFlashcard activeTab={activeTab} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -387,15 +437,22 @@ const Explore = () => {
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600">
-                {t("explore.resultsCount", "Showing")} {filteredData.length} {activeTab === "quiz" ? t("explore.quizSets", "quiz sets") : t("explore.flashcardSets", "flashcard sets")}
-                {selectedCategory !== "ALL" && ` in ${displayCategories.find(cat => cat.id === selectedCategory)?.name}`}
+                {t("explore.resultsCount", "Showing")} {filteredData.length}{" "}
+                {activeTab === "quiz"
+                  ? t("explore.quizSets", "quiz sets")
+                  : t("explore.flashcardSets", "flashcard sets")}
+                {selectedCategory !== "ALL" &&
+                  ` in ${
+                    displayCategories.find((cat) => cat.id === selectedCategory)
+                      ?.name
+                  }`}
               </p>
             </div>
 
             {/* Content Grid */}
             {filteredData.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredData.map((item) => (
+                {filteredData.map((item) =>
                   activeTab === "quiz" ? (
                     <QuizCard
                       key={item.id}
@@ -409,7 +466,7 @@ const Explore = () => {
                       onView={handleViewFlashcard}
                     />
                   )
-                ))}
+                )}
               </div>
             ) : (
               <EmptyState />
@@ -417,7 +474,6 @@ const Explore = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
