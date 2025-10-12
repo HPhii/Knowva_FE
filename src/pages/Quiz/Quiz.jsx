@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import api from "../../config/axios";
@@ -11,6 +11,9 @@ import InputFrame from "./components/InputFrame";
 import BottomSection from "./components/BottomSection";
 import QuizModal from "./components/QuizModal";
 import GeneratedQuiz from "./components/GeneratedQuiz";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
+import RequireVipModal from "../../components/RequireVipModal";
+import tabBarIcon from "../../assets/images/tabBarIcon.png";
 
 const Quiz = () => {
   const { t } = useTranslation();
@@ -26,9 +29,16 @@ const Quiz = () => {
   const [editingQuiz, setEditingQuiz] = useState(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [form] = Form.useForm();
-  // const navigate = useNavigate();
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [showVipModal, setShowVipModal] = useState(false);
 
-  console.log("generatedQuiz: ", generatedQuiz);
+  // Kiểm tra trạng thái xác thực email khi component mount
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user && user.isVerified === false) {
+      setShowVerifyModal(true);
+    }
+  }, []);
 
   const handleTabClick = (tabKey) => {
     try {
@@ -170,7 +180,6 @@ const Quiz = () => {
 
       const res = await api.post("/quiz-sets/save", generatedQuiz);
 
-      console.log("Save quiz response: ", res);
       toast.success(t("quiz.generatedQuiz.messages.saveSuccess"));
 
       // Reset generated quiz sau khi lưu thành công
@@ -349,51 +358,6 @@ const Quiz = () => {
     }
   };
 
-  const logFormData = async (formData) => {
-    try {
-      console.group("FormData Content");
-      for (let [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          // Trường hợp là file
-          console.log(`${key}: File`, {
-            name: value.name,
-            type: value.type,
-            size: value.size,
-            lastModified: value.lastModified,
-          });
-        } else if (value instanceof Blob) {
-          // Trường hợp là blob (quizSet, text...)
-          console.log(`${key}: Blob`, {
-            type: value.type,
-            size: value.size,
-          });
-
-          // Đọc nội dung blob
-          const text = await value.text();
-          try {
-            if (value.type === "application/json") {
-              console.log(`${key} (parsed JSON):`, JSON.parse(text));
-            } else {
-              console.log(`${key} (raw text):`, text);
-            }
-          } catch {
-            console.log(`${key} (raw text):`, text);
-          }
-        } else {
-          console.log(`${key}:`, value);
-        }
-      }
-      console.groupEnd();
-    } catch {
-      toast.error(
-        t(
-          "quiz.errors.logFormData",
-          "Có lỗi khi xử lý dữ liệu form. Vui lòng thử lại."
-        )
-      );
-    }
-  };
-
   const handleGenerate = async (values) => {
     try {
       if (activeTab === "Text") {
@@ -442,11 +406,6 @@ const Quiz = () => {
         timeLimit: values.timeLimit,
       };
 
-      // Log quizSet
-      console.log("=== QUIZ SET ===");
-      console.log(JSON.stringify(quizSet, null, 2));
-      console.log("=== END QUIZ SET ===");
-
       const formData = new FormData();
       formData.append(
         "quizSet",
@@ -462,8 +421,6 @@ const Quiz = () => {
       } else {
         formData.append("text", textareaContent);
       }
-
-      await logFormData(formData);
 
       const res = await api.post("/quiz-sets/generate", formData); // không set headers
 
@@ -486,8 +443,23 @@ const Quiz = () => {
       setIsModalOpen(false);
       form.resetFields();
     } catch (err) {
-      console.error(err);
-      toast.error(t("quiz.generatedQuiz.messages.generateError"));
+      console.log("Generate quiz error: ", err.response?.data);
+
+      // Kiểm tra nếu lỗi là do chưa xác thực email
+      if (
+        err.response?.data === "Email verification required for this action."
+      ) {
+        setIsModalOpen(false);
+        setShowVerifyModal(true);
+      } else if (
+        err.response?.data ===
+        "Only VIP users can upload files for quiz set generation."
+      ) {
+        setIsModalOpen(false);
+        setShowVipModal(true);
+      } else {
+        toast.error(t("quiz.generatedQuiz.messages.generateError"));
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -499,7 +471,6 @@ const Quiz = () => {
         <div className="max-w-4xl mx-auto">
           {/* Tab Bar */}
           <TabBar activeTab={activeTab} onTabClick={handleTabClick} />
-
           {/* Input Frame */}
           <InputFrame
             activeTab={activeTab}
@@ -556,6 +527,19 @@ const Quiz = () => {
         form={form}
         isGenerating={isGenerating}
       />
+
+      {/* Email Verification Modal */}
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => setShowVerifyModal(false)}
+      />
+
+      {/* VIP Modal */}
+      <RequireVipModal
+        open={showVipModal}
+        onCancel={() => setShowVipModal(false)}
+      />
+
       <ToastContainer />
     </>
   );

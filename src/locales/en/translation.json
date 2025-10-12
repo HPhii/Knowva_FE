@@ -98,8 +98,10 @@
     "success": "Registration successful! Please log in.",
     "illustrationAlt": "Sign up illustration"
   },
+  "becomeVip": "Become VIP",
   "error": {
     "emailVerificationRequired": "You need to verify your email to perform this action.",
+    "vipRequired": "Only VIP members can use this feature.",
     "failedToFetch": "Unable to connect to the server. Please check your internet connection or try again later.",
     "incorrectEmailOrPassword": "Invalid email or password. Please check your credentials.",
     "userNotFound": "Account not found. Please check your email.",
