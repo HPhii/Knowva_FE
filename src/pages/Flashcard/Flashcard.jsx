@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "antd";
 import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga4";
 import api from "../../config/axios";
 // import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -208,6 +209,13 @@ const Flashcard = () => {
 
       console.log("Save flashcard response: ", res);
       toast.success(t("flashcard.generatedFlashcard.messages.saveSuccess"));
+
+      // Track flashcard creation event
+      ReactGA.event({
+        category: "Content Creation",
+        action: "Created a new Flashcard Set",
+        label: generatedFlashcard.sourceType || "Unknown Source",
+      });
 
       // Reset generated flashcard sau khi lưu thành công
       setGeneratedFlashcard(null);

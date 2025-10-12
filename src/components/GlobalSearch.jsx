@@ -3,6 +3,7 @@ import { Search, BrainCircuit, BookCopy, Users, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import useDebounce from "../hooks/useDebounce";
 import api from "../config/axios";
+import ReactGA from "react-ga4";
 
 const searchEndpoints = {
   quiz: "/search/quiz-sets",
@@ -28,6 +29,13 @@ const GlobalSearch = () => {
         setResults([]);
         return;
       }
+
+      ReactGA.event({
+        category: "Search",
+        action: `User searched for ${searchType}`,
+        label: debouncedSearchTerm,
+      });
+
       setLoading(true);
       try {
         const endpoint = searchEndpoints[searchType];
