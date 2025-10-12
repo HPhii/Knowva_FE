@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"; // Import
+import ReactGA from "react-ga4";
 import loginIllustration from "../../assets/images/login.png";
 import api from "../../config/axios";
 import { saveLoginData } from "../../utils/auth";
@@ -41,6 +42,12 @@ const Login = () => {
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Login data saved successfully");
+        // Track login event
+        ReactGA.event({
+          category: "User",
+          action: "User Logged In",
+          label: "Email Login",
+        });
       }
 
       if (response.data.role === "ADMIN") {
@@ -72,6 +79,12 @@ const Login = () => {
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Google login data saved successfully");
+        // Track Google login event
+        ReactGA.event({
+          category: "User",
+          action: "User Logged In",
+          label: "Google Login",
+        });
       }
 
       if (response.data.role === "ADMIN") {
