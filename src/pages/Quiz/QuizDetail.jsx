@@ -31,12 +31,29 @@ const QuizDetail = () => {
   
   // Copy link state
   const [copyMessage, setCopyMessage] = useState("");
+  
+  // Share dropdown state
+  const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
 
   useEffect(() => {
     fetchQuizDetail();
     fetchComments();
     checkUserPermissions();
   }, [id]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isShareDropdownOpen && !event.target.closest('.share-dropdown')) {
+        setIsShareDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isShareDropdownOpen]);
 
   // Check user permissions for editing
   const checkUserPermissions = () => {
@@ -196,11 +213,18 @@ const QuizDetail = () => {
       await navigator.clipboard.writeText(link);
       setCopyMessage("Đã sao chép link!");
       setTimeout(() => setCopyMessage(""), 3000);
+      setIsShareDropdownOpen(false); // Close dropdown after copying
     } catch (error) {
       console.error('Error copying link:', error);
       setCopyMessage("Không thể sao chép link");
       setTimeout(() => setCopyMessage(""), 3000);
     }
+  };
+
+  // Handle invite from share dropdown
+  const handleInviteFromShare = () => {
+    setIsInviteModalOpen(true);
+    setIsShareDropdownOpen(false); // Close dropdown
   };
 
 
@@ -310,73 +334,54 @@ const QuizDetail = () => {
               <span className="font-medium">Quay lại</span>
             </button>
             
-            {/* Secondary Actions - Only show action buttons */}
-            <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
-              {/* Copy Link Button */}
-              <div className="relative group">
-                <button
-                  onClick={handleCopyLink}
-                  disabled={quiz.visibility === 'PRIVATE'}
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                    quiz.visibility === 'PRIVATE'
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 cursor-pointer shadow-md hover:shadow-lg"
-                  }`}
-                  title="Copy Link"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </button>
-                
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  {quiz.visibility === 'PRIVATE' ? "Set này là riêng tư" : "Copy Link"}
-                </div>
+            {/* Share Button */}
+            <div className="relative group share-dropdown">
+              <button
+                onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                title="Chia sẻ"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                </svg>
+              </button>
+              
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                Chia sẻ
               </div>
 
-              {/* Invite Button - Only show for owner */}
-              {canEdit && (
-                <div className="relative group">
+              {/* Share Dropdown */}
+              {isShareDropdownOpen && (
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
                   <button
-                    onClick={() => setIsInviteModalOpen(true)}
-                    className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
-                    title="Mời người dùng"
+                    onClick={handleCopyLink}
+                    disabled={quiz.visibility === 'PRIVATE'}
+                    className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
+                      quiz.visibility === 'PRIVATE'
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
+                    Copy Link
                   </button>
                   
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    Mời người dùng
-                  </div>
+                  {canEdit && (
+                    <button
+                      onClick={handleInviteFromShare}
+                      className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                    >
+                      <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                      </svg>
+                      Mời người dùng
+                    </button>
+                  )}
                 </div>
               )}
-              
-              {/* Edit Button */}
-              <div className="relative group">
-                <button
-                  onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
-                  disabled={!canEdit}
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                    canEdit 
-                      ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg" 
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  }`}
-                  title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  {canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -419,16 +424,30 @@ const QuizDetail = () => {
                   </div>
                 </div>
                 
-                {/* Start Quiz Button */}
-                <div className="flex justify-center lg:justify-start">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+                  {/* Start Quiz Button */}
                   <button
                     onClick={startQuizAttempt}
                     className="flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 !text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 group"
                   >
-                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
                     Bắt đầu làm quiz
+                  </button>
+                  
+                  {/* Edit Button */}
+                  <button
+                    onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
+                    disabled={!canEdit}
+                    className={`flex items-center justify-center w-12 py-4 rounded-xl transition-all duration-200 -ml-2 ${
+                      canEdit 
+                        ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg" 
+                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    }`}
+                    title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </button>
                 </div>
               </div>

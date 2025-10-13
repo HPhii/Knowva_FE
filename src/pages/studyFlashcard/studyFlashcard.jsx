@@ -11,6 +11,7 @@ import FlashcardView from "./components/FlashcardView";
 import SpacedRepetitionView from "./components/SpacedRepetitionView";
 import CardLimitModal from "./components/CardLimitModal";
 import NextDayNotificationModal from "./components/NextDayNotificationModal";
+import InviteModal from "../../components/InviteModal";
 
 const { Title } = Typography;
 
@@ -804,6 +805,13 @@ const StudyFlashcard = () => {
           open={nextDayNotiModal}
           onOk={handleNextDayModalConfirm}
           onCancel={handleModalCancel}
+        />
+
+        <InviteModal
+          open={isInviteModalOpen}
+          onCancel={() => setIsInviteModalOpen(false)}
+          onSuccess={handleInviteSuccess}
+          flashcardSetId={id}
         />
       </div>
     </div>

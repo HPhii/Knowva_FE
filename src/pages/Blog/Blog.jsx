@@ -5,6 +5,7 @@ import api from '../../config/axios';
 import BlogCard from '../../components/BlogCard';
 import { debounce } from 'lodash';
 import { getCategoriesForFilter } from '../../utils/blogCategories';
+import NotFoundImage from '../../assets/images/NotFound.png';
 
 const Blog = () => {
     const { t } = useTranslation();
@@ -175,8 +176,12 @@ const Blog = () => {
 
     const EmptyState = () => (
         <div className="text-center py-20 animate-fade-in">
-            <div className="mx-auto w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-6">
-                <span className="text-3xl">📰</span>
+            <div className="mx-auto w-32 h-32 mb-6">
+                <img 
+                    src={NotFoundImage} 
+                    alt="No blog posts found" 
+                    className="w-full h-full object-contain"
+                />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">No blog posts found</h3>
             <p className="text-gray-600 mb-6 text-lg max-w-md mx-auto">
@@ -187,10 +192,11 @@ const Blog = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            {/* Header Section - All controls in one row */}
+            {/* Header Section - Search and controls in one row */}
             <div className="border-b border-gray-100 sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
                 <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+                    {/* First row - Search, Sort, and Create button */}
+                    <div className="flex flex-col lg:flex-row gap-4 items-center justify-center mb-4">
                         {/* Search Bar - Fixed width */}
                         <div className="w-full lg:w-80">
                             <div className="relative">
@@ -232,33 +238,33 @@ const Blog = () => {
                             </select>
                         </div>
                         
-                        {/* Category Filters - Flexible width, no scroll */}
-                        <div className="flex items-center gap-2 flex-1 flex-wrap">
-                            {categories.map((category) => (
-                                <button
-                                    key={category.id || 'all'}
-                                    onClick={() => handleCategoryChange(category.id)}
-                                    className={`px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-all duration-200 ${
-                                        selectedCategoryId === category.id
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                                >
-                                    {t(category.nameKey)}
-                                </button>
-                            ))}
-                        </div>
-                        
                         {/* Create Post Button - Fixed width */}
                         <button
                             onClick={() => navigate('/blog/create')}
-                            className="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 whitespace-nowrap w-full lg:w-auto justify-center"
+                            className="inline-flex items-center px-3 py-2 bg-blue-600 !text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 whitespace-nowrap w-full lg:w-auto justify-center"
                         >
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                             </svg>
                             {t('blog.actions.createNewPost', 'Create')}
                         </button>
+                    </div>
+
+                    {/* Second row - Category Filters */}
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
+                        {categories.map((category) => (
+                            <button
+                                key={category.id || 'all'}
+                                onClick={() => handleCategoryChange(category.id)}
+                                className={`px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                                    selectedCategoryId === category.id
+                                        ? 'bg-blue-600 !text-white shadow-md'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                                }`}
+                            >
+                                {t(category.nameKey)}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>
