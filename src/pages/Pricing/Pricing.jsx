@@ -163,7 +163,7 @@ const Pricing = () => {
     return {
       symbol: isVietnamese ? '₫' : '$',
       regularPrice: isVietnamese ? '0' : '0', // Free plan
-      vipPrice: isVietnamese ? '49.000' : '1.90',
+      vipPrice: isVietnamese ? '50.000' : '1.90',
       period: t('pricing.perMonth')
     };
   };
@@ -272,7 +272,7 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl shadow-lg p-8 ${
+              className={`relative bg-white rounded-2xl shadow-lg p-8 flex flex-col ${
                 plan.popular ? 'ring-2 ring-blue-500' : ''
               }`}
             >
@@ -292,7 +292,7 @@ const Pricing = () => {
                 </div>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <svg
@@ -314,7 +314,7 @@ const Pricing = () => {
               <button
                 onClick={() => plan.isFree ? null : handlePayment(plan.id)}
                 disabled={loading === plan.id}
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors relative ${
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors relative mt-auto ${
                   plan.popular && !plan.isFree
                     ? 'bg-blue-600 !text-white hover:bg-blue-700 disabled:bg-blue-400'
                     : plan.isFree
