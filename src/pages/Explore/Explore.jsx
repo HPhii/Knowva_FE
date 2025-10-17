@@ -10,6 +10,7 @@ import notFoundImage from "../../assets/images/NotFound.png";
 import DogLogoExploreQuiz from "../../components/DogLogoExploreQuiz";
 import DogLogoExploreFlashcard from "../../components/DogLogoExploreFlashcard";
 import tabBarIcon from "../../assets/images/tabBarIcon.png";
+import DogWalkLoading from "../../components/DogWalkLoading";
 
 const Explore = () => {
   const { t } = useTranslation();
@@ -331,9 +332,7 @@ const Explore = () => {
         )}
       </div>
       {/* ------------------------TEST------------------------------- */}
-      {/* <div className="ml-50">
-        <img src={tabBarIcon} alt="tabBarIcon" className="w-50 h-50" />
-      </div> */}
+      <div className="ml-50">{/* <DogWalkLoading /> */}</div>
       {/* --------------------------------------------------------------- */}
       {/* Image Tab Navigation - Vertical Left Side */}
       <div className="w-full bg-gray-50 px-4 py-6">
@@ -346,7 +345,7 @@ const Explore = () => {
               <div className="w-full h-full">
                 {/* div bao quanh nut quiz  */}
                 <div className="flex justify-end items-center h-full w-50%">
-                  <div className="w-[45%] h-full relative">
+                  <div className="w-[40%] h-full relative">
                     <div
                       onClick={() => setActiveTab("quiz")}
                       className={`z-20 absolute cursor-pointer flex justify-center items-center bg-[#2F3353] h-full rounded-full py-1 px-2 w-[100%] transition-all duration-300 hover:bg-[#414990] hover:scale-105 ${
@@ -387,7 +386,7 @@ const Explore = () => {
               <div className="w-full h-full">
                 {/* div bao quanh nut flashcard  */}
                 <div className="flex justify-baseline items-center h-full w-50%">
-                  <div className="w-[45%] h-full relative">
+                  <div className="w-[40%] h-full relative">
                     <div
                       onClick={() => setActiveTab("flashcard")}
                       className={`z-20 absolute cursor-pointer flex justify-center items-center bg-[#2F3353] h-full rounded-full py-1 px-2 w-full transition-all duration-300 hover:bg-[#414990] hover:scale-105 ${

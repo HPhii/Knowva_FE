@@ -658,6 +658,14 @@
   "tryAgain": "Thử lại",
   "noUserData": "Không có dữ liệu người dùng.",
   "loadUserError": "Không thể tải thông tin người dùng. Vui lòng thử lại.",
+  "auth": {
+    "requireLoginTitle": "Yêu cầu đăng nhập",
+    "requireLoginDescription": "Bạn cần đăng nhập để xem thư viện của mình.",
+    "login": "Đăng nhập"
+  },
+  "common": {
+    "cancel": "Hủy"
+  },
   "user": "Người dùng",
   "email": "Email",
   "vipDaysLeft": "Số ngày VIP còn lại",

@@ -667,6 +667,14 @@
   "tryAgain": "Try Again",
   "noUserData": "No user data available.",
   "loadUserError": "Failed to load user information. Please try again.",
+  "auth": {
+    "requireLoginTitle": "Login Required",
+    "requireLoginDescription": "You need to log in to view your library.",
+    "login": "Login"
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
   "user": "User",
   "email": "Email",
   "vipDaysLeft": "VIP Days Left",

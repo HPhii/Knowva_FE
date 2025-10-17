@@ -14,6 +14,7 @@ import FlashcardModal from "./components/FlashcardModal";
 import GeneratedFlashcard from "./components/GeneratedFlashcard";
 import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 import RequireVipModal from "../../components/RequireVipModal";
+import RequireLoginModal from "../../components/RequireLoginModal";
 
 const Flashcard = () => {
   const { t } = useTranslation();
@@ -31,18 +32,22 @@ const Flashcard = () => {
   const [form] = Form.useForm();
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showVipModal, setShowVipModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   // const navigate = useNavigate();
 
   console.log("activeTab: ", activeTab);
   console.log("selectedFile: ", selectedFile);
   console.log("generatedFlashcard: ", generatedFlashcard);
 
-  // Kiểm tra trạng thái xác thực email khi component mount
+  // Kiểm tra login + trạng thái xác thực email khi component mount
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (user && user.isVerified === false) {
-      setShowVerifyModal(true);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowLoginModal(true);
+      return;
     }
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user && user.isVerified === false) setShowVerifyModal(true);
   }, []);
 
   const handleTabClick = (tabKey) => {
@@ -586,6 +591,13 @@ const Flashcard = () => {
         onFinish={handleGenerate}
         form={form}
         isGenerating={isGenerating}
+      />
+
+      {/* Require Login Modal */}
+      <RequireLoginModal
+        open={showLoginModal}
+        onOk={() => (window.location.href = "/login")}
+        onCancel={() => (window.location.href = "/")}
       />
 
       {/* Email Verification Modal */}
