@@ -53,28 +53,27 @@ const StudyFlashcard = () => {
   const [canEdit, setCanEdit] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
-  
   // Comments state
   const [comments, setComments] = useState([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
-  
+
   // Copy link state
   const [copyMessage, setCopyMessage] = useState("");
-  
+
   // Share dropdown state
   const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isShareDropdownOpen && !event.target.closest('.share-dropdown')) {
+      if (isShareDropdownOpen && !event.target.closest(".share-dropdown")) {
         setIsShareDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isShareDropdownOpen]);
 
@@ -201,23 +200,25 @@ const StudyFlashcard = () => {
   const fetchComments = async () => {
     try {
       setIsLoadingComments(true);
-      console.log('Fetching comments for flashcard set:', id);
-      const response = await api.get(`/interactions/flashcardset/${id}/comments`);
-      console.log('Comments API response:', response.data);
-      
+      console.log("Fetching comments for flashcard set:", id);
+      const response = await api.get(
+        `/interactions/flashcardset/${id}/comments`
+      );
+      console.log("Comments API response:", response.data);
+
       // Ensure we always set an array
       const commentsData = response.data;
       if (Array.isArray(commentsData)) {
         setComments(commentsData);
-        console.log('Set comments (array):', commentsData);
+        console.log("Set comments (array):", commentsData);
       } else if (commentsData && Array.isArray(commentsData.content)) {
         setComments(commentsData.content);
-        console.log('Set comments (content):', commentsData.content);
+        console.log("Set comments (content):", commentsData.content);
       } else if (commentsData && Array.isArray(commentsData.comments)) {
         setComments(commentsData.comments);
-        console.log('Set comments (nested):', commentsData.comments);
+        console.log("Set comments (nested):", commentsData.comments);
       } else {
-        console.log('API response format:', commentsData);
+        console.log("API response format:", commentsData);
         setComments([]);
       }
     } catch (err) {
@@ -233,16 +234,16 @@ const StudyFlashcard = () => {
   const handleAddComment = (newComment) => {
     if (newComment.parentId) {
       // This is a reply - find parent and add to replies
-      setComments(prevComments => 
-        prevComments.map(comment => 
-          comment.id === newComment.parentId 
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === newComment.parentId
             ? { ...comment, replies: [...(comment.replies || []), newComment] }
             : comment
         )
       );
     } else {
       // This is a new parent comment
-      setComments(prevComments => [newComment, ...prevComments]);
+      setComments((prevComments) => [newComment, ...prevComments]);
     }
   };
 
@@ -344,7 +345,10 @@ const StudyFlashcard = () => {
         : sessionData?.flashcards || [];
 
       // Save into flashcardSet while preserving existing metadata (owner, visibility, etc.)
-      setFlashcardSet((prev) => ({ ...(prev || {}), flashcards: normalizedFlashcards }));
+      setFlashcardSet((prev) => ({
+        ...(prev || {}),
+        flashcards: normalizedFlashcards,
+      }));
 
       // Initialize review session from API data
       setReviewCards(normalizedFlashcards);
@@ -531,7 +535,10 @@ const StudyFlashcard = () => {
         : sessionData?.flashcards || [];
 
       // Save into flashcardSet while preserving existing metadata (owner, visibility, etc.)
-      setFlashcardSet((prev) => ({ ...(prev || {}), flashcards: normalizedFlashcards }));
+      setFlashcardSet((prev) => ({
+        ...(prev || {}),
+        flashcards: normalizedFlashcards,
+      }));
 
       // Initialize review session from API data
       setReviewCards(normalizedFlashcards);
@@ -786,52 +793,6 @@ const StudyFlashcard = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
-              {/* Primary Button - Restart */}
-              <Button
-                icon={<RotateLeftOutlined />}
-                onClick={handleRestart}
-                type="primary"
-                className="flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex-1 sm:flex-none sm:min-w-[200px] h-12"
-              >
-                Bắt đầu lại
-              </Button>
-
-              {/* Secondary Actions - Moved to right */}
-              <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
-                {/* Copy Link Button */}
-                <div className="relative group">
-                  <Button
-                    icon={
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    }
-                    onClick={handleCopyLink}
-                    disabled={flashcardSet.visibility === "PRIVATE"}
-                    className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                      flashcardSet.visibility === "PRIVATE"
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-100"
-                        : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 border-green-100 hover:border-green-200 cursor-pointer shadow-md hover:shadow-lg"
-                    }`}
-                    type="default"
-                    title="Copy Link"
-                  />
-
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    {flashcardSet.visibility === "PRIVATE"
-                      ? "Set này là riêng tư"
-                      : "Copy Link"}
               {/* Secondary Actions - Restart + Share grouped on the right */}
               <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
                 {/* Restart Button - icon only, purple, sits to the left of Share */}
@@ -849,8 +810,18 @@ const StudyFlashcard = () => {
                     className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
                     title="Chia sẻ"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                      />
                     </svg>
                   </button>
 
@@ -864,15 +835,25 @@ const StudyFlashcard = () => {
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
                       <button
                         onClick={handleCopyLink}
-                        disabled={flashcardSet.visibility === 'PRIVATE'}
+                        disabled={flashcardSet.visibility === "PRIVATE"}
                         className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
-                          flashcardSet.visibility === 'PRIVATE'
+                          flashcardSet.visibility === "PRIVATE"
                             ? "text-gray-400 cursor-not-allowed"
                             : "text-gray-700 hover:bg-gray-100"
                         }`}
                       >
-                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        <svg
+                          className="w-4 h-4 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
                         </svg>
                         Copy Link
                       </button>
@@ -882,8 +863,18 @@ const StudyFlashcard = () => {
                           onClick={handleInviteFromShare}
                           className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center"
                         >
-                          <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                          <svg
+                            className="w-4 h-4 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                            />
                           </svg>
                           Mời người dùng
                         </button>
