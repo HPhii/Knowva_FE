@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
+import FailImage from "../../assets/images/Fail.png";
+import BetterImage from "../../assets/images/better.png";
+import SuperImage from "../../assets/images/super.png";
 
 const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
   const { t } = useTranslation();
@@ -97,6 +100,33 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
     return answers[questionId] ? 'answered' : 'unanswered';
   };
 
+  const getScoreDisplay = (score) => {
+    const scoreValue = Math.round(score || 0);
+    
+    if (scoreValue >= 0 && scoreValue <= 49) {
+      return {
+        icon: FailImage,
+        color: 'text-red-600',
+        bgColor: 'bg-red-100',
+        label: 'Cần cải thiện'
+      };
+    } else if (scoreValue >= 50 && scoreValue <= 79) {
+      return {
+        icon: BetterImage,
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-100',
+        label: 'Khá tốt'
+      };
+    } else {
+      return {
+        icon: SuperImage,
+        color: 'text-green-600',
+        bgColor: 'bg-green-100',
+        label: 'Xuất sắc'
+      };
+    }
+  };
+
   const handleTimeUpConfirm = () => {
     setShowTimeUpModal(false);
     handleSubmit();
@@ -115,21 +145,139 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
   }
 
   if (showResults && score) {
+    const scoreDisplay = getScoreDisplay(score.score);
+    
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <style>
+          {`
+            @keyframes angryShake {
+              0%, 100% { transform: translateX(0) rotate(0deg); }
+              25% { transform: translateX(-5px) rotate(-5deg); }
+              75% { transform: translateX(5px) rotate(5deg); }
+            }
+            
+            @keyframes gentleFloat {
+              0%, 100% { transform: translateY(0) scale(1); }
+              50% { transform: translateY(-8px) scale(1.05); }
+            }
+            
+            @keyframes gentleGlow {
+              0%, 100% { 
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+                transform: scale(1);
+              }
+              50% { 
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+                transform: scale(1.02);
+              }
+            }
+            
+            @keyframes checkmarkBounce {
+              0%, 100% { transform: scale(1) rotate(0deg); }
+              25% { transform: scale(1.1) rotate(-5deg); }
+              75% { transform: scale(1.1) rotate(5deg); }
+            }
+            
+            @keyframes sparkle {
+              0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+              50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+            }
+            
+            @keyframes starTwinkle {
+              0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+              50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+            }
+            
+            .angry-shake {
+              animation: angryShake 0.5s ease-in-out infinite;
+            }
+            
+            .wind-blow {
+              animation: windBlow 1s ease-in-out infinite;
+            }
+            
+            .sparkle {
+              animation: sparkle 2s ease-in-out infinite;
+            }
+            
+            .star-twinkle {
+              animation: starTwinkle 1.5s ease-in-out infinite;
+            }
+            
+            .gentle-float {
+              animation: gentleFloat 3s ease-in-out infinite;
+            }
+            
+            .gentle-glow {
+              animation: gentleGlow 2s ease-in-out infinite;
+            }
+            
+            .checkmark-bounce {
+              animation: checkmarkBounce 1.5s ease-in-out infinite;
+            }
+          `}
+        </style>
+        
         <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full mx-4">
           <div className="text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+            <div className="flex items-center justify-center mx-auto mb-4 relative">
+              <img 
+                src={scoreDisplay.icon} 
+                alt={scoreDisplay.label}
+                className={`w-32 h-32 object-contain ${
+                  scoreDisplay.label === 'Cần cải thiện' 
+                    ? 'angry-shake' 
+                    : scoreDisplay.label === 'Khá tốt' 
+                    ? 'animate-pulse' 
+                    : 'sparkle'
+                }`}
+              />
+              
+              {/* Animation effects based on score */}
+              {scoreDisplay.label === 'Cần cải thiện' && (
+                <>
+                  <div className="absolute -top-2 -right-2 text-red-500 text-2xl animate-ping">
+                    😡
+                  </div>
+                  <div className="absolute -top-1 -left-2 text-red-400 text-xl animate-ping">
+                    💥
+                  </div>
+                </>
+              )}
+              
+              {scoreDisplay.label === 'Khá tốt' && (
+                <>
+                  <div className="absolute -top-2 -right-2 text-yellow-500 text-2xl animate-ping">
+                    😊
+                  </div>
+                  <div className="absolute -top-1 -left-2 text-yellow-400 text-xl animate-ping">
+                    👍
+                  </div>
+                </>
+              )}
+              
+              {scoreDisplay.label === 'Xuất sắc' && (
+                <>
+                  <div className="absolute -top-2 -right-2 text-yellow-500 text-2xl star-twinkle">
+                    ✨
+                  </div>
+                  <div className="absolute -top-1 -left-2 text-yellow-400 text-xl star-twinkle" style={{animationDelay: '0.5s'}}>
+                    ⭐
+                  </div>
+                  <div className="absolute top-2 -right-3 text-yellow-300 text-lg star-twinkle" style={{animationDelay: '1s'}}>
+                    💫
+                  </div>
+                </>
+              )}
             </div>
             
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Hoàn thành!</h2>
-            <p className="text-gray-600 mb-6">Bạn đã hoàn thành quiz thành công</p>
+            <p className="text-gray-600 mb-2">Bạn đã hoàn thành quiz thành công</p>
+            <p className={`text-lg font-semibold ${scoreDisplay.color} mb-6`}>{scoreDisplay.label}</p>
             
             <div className="bg-gray-50 rounded-xl p-6 mb-6">
-              <div className="text-4xl font-bold text-blue-600 mb-2">
+              <div className={`text-4xl font-bold ${scoreDisplay.color} mb-2`}>
                 {Math.round(score.score || 0)}/100
               </div>
               <p className="text-gray-600">Điểm số</p>
@@ -138,7 +286,7 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
             <div className="space-y-3">
               <button
                 onClick={onBack}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors"
+                className="w-full bg-blue-600 hover:bg-blue-700 !text-white py-3 px-6 rounded-lg font-medium transition-colors"
               >
                 Quay lại chi tiết quiz
               </button>

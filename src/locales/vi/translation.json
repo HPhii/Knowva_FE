@@ -155,19 +155,19 @@
     "teamSubtitle": "Những cá nhân đam mê đứng sau KnowVa, những người tận tâm chuyển đổi giáo dục thông qua công nghệ.",
     "team": {
       "sarah": {
-        "name": "Sarah Johnson",
-        "role": "CEO & Người sáng lập",
-        "bio": "Cựu nhà giáo dục với hơn 10 năm kinh nghiệm trong EdTech"
+        "name": "Lê Cao Kha",
+        "role": "Front end Developer",
+        "bio": "Lau nhà lúc 10 giờ tối"
       },
       "michael": {
-        "name": "Michael Chen",
-        "role": "CTO",
-        "bio": "Chuyên gia AI/ML tập trung vào công nghệ giáo dục"
+        "name": "Trịnh Hiểu Phi",
+        "role": "Backend Developer",
+        "bio": "Nấu ăn lúc 3 giờ sáng"
       },
       "emily": {
-        "name": "Emily Rodriguez",
-        "role": "Trưởng phòng Sản phẩm",
-        "bio": "Chiến lược gia sản phẩm đam mê trải nghiệm người dùng"
+        "name": "Nguyễn Hữu An",
+        "role": "Front end Developer",
+        "bio": "Đi gym lúc 2 giờ sáng"
       }
     },
     "storyTitle": "Câu chuyện của chúng tôi",
@@ -301,16 +301,19 @@
     "subject": "Tiêu đề",
     "message": "Tin nhắn",
     "sendMessage": "Gửi Tin Nhắn",
+    "sending": "Đang gửi...",
+    "successMessage": "Tin nhắn đã được gửi thành công! Chúng tôi sẽ phản hồi bạn sớm nhất.",
+    "errorMessage": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
     "infoTitle": "Thông Tin Liên Hệ",
     "faqTitle": "Câu Hỏi Nhanh?",
     "address": "Địa chỉ",
     "phone": "Điện thoại",
     "contactEmail": "contact@knowva.com",
-    "supportEmail": "support@knowva.com",
-    "addressLine1": "123 Innovation Drive",
-    "addressLine2": "San Francisco, CA 94105",
-    "addressLine3": "United States",
-    "phoneNumber": "+1 (555) 123-4567",
+    "supportEmail": "knowva18k@gmail.com",
+    "addressLine1": "7 Đ. D1, Long Thạnh Mỹ",
+    "addressLine2": "Thủ Đức, Hồ Chí Minh 70000",
+    "addressLine3": "Việt Nam",
+    "phoneNumber": "+84 937 874 259",
     "phoneHours": "Thứ 2-Thứ 6 9AM-6PM PST",
     "faqLinks": {
       "getStarted": "Làm thế nào để bắt đầu với KnowVa?",
@@ -460,8 +463,8 @@
     "changesTermsText": "Chúng tôi có quyền, theo quyết định riêng của mình, sửa đổi hoặc thay thế các Điều khoản này bất cứ lúc nào. Nếu việc sửa đổi là quan trọng, chúng tôi sẽ cố gắng cung cấp thông báo ít nhất 30 ngày trước khi bất kỳ điều khoản mới nào có hiệu lực.",
     "contactInfoTitle": "10. Thông Tin Liên Hệ",
     "contactInfoText": "Nếu bạn có bất kỳ câu hỏi nào về Điều khoản & Điều kiện này, vui lòng liên hệ với chúng tôi tại:",
-    "contactEmail": "Email: legal@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "privacy": {
     "title": "Chính Sách Bảo Mật",
@@ -514,8 +517,8 @@
     "changesPolicyText": "Chúng tôi có thể cập nhật Chính sách Bảo mật theo thời gian. Chúng tôi sẽ thông báo bằng cách đăng chính sách mới trên trang này và cập nhật ngày 'Cập nhật lần cuối'.",
     "contactUsTitle": "10. Liên Hệ Chúng Tôi",
     "contactUsText": "Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này, vui lòng liên hệ với chúng tôi tại:",
-    "contactEmail": "Email: privacy@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "documentation": {
     "title": "Tài Liệu",
@@ -647,8 +650,8 @@
     "updatesDescription": "Chúng tôi có thể cập nhật Chính sách Cookie này theo thời gian để phản ánh những thay đổi trong thực tiễn của chúng tôi hoặc vì các lý do vận hành, pháp lý hoặc quy định khác. Chúng tôi sẽ thông báo cho bạn về bất kỳ thay đổi quan trọng nào bằng cách đăng chính sách cập nhật trên trang web của chúng tôi.",
     "contactUs": "Liên Hệ Chúng Tôi",
     "contactDescription": "Nếu bạn có bất kỳ câu hỏi nào về việc sử dụng cookie của chúng tôi hoặc Chính sách Cookie này, vui lòng liên hệ với chúng tôi:",
-    "contactEmail": "Email: privacy@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "userDetails": "Chi tiết người dùng",
   "loadingUserInfo": "Đang tải thông tin người dùng...",
@@ -991,7 +994,9 @@
     "sendFeedback": "Gửi Feedback",
     "reportBug": "Báo cáo lỗi",
     "reportBugDesc": "Tìm thấy lỗi? Hãy giúp chúng tôi cải thiện ứng dụng",
+    "helpSupport": "Hỗ trợ & Trợ giúp",
     "customers": "Khách hàng",
+    "contact": "Liên hệ",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
     "documentation": "Tài liệu",
@@ -1003,10 +1008,11 @@
     "terms": "Điều khoản & Điều kiện",
     "privacy": "Chính sách bảo mật",
     "cookies": "Chính sách Cookie",
-    "copyright": "© 2024 KnowVa. Đã đăng ký bản quyền.",
+    "copyright": "© 2025 KnowVa.",
     "twitter": "Twitter",
     "facebook": "Facebook",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+    "location": "Vị trí"
   },
   "postBlog": {
     "title": "Tạo bài viết blog mới",

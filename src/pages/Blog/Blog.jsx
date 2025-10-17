@@ -5,6 +5,14 @@ import api from "../../config/axios";
 import BlogCard from "../../components/BlogCard";
 import { debounce } from "lodash";
 import { getCategoriesForFilter } from "../../utils/blogCategories";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import api from '../../config/axios';
+import BlogCard from '../../components/BlogCard';
+import { debounce } from 'lodash';
+import { getCategoriesForFilter } from '../../utils/blogCategories';
+import NotFoundImage from '../../assets/images/NotFound.png';
 
 const Blog = () => {
   const { t } = useTranslation();
@@ -354,6 +362,98 @@ const Blog = () => {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <BlogCard blog={blog} />
+    const EmptyState = () => (
+        <div className="text-center py-20 animate-fade-in">
+            <div className="mx-auto w-32 h-32 mb-6">
+                <img 
+                    src={NotFoundImage} 
+                    alt="No blog posts found" 
+                    className="w-full h-full object-contain"
+                />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">No blog posts found</h3>
+            <p className="text-gray-600 mb-6 text-lg max-w-md mx-auto">
+                {t('blog.errors.tryDifferentKeyword', 'Please try with different keywords or categories.')}
+            </p>
+        </div>
+    );
+
+    return (
+        <div className="min-h-screen bg-white">
+            {/* Header Section - Search and controls in one row */}
+            <div className="border-b border-gray-100 sticky top-0 z-20 bg-white/95 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                    {/* First row - Search, Sort, and Create button */}
+                    <div className="flex flex-col lg:flex-row gap-4 items-center justify-center mb-4">
+                        {/* Search Bar - Fixed width */}
+                        <div className="w-full lg:w-80">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="search"
+                                    value={keyword}
+                                    onChange={handleSearchChange}
+                                    placeholder={t('blog.searchPlaceholder', 'Search...')}
+                                    className="block w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+                                />
+                            </div>
+                        </div>
+                        
+                        {/* Sort Controls - Fixed width */}
+                        <div className="flex items-center gap-2 w-full lg:w-auto">
+                            <select
+                                value={sortBy}
+                                onChange={(e) => handleSortByChange(e.target.value)}
+                                className="px-2 py-2 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            >
+                                <option value="publishedAt">{t('blog.sort.publishedAt', 'Date')}</option>
+                                <option value="title">{t('blog.sort.title', 'Title')}</option>
+                                <option value="authorName">{t('blog.sort.authorName', 'Author')}</option>
+                                <option value="readTime">{t('blog.sort.readTime', 'Read Time')}</option>
+                            </select>
+                            
+                            <select
+                                value={sortDirection}
+                                onChange={(e) => handleSortDirectionChange(e.target.value)}
+                                className="px-2 py-2 text-xs border border-gray-200 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            >
+                                <option value="DESC">↓</option>
+                                <option value="ASC">↑</option>
+                            </select>
+                        </div>
+                        
+                        {/* Create Post Button - Fixed width */}
+                        <button
+                            onClick={() => navigate('/blog/create')}
+                            className="inline-flex items-center px-3 py-2 bg-blue-600 !text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 whitespace-nowrap w-full lg:w-auto justify-center"
+                        >
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            {t('blog.actions.createNewPost', 'Create')}
+                        </button>
+                    </div>
+
+                    {/* Second row - Category Filters */}
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
+                        {categories.map((category) => (
+                            <button
+                                key={category.id || 'all'}
+                                onClick={() => handleCategoryChange(category.id)}
+                                className={`px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                                    selectedCategoryId === category.id
+                                        ? 'bg-blue-600 !text-white shadow-md'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                                }`}
+                            >
+                                {t(category.nameKey)}
+                            </button>
+                        ))}
+                    </div>
                 </div>
               ))}
             </div>

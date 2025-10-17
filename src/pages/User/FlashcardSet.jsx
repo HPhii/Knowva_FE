@@ -1,26 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../../config/axios";
 
 const FlashcardSet = () => {
   const { t } = useTranslation();
+  const { id } = useParams(); // Get user ID from URL params
   const location = useLocation();
   const navigate = useNavigate();
   const [flashcardSets, setFlashcardSets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   useEffect(() => {
     fetchFlashcardSets();
-  }, [location.pathname]);
+  }, [location.pathname, id]);
 
   const fetchFlashcardSets = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get("/flashcard-sets/my-flashcard-sets");
-      setFlashcardSets(response.data || []);
+      
+      // Determine if we're viewing current user or another user
+      const isViewingOtherUser = id && id !== "me";
+      setIsCurrentUser(!isViewingOtherUser);
+      
+      let response;
+      if (isViewingOtherUser) {
+        // Get public flashcard sets of another user
+        response = await api.get(`/flashcard-sets/user/${id}`);
+        // Filter only PUBLIC visibility flashcard sets
+        const publicFlashcardSets = (response.data || []).filter(flashcard => 
+          (flashcard.visibility || flashcard.visibilityStatus) === "PUBLIC"
+        );
+        setFlashcardSets(publicFlashcardSets);
+      } else {
+        // Get current user's flashcard sets
+        response = await api.get("/flashcard-sets/my-flashcard-sets");
+        setFlashcardSets(response.data || []);
+      }
     } catch (err) {
       console.error("Error fetching flashcard sets:", err);
       setError(err.response?.data?.message || "Không thể tải danh sách flashcard sets");
@@ -89,20 +108,28 @@ const FlashcardSet = () => {
         </svg>
       </div>
       <h3 className="text-lg font-medium text-gray-900 mb-2">
-        {t("noFlashcardSets") || "No Flashcard Sets Available"}
+        {isCurrentUser 
+          ? (t("noFlashcardSets") || "No Flashcard Sets Available")
+          : "Chưa có flashcard công khai"
+        }
       </h3>
       <p className="text-gray-500 mb-6">
-        Bạn chưa có bộ flashcard nào. Hãy bắt đầu tạo flashcard để học tập hiệu quả!
+        {isCurrentUser 
+          ? "Bạn chưa có bộ flashcard nào. Hãy bắt đầu tạo flashcard để học tập hiệu quả!"
+          : "Người dùng này chưa có flashcard nào được công khai."
+        }
       </p>
-      <button
-        onClick={() => navigate('/flashcards')}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 mx-auto"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        <span>Tạo flashcard mới</span>
-      </button>
+      {isCurrentUser && (
+        <button
+          onClick={() => navigate('/flashcards')}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 mx-auto"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          <span>Tạo flashcard mới</span>
+        </button>
+      )}
     </div>
   );
 
@@ -156,11 +183,16 @@ const FlashcardSet = () => {
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {t("flashcardSet")}
+          {isCurrentUser 
+            ? (t("flashcardSet") || "Flashcard Sets")
+            : "Flashcard công khai"
+          }
         </h3>
         <p className="text-gray-600 text-sm">
-          {t("flashcardSetDescription") ||
-            "Create and manage your flashcard sets for effective learning"}
+          {isCurrentUser 
+            ? (t("flashcardSetDescription") || "Create and manage your flashcard sets for effective learning")
+            : "Các flashcard được công khai của người dùng này"
+          }
         </p>
       </div>
 
@@ -178,16 +210,18 @@ const FlashcardSet = () => {
         </div>
       )}
 
-      {/* Floating Add Button */}
-      <button
-        onClick={() => navigate('/flashcards')}
-        className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group hover:scale-110"
-        title="Tạo flashcard mới"
-      >
-        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
+      {/* Floating Add Button - Only show for current user */}
+      {isCurrentUser && (
+        <button
+          onClick={() => navigate('/flashcards')}
+          className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group hover:scale-110"
+          title="Tạo flashcard mới"
+        >
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };

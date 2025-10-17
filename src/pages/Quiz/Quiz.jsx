@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "antd";
 import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga4";
 import api from "../../config/axios";
 // import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -183,9 +184,16 @@ const Quiz = () => {
     try {
       setIsSaving(true);
 
-      const res = await api.post("/quiz-sets/save", generatedQuiz);
+      await api.post("/quiz-sets/save", generatedQuiz);
 
       toast.success(t("quiz.generatedQuiz.messages.saveSuccess"));
+
+      // Track quiz creation event
+      ReactGA.event({
+        category: "Content Creation",
+        action: "Created a new Quiz Set",
+        label: generatedQuiz.sourceType || "Unknown Source",
+      });
 
       // Reset generated quiz sau khi lưu thành công
       setGeneratedQuiz(null);
