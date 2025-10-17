@@ -673,6 +673,7 @@
     "userNotFound": "Không tìm thấy người dùng này.",
     "vipUser": "VIP User",
     "freeUser": "Người dùng miễn phí",
+    "upgradeToVIP": "Nhấp để nâng cấp lên VIP",
     "loadUserError": "Không thể tải thông tin người dùng",
     "quizSet": {
       "noPublicQuizzes": "Chưa có câu hỏi công khai",

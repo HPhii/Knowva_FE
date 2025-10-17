@@ -13,6 +13,7 @@ import FlashcardSet from "./FlashcardSet";
 import BlogSet from "./BlogSet";
 import Transaction from "./Transaction";
 import UserActivities from "./UserActivities";
+import runDogVideo from "../../assets/images/run_dog.mp4";
 
 // Icons
 import { 
@@ -374,8 +375,31 @@ const UserDetails = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8 relative overflow-hidden">
+          {/* Running Dog Video - Only for Free Users */}
+          {!(userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)) && (
+            <div className="absolute inset-0 pointer-events-none">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="absolute w-16 h-16 object-cover rounded-full animate-bounce"
+                style={{
+                  animation: 'moveEditToFree 6s ease-in-out infinite',
+                  maxWidth: '64px',
+                  maxHeight: '64px',
+                  top: '50%',
+                  left: '85%',
+                  transform: 'translateY(-50%)'
+                }}
+              >
+                <source src={runDogVideo} type="video/mp4" />
+              </video>
+            </div>
+          )}
+          
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0 relative z-10">
             <div className="flex items-center space-x-6">
               <div className="flex-shrink-0">
                 {userData?.avatarUrl ? (
@@ -397,14 +421,27 @@ const UserDetails = () => {
                   {userData.fullName || t("user")}
                 </h1>
                 <p className="text-gray-600 mb-2">{userData.email}</p>
-                <div className="flex items-center space-x-4">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)
-                      ? 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white shadow-lg animate-pulse' 
-                      : 'bg-gray-100 text-gray-700'
-                  }`}>
+                <div className="flex flex-col items-start space-y-2">
+                  <span 
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 ${
+                      userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)
+                        ? 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white shadow-lg animate-pulse' 
+                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer animate-bounce ring-2 ring-blue-300 ring-opacity-50'
+                    }`}
+                    onClick={() => {
+                      if (!(userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null))) {
+                        navigate('/pricing');
+                      }
+                    }}
+                    title={!(userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)) ? t("userDetailsPage.upgradeToVIP") : ""}
+                  >
                     <Crown className="w-4 h-4 mr-1" />
                     {userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null) ? t("userDetailsPage.vipUser") : t("userDetailsPage.freeUser")}
+                    {!(userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)) && (
+                      <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    )}
                   </span>
                   {userData.vipDaysLeft && userData.vipDaysLeft !== null && (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">

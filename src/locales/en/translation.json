@@ -682,6 +682,7 @@
     "userNotFound": "User not found.",
     "vipUser": "VIP User",
     "freeUser": "Free User",
+    "upgradeToVIP": "Click to upgrade to VIP",
     "loadUserError": "Failed to load user information",
     "quizSet": {
       "noPublicQuizzes": "No public questions",
