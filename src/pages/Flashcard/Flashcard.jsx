@@ -213,6 +213,7 @@ const Flashcard = () => {
       const res = await api.post("/flashcard-sets/save", saveData);
 
       console.log("Save flashcard response: ", res);
+
       toast.success(t("flashcard.generatedFlashcard.messages.saveSuccess"));
 
       // Track flashcard creation event

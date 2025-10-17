@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Button, Dropdown } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
 
 const QuizSet = () => {
@@ -8,6 +10,7 @@ const QuizSet = () => {
   const { id } = useParams(); // Get user ID from URL params
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [quizSets, setQuizSets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,7 +45,7 @@ const QuizSet = () => {
       }
     } catch (err) {
       console.error("Error fetching quiz sets:", err);
-      setError(err.response?.data?.message || "Không thể tải danh sách quiz sets");
+      setError(err.response?.data?.message || t("userDetailsPage.quizSet.cannotLoadQuizSets"));
     } finally {
       setLoading(false);
     }
@@ -84,7 +87,7 @@ const QuizSet = () => {
         onClick={fetchQuizSets}
         className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
       >
-        Thử lại
+        {t("userDetailsPage.quizSet.tryAgain")}
       </button>
     </div>
   );
@@ -110,34 +113,75 @@ const QuizSet = () => {
       <h3 className="text-lg font-medium text-gray-900 mb-2">
         {isCurrentUser 
           ? (t("noQuizSets") || "No Quiz Sets Available")
-          : "Chưa có quiz công khai"
+          : t("userDetailsPage.quizSet.noPublicQuizzes")
         }
       </h3>
       <p className="text-gray-500 mb-6">
         {isCurrentUser 
           ? "Bạn chưa có bộ câu hỏi nào. Hãy bắt đầu tạo quiz để kiểm tra kiến thức!"
-          : "Người dùng này chưa có quiz nào được công khai."
+          : t("userDetailsPage.quizSet.noPublicQuizzesDesc")
         }
       </p>
       {isCurrentUser && (
-        <button
-          onClick={() => navigate('/quiz')}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 mx-auto"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Tạo quiz mới</span>
-        </button>
+        <div className="flex justify-baseline mb-5">
+          <Dropdown
+            menu={{ items: createQuizItems }}
+            placement="bottomLeft"
+            trigger={["click"]}
+          >
+            <Button icon={<PlusOutlined />}>
+              {t("userDetailsPage.quizSet.createNewQuiz", "Tạo Quiz mới")}
+            </Button>
+          </Dropdown>
+        </div>
       )}
     </div>
   );
+
+  // Create dropdown items for quiz creation
+  const createQuizItems = [
+    {
+      key: "ai",
+      label: (
+        <div
+          onClick={() => navigate("/quiz")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          {t("userDetailsPage.quizSet.createWithAI", "Tạo với AI")}
+        </div>
+      ),
+    },
+    {
+      key: "scratch",
+      label: (
+        <div
+          onClick={() => navigate("/quiz/create")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          {t("userDetailsPage.quizSet.createFromScratch", "Tạo từ đầu")}
+        </div>
+      ),
+    },
+  ];
 
   // Handle quiz card click
   const handleQuizClick = (quizSet) => {
     const quizId = quizSet.id || quizSet._id;
     if (quizId) {
-      navigate(`/quiz/${quizId}`);
+      const currentTab = searchParams.get('tab') || 'quizzes';
+      navigate(`/quiz/${quizId}`, { 
+        state: { 
+          from: 'userDetail', 
+          userId: id, 
+          tab: currentTab 
+        } 
+      });
     }
   };
 

@@ -51,7 +51,10 @@ const GlobalSearch = () => {
           const flashcardSets = data.flashcardSets || [];
           setResults(flashcardSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC"));
         } else if (searchType === "user") {
-          setResults(data.accounts || []);
+          const accounts = data.accounts || [];
+          // Filter out ADMIN users from search results
+          const filteredAccounts = accounts.filter(user => user.role !== 'ADMIN');
+          setResults(filteredAccounts);
         }
       } catch (error) {
         console.error("Search failed:", error);

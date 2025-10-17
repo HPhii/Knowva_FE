@@ -16,6 +16,7 @@ import Contact from "../pages/Contact/Contact";
 import Blog from "../pages/Blog/Blog";
 import PostBlog from "../pages/Blog/PostBlog";
 import BlogDetail from "../pages/Blog/BlogDetail";
+import EditBlog from "../pages/Blog/EditBlog";
 import Terms from "../pages/Terms/Terms";
 import Privacy from "../pages/Privacy/Privacy";
 import Documentation from "../pages/Documentation/Documentation";
@@ -29,6 +30,7 @@ import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
 import QuizDetail from "../pages/Quiz/QuizDetail";
 import EditQuiz from "../pages/Quiz/EditQuiz";
+import CreateQuiz from "../pages/Quiz/CreateQuiz";
 import NotFound from "../pages/NotFound/NotFound";
 
 import MyLibrary from "../pages/MyLibrary/MyLibrary";
@@ -48,6 +50,7 @@ const router = createBrowserRouter([
       { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
       { path: "quizzes", element: <Quiz /> },
+      { path: "quiz/create", element: <CreateQuiz /> },
       { path: "quiz/:id", element: <QuizDetail /> },
       { path: "quiz/:id/edit", element: <EditQuiz /> },
       { path: "flashcards", element: <Flashcard /> },
@@ -58,6 +61,7 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "blog", element: <Blog /> },
       { path: "blog/create", element: <PostBlog /> },
+      { path: "blog/edit/:id", element: <EditBlog /> },
       { path: "blog/:slug", element: <BlogDetail /> },
       { path: "terms", element: <Terms /> },
       { path: "privacy", element: <Privacy /> },

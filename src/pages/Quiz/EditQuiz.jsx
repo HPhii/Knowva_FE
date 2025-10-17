@@ -39,7 +39,7 @@ const EditQuiz = () => {
       });
     } catch (err) {
       console.error("Error fetching quiz detail:", err);
-      message.error("Không thể tải thông tin quiz");
+      message.error(t('editQuiz.loadError', 'Không thể tải thông tin quiz'));
     } finally {
       setLoading(false);
     }
@@ -62,11 +62,11 @@ const EditQuiz = () => {
         questions: values.questions
       });
       
-      message.success("Cập nhật quiz thành công!");
+      message.success(t('editQuiz.updateSuccess', 'Cập nhật quiz thành công!'));
       navigate(`/quiz/${id}`);
     } catch (err) {
       console.error("Error updating quiz:", err);
-      message.error(err.response?.data?.message || "Cập nhật quiz thất bại");
+      message.error(err.response?.data?.message || t('editQuiz.updateError', 'Cập nhật quiz thất bại'));
     } finally {
       setSaving(false);
     }
@@ -126,7 +126,7 @@ const EditQuiz = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tải...</p>
+          <p className="text-gray-600">{t('editQuiz.loading', 'Đang tải...')}</p>
         </div>
       </div>
     );
@@ -144,10 +144,10 @@ const EditQuiz = () => {
                 onClick={() => navigate(`/quiz/${id}`)}
                 className="mr-4"
               >
-                Quay lại
+                {t('editQuiz.back', 'Quay lại')}
               </Button>
               <h1 className="text-3xl font-bold text-gray-900">
-                Sửa Quiz: {quiz?.title}
+                {t('editQuiz.editQuiz', 'Sửa Quiz')}: {quiz?.title}
               </h1>
             </div>
             <Button
@@ -157,7 +157,7 @@ const EditQuiz = () => {
               onClick={handleSave}
               size="large"
             >
-              Lưu thay đổi
+              {t('editQuiz.saveChanges', 'Lưu thay đổi')}
             </Button>
           </div>
         </div>
@@ -168,96 +168,97 @@ const EditQuiz = () => {
           className="space-y-6"
         >
           {/* Basic Info */}
-          <Card title="Thông tin cơ bản" className="mb-6">
+          <Card title={t('editQuiz.basicInfo', 'Thông tin cơ bản')} className="mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item
-                label="Tiêu đề"
+                label={t('editQuiz.title', 'Tiêu đề')}
                 name="title"
-                rules={[{ required: true, message: "Vui lòng nhập tiêu đề" }]}
+                rules={[{ required: true, message: t('editQuiz.titleRequired', 'Vui lòng nhập tiêu đề') }]}
               >
-                <Input placeholder="Nhập tiêu đề quiz" />
+                <Input placeholder={t('editQuiz.titlePlaceholder', 'Nhập tiêu đề quiz')} />
               </Form.Item>
 
               <Form.Item
-                label="Thời gian (phút)"
+                label={t('editQuiz.timeLimit', 'Thời gian (phút)')}
                 name="timeLimit"
-                rules={[{ required: true, message: "Vui lòng nhập thời gian" }]}
+                rules={[{ required: true, message: t('editQuiz.timeLimitRequired', 'Vui lòng nhập thời gian') }]}
               >
-                <Input type="number" placeholder="30" />
+                <Input type="number" placeholder={t('editQuiz.timeLimitPlaceholder', '30')} />
               </Form.Item>
             </div>
 
             <Form.Item
-              label="Mô tả"
+              label={t('editQuiz.description', 'Mô tả')}
               name="description"
-              rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+              rules={[{ required: true, message: t('editQuiz.descriptionRequired', 'Vui lòng nhập mô tả') }]}
             >
               <Input.TextArea
                 rows={3}
-                placeholder="Nhập mô tả quiz"
+                placeholder={t('editQuiz.descriptionPlaceholder', 'Nhập mô tả quiz')}
               />
             </Form.Item>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Form.Item
-                label="Loại câu hỏi"
+                label={t('editQuiz.questionType', 'Loại câu hỏi')}
                 name="questionType"
-                rules={[{ required: true, message: "Vui lòng chọn loại câu hỏi" }]}
+                rules={[{ required: true, message: t('editQuiz.questionTypeRequired', 'Vui lòng chọn loại câu hỏi') }]}
               >
-                <Select placeholder="Chọn loại câu hỏi">
-                  <Select.Option value="MULTIPLE_CHOICE">Trắc nghiệm</Select.Option>
-                  <Select.Option value="TRUE_FALSE">Đúng/Sai</Select.Option>
+                <Select placeholder={t('editQuiz.questionTypePlaceholder', 'Chọn loại câu hỏi')}>
+                  <Select.Option value="MULTIPLE_CHOICE">{t('editQuiz.multipleChoice', 'Trắc nghiệm')}</Select.Option>
+                  <Select.Option value="TRUE_FALSE">{t('editQuiz.trueFalse', 'Đúng/Sai')}</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item
-                label="Quyền hiển thị"
+                label={t('editQuiz.visibility', 'Quyền hiển thị')}
                 name="visibility"
-                rules={[{ required: true, message: "Vui lòng chọn quyền hiển thị" }]}
+                rules={[{ required: true, message: t('editQuiz.visibilityRequired', 'Vui lòng chọn quyền hiển thị') }]}
               >
-                <Select placeholder="Chọn quyền hiển thị">
-                  <Select.Option value="PUBLIC">Công khai</Select.Option>
-                  <Select.Option value="PRIVATE">Riêng tư</Select.Option>
+                <Select placeholder={t('editQuiz.visibilityPlaceholder', 'Chọn quyền hiển thị')}>
+                  <Select.Option value="PUBLIC">{t('editQuiz.public', 'Công khai')}</Select.Option>
+                  <Select.Option value="PRIVATE">{t('editQuiz.private', 'Riêng tư')}</Select.Option>
+                  <Select.Option value="HIDDEN">{t('editQuiz.hidden', 'Ẩn')}</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item
-                label="Danh mục"
+                label={t('editQuiz.category', 'Danh mục')}
                 name="category"
-                rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}
+                rules={[{ required: true, message: t('editQuiz.categoryRequired', 'Vui lòng chọn danh mục') }]}
               >
-                <Select placeholder="Chọn danh mục">
-                  <Select.Option value="SCIENCE">Khoa học</Select.Option>
-                  <Select.Option value="HISTORY">Lịch sử</Select.Option>
-                  <Select.Option value="GEOGRAPHY">Địa lý</Select.Option>
-                  <Select.Option value="LITERATURE">Văn học</Select.Option>
-                  <Select.Option value="MATH">Toán học</Select.Option>
-                  <Select.Option value="LANGUAGE">Ngôn ngữ</Select.Option>
-                  <Select.Option value="TECHNOLOGY">Công nghệ</Select.Option>
-                  <Select.Option value="SPORTS">Thể thao</Select.Option>
-                  <Select.Option value="ART">Nghệ thuật</Select.Option>
-                  <Select.Option value="OTHER">Khác</Select.Option>
+                <Select placeholder={t('editQuiz.categoryPlaceholder', 'Chọn danh mục')}>
+                  <Select.Option value="SCIENCE">{t('editQuiz.science', 'Khoa học')}</Select.Option>
+                  <Select.Option value="HISTORY">{t('editQuiz.history', 'Lịch sử')}</Select.Option>
+                  <Select.Option value="GEOGRAPHY">{t('editQuiz.geography', 'Địa lý')}</Select.Option>
+                  <Select.Option value="LITERATURE">{t('editQuiz.literature', 'Văn học')}</Select.Option>
+                  <Select.Option value="MATH">{t('editQuiz.math', 'Toán học')}</Select.Option>
+                  <Select.Option value="LANGUAGE">{t('editQuiz.language', 'Ngôn ngữ')}</Select.Option>
+                  <Select.Option value="TECHNOLOGY">{t('editQuiz.technology', 'Công nghệ')}</Select.Option>
+                  <Select.Option value="SPORTS">{t('editQuiz.sports', 'Thể thao')}</Select.Option>
+                  <Select.Option value="ART">{t('editQuiz.art', 'Nghệ thuật')}</Select.Option>
+                  <Select.Option value="OTHER">{t('editQuiz.other', 'Khác')}</Select.Option>
                 </Select>
               </Form.Item>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item
-                label="Số câu hỏi tối đa"
+                label={t('editQuiz.maxQuestions', 'Số câu hỏi tối đa')}
                 name="maxQuestions"
-                rules={[{ required: true, message: "Vui lòng nhập số câu hỏi tối đa" }]}
+                rules={[{ required: true, message: t('editQuiz.maxQuestionsRequired', 'Vui lòng nhập số câu hỏi tối đa') }]}
               >
-                <Input type="number" placeholder="5" min="1" max="100" />
+                <Input type="number" placeholder={t('editQuiz.maxQuestionsPlaceholder', '5')} min="1" max="100" />
               </Form.Item>
 
               <Form.Item
-                label="Ngôn ngữ"
+                label={t('editQuiz.languageLabel', 'Ngôn ngữ')}
                 name="language"
-                rules={[{ required: true, message: "Vui lòng chọn ngôn ngữ" }]}
+                rules={[{ required: true, message: t('editQuiz.languageRequired', 'Vui lòng chọn ngôn ngữ') }]}
               >
-                <Select placeholder="Chọn ngôn ngữ">
-                  <Select.Option value="vi">Tiếng Việt</Select.Option>
-                  <Select.Option value="en">English</Select.Option>
+                <Select placeholder={t('editQuiz.languagePlaceholder', 'Chọn ngôn ngữ')}>
+                  <Select.Option value="vi">{t('editQuiz.vietnamese', 'Tiếng Việt')}</Select.Option>
+                  <Select.Option value="en">{t('editQuiz.english', 'English')}</Select.Option>
                 </Select>
               </Form.Item>
             </div>
@@ -265,14 +266,14 @@ const EditQuiz = () => {
 
           {/* Questions */}
           <Card 
-            title="Câu hỏi" 
+            title={t('editQuiz.questions', 'Câu hỏi')} 
             extra={
               <Button 
                 type="dashed" 
                 icon={<PlusOutlined />} 
                 onClick={addQuestion}
               >
-                Thêm câu hỏi
+                {t('editQuiz.addQuestion', 'Thêm câu hỏi')}
               </Button>
             }
           >
@@ -283,7 +284,7 @@ const EditQuiz = () => {
                     <Card
                       key={field.key}
                       size="small"
-                      title={`Câu hỏi ${questionIndex + 1}`}
+                      title={`${t('editQuiz.questionNumber', 'Câu hỏi')} ${questionIndex + 1}`}
                       extra={
                         <Button
                           type="text"
@@ -291,7 +292,7 @@ const EditQuiz = () => {
                           icon={<DeleteOutlined />}
                           onClick={() => removeQuestion(questionIndex)}
                         >
-                          Xóa
+                          {t('editQuiz.delete', 'Xóa')}
                         </Button>
                       }
                       className="bg-gray-50"
@@ -299,30 +300,30 @@ const EditQuiz = () => {
                       <Form.Item
                         key={`${field.key}-questionText`}
                         name={[field.name, 'questionText']}
-                        label="Nội dung câu hỏi"
-                        rules={[{ required: true, message: "Vui lòng nhập nội dung câu hỏi" }]}
+                        label={t('editQuiz.questionContent', 'Nội dung câu hỏi')}
+                        rules={[{ required: true, message: t('editQuiz.questionContentRequired', 'Vui lòng nhập nội dung câu hỏi') }]}
                       >
                         <Input.TextArea
                           rows={2}
-                          placeholder="Nhập nội dung câu hỏi"
+                          placeholder={t('editQuiz.questionContentPlaceholder', 'Nhập nội dung câu hỏi')}
                         />
                       </Form.Item>
 
                       <Form.Item
                         key={`${field.key}-timeLimit`}
                         name={[field.name, 'timeLimit']}
-                        label="Thời gian (giây)"
-                        rules={[{ required: true, message: "Vui lòng nhập thời gian" }]}
+                        label={t('editQuiz.questionTimeLimit', 'Thời gian (giây)')}
+                        rules={[{ required: true, message: t('editQuiz.questionTimeLimitRequired', 'Vui lòng nhập thời gian') }]}
                       >
-                        <Input type="number" placeholder="30" />
+                        <Input type="number" placeholder={t('editQuiz.questionTimeLimitPlaceholder', '30')} />
                       </Form.Item>
 
                       <div>
                         <div className="flex items-center justify-between mb-3">
                           <div>
-                            <label className="text-sm font-medium text-gray-700">Đáp án</label>
+                            <label className="text-sm font-medium text-gray-700">{t('editQuiz.answers', 'Đáp án')}</label>
                             <p className="text-xs text-gray-500 mt-1">
-                              💡 Có thể chọn nhiều câu trả lời đúng cho mỗi câu hỏi
+                              {t('editQuiz.multipleCorrectAnswers', '💡 Có thể chọn nhiều câu trả lời đúng cho mỗi câu hỏi')}
                             </p>
                           </div>
                           <Button
@@ -331,7 +332,7 @@ const EditQuiz = () => {
                             icon={<PlusOutlined />}
                             onClick={() => addAnswer(questionIndex)}
                           >
-                            Thêm đáp án
+                            {t('editQuiz.addAnswer', 'Thêm đáp án')}
                           </Button>
                         </div>
 
@@ -344,9 +345,9 @@ const EditQuiz = () => {
                                     <Form.Item
                                       key={`${answerField.key}-answerText`}
                                       name={[answerField.name, 'answerText']}
-                                      rules={[{ required: true, message: "Vui lòng nhập đáp án" }]}
+                                      rules={[{ required: true, message: t('editQuiz.answerRequired', 'Vui lòng nhập đáp án') }]}
                                     >
-                                      <Input placeholder={`Đáp án ${String.fromCharCode(65 + answerIndex)}`} />
+                                      <Input placeholder={`${t('editQuiz.answerPlaceholder', 'Đáp án')} ${String.fromCharCode(65 + answerIndex)}`} />
                                     </Form.Item>
                                   </div>
                                   
@@ -355,7 +356,7 @@ const EditQuiz = () => {
                                     onClick={() => toggleCorrectAnswer(questionIndex, answerIndex)}
                                     className="min-w-[100px]"
                                   >
-                                    {form.getFieldValue(['questions', questionIndex, 'answers', answerIndex, 'isCorrect']) ? 'Đúng' : 'Sai'}
+                                    {form.getFieldValue(['questions', questionIndex, 'answers', answerIndex, 'isCorrect']) ? t('editQuiz.correct', 'Đúng') : t('editQuiz.incorrect', 'Sai')}
                                   </Button>
                                   
                                   <Button

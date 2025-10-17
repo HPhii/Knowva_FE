@@ -27,37 +27,37 @@ const Explore = () => {
 
   // Main categories - hiển thị mặc định (6 items)
   const mainCategories = [
-    { id: "ALL", name: "All", icon: "🌐" },
-    { id: "MATHEMATICS", name: "Math", icon: "📐" },
-    { id: "LITERATURE", name: "Literature", icon: "📚" },
-    { id: "PHYSICS", name: "Physics", icon: "⚛️" },
-    { id: "CHEMISTRY", name: "Chemistry", icon: "🧪" },
-    { id: "LANGUAGE", name: "Language", icon: "🗣️" },
+    { id: "ALL", name: t("explore.categories.all"), icon: "🌐" },
+    { id: "MATHEMATICS", name: t("explore.categories.mathematics"), icon: "📐" },
+    { id: "LITERATURE", name: t("explore.categories.literature"), icon: "📚" },
+    { id: "PHYSICS", name: t("explore.categories.physics"), icon: "⚛️" },
+    { id: "CHEMISTRY", name: t("explore.categories.chemistry"), icon: "🧪" },
+    { id: "LANGUAGE", name: t("explore.categories.language"), icon: "🗣️" },
   ];
 
   // All categories - hiển thị khi click ">" (18 items - chia đều 2 hàng)
   const allCategories = [
     // Hàng 1 (9 items)
-    { id: "ALL", name: "All Categories", icon: "🌐" },
-    { id: "MATHEMATICS", name: "Mathematics", icon: "📐" },
-    { id: "PHYSICS", name: "Physics", icon: "⚛️" },
-    { id: "CHEMISTRY", name: "Chemistry", icon: "🧪" },
-    { id: "BIOLOGY", name: "Biology", icon: "🧬" },
-    { id: "COMPUTER_SCIENCE", name: "Computer Science", icon: "💻" },
-    { id: "HISTORY", name: "History", icon: "📜" },
-    { id: "GEOGRAPHY", name: "Geography", icon: "🌍" },
-    { id: "LITERATURE", name: "Literature", icon: "📚" },
+    { id: "ALL", name: t("explore.categories.all"), icon: "🌐" },
+    { id: "MATHEMATICS", name: t("explore.categories.mathematics"), icon: "📐" },
+    { id: "PHYSICS", name: t("explore.categories.physics"), icon: "⚛️" },
+    { id: "CHEMISTRY", name: t("explore.categories.chemistry"), icon: "🧪" },
+    { id: "BIOLOGY", name: t("explore.categories.biology"), icon: "🧬" },
+    { id: "COMPUTER_SCIENCE", name: t("explore.categories.computerScience"), icon: "💻" },
+    { id: "HISTORY", name: t("explore.categories.history"), icon: "📜" },
+    { id: "GEOGRAPHY", name: t("explore.categories.geography"), icon: "🌍" },
+    { id: "LITERATURE", name: t("explore.categories.literature"), icon: "📚" },
     // Hàng 2 (9 items)
-    { id: "LANGUAGE", name: "Language", icon: "🗣️" },
-    { id: "BUSINESS", name: "Business", icon: "💼" },
-    { id: "ECONOMICS", name: "Economics", icon: "📊" },
-    { id: "PSYCHOLOGY", name: "Psychology", icon: "🧠" },
-    { id: "MEDICINE", name: "Medicine", icon: "🏥" },
-    { id: "LAW", name: "Law", icon: "⚖️" },
-    { id: "ENGINEERING", name: "Engineering", icon: "⚙️" },
-    { id: "ARTS", name: "Arts", icon: "🎨" },
-    { id: "MUSIC", name: "Music", icon: "🎵" },
-    { id: "OTHER", name: "Other", icon: "🔖" },
+    { id: "LANGUAGE", name: t("explore.categories.language"), icon: "🗣️" },
+    { id: "BUSINESS", name: t("explore.categories.business"), icon: "💼" },
+    { id: "ECONOMICS", name: t("explore.categories.economics"), icon: "📊" },
+    { id: "PSYCHOLOGY", name: t("explore.categories.psychology"), icon: "🧠" },
+    { id: "MEDICINE", name: t("explore.categories.medicine"), icon: "🏥" },
+    { id: "LAW", name: t("explore.categories.law"), icon: "⚖️" },
+    { id: "ENGINEERING", name: t("explore.categories.engineering"), icon: "⚙️" },
+    { id: "ARTS", name: t("explore.categories.arts"), icon: "🎨" },
+    { id: "MUSIC", name: t("explore.categories.music"), icon: "🎵" },
+    { id: "OTHER", name: t("explore.categories.other"), icon: "🔖" },
   ];
 
   // Categories hiển thị hiện tại
@@ -113,15 +113,6 @@ const Explore = () => {
       const itemCategory =
         item.categoryName || item.category || item.categoryType;
 
-      // Log để debug
-      console.log("Filtering:", {
-        selectedCategory,
-        itemCategory,
-        itemTitle: item.title,
-        visibility: item.visibility || item.visibilityStatus,
-        matches: itemCategory === selectedCategory,
-        item: item,
-      });
 
       return itemCategory === selectedCategory;
     });
@@ -266,7 +257,7 @@ const Explore = () => {
               className="flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 transition-all duration-200"
             >
               <span className="mr-1 sm:mr-2 text-sm sm:text-lg">›</span>
-              <span className="hidden sm:inline">More</span>
+              <span className="hidden sm:inline">{t("explore.categories.more")}</span>
               <span className="sm:hidden">›</span>
             </button>
           </div>
@@ -324,7 +315,7 @@ const Explore = () => {
                 className="flex items-center px-2 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 transition-all duration-200"
               >
                 <span className="mr-1 sm:mr-2 text-sm sm:text-lg">‹</span>
-                <span className="hidden sm:inline">Less</span>
+                <span className="hidden sm:inline">{t("explore.categories.less")}</span>
                 <span className="sm:hidden">‹</span>
               </button>
             </div>
@@ -353,7 +344,7 @@ const Explore = () => {
                       }`}
                     >
                       <p className="!mb-0 font-bold !text-white !text-[35px] select-none">
-                        Quiz
+                        {t("explore.categories.quiz")}
                       </p>
                     </div>
 
@@ -396,7 +387,7 @@ const Explore = () => {
                       }`}
                     >
                       <p className="!mb-0 font-bold !text-white !text-[35px] select-none">
-                        Flashcard
+                        {t("explore.categories.flashcard")}
                       </p>
                     </div>
                     {/* lo go con cho flashcard  */}

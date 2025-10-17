@@ -26,15 +26,15 @@ const BlogCard = ({ blog }) => {
 
   return (
     <article 
-      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100"
+      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100 h-[400px] flex flex-col"
       onClick={handleCardClick}
     >
       {/* Featured Image */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden flex-shrink-0">
         <img
           src={blog.imageUrl || 'https://via.placeholder.com/400x250?text=No+Image'}
           alt={blog.title}
-          className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
           onError={(e) => {
             e.target.src = 'https://via.placeholder.com/400x250?text=No+Image';
           }}
@@ -44,19 +44,19 @@ const BlogCard = ({ blog }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         {/* Title */}
-        <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-tight">
+        <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-tight flex-shrink-0">
           {blog.title}
         </h3>
 
         {/* Excerpt */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed flex-grow overflow-hidden">
           {blog.excerpt}
         </p>
 
         {/* Meta Information */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
+        <div className="flex items-center justify-between text-sm text-gray-500 mt-auto flex-shrink-0">
           <div className="flex items-center space-x-2">
             <span className="font-medium text-gray-700">{blog.authorName}</span>
           </div>

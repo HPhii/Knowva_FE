@@ -60,9 +60,7 @@ const BlogDetail = () => {
 
         const response = await api.get(`interactions/blogpost/${blog.id}/rating/my`);
         setUserRating(response.data);
-        console.log('User rating:', response.data);
       } catch (error) {
-        console.log('User has no rating yet or error:', error);
         setUserRating(null);
       } finally {
         setRatingLoading(false);
@@ -102,42 +100,29 @@ const BlogDetail = () => {
       
       try {
         setCommentsLoading(true);
-        console.log('Fetching comments for blog:', blog.id);
         
         const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
-        console.log('Comments API response:', response.data);
-        console.log('Response data type:', typeof response.data);
-        console.log('Response data keys:', Object.keys(response.data || {}));
-        console.log('Is response.data array?', Array.isArray(response.data));
-        console.log('Response data length:', response.data?.length);
         
         // Sort comments by newest first
         let commentsData = [];
         if (Array.isArray(response.data)) {
           commentsData = response.data;
-          console.log('Using response.data directly as array');
         } else if (response.data && response.data.comments && Array.isArray(response.data.comments)) {
           commentsData = response.data.comments;
-          console.log('Using response.data.comments');
         } else if (response.data && Array.isArray(response.data.content)) {
           // Handle case where API returns { content: [...], pageable: {...} }
           commentsData = response.data.content;
-          console.log('Using response.data.content');
         } else {
-          console.log('Unexpected response structure:', response.data);
         }
         
-        console.log('Extracted comments data:', commentsData);
         
         if (commentsData.length > 0) {
           const sortedComments = commentsData.sort((a, b) => 
             new Date(b.createdAt || b.created_at || b.timestamp) - new Date(a.createdAt || a.created_at || a.timestamp)
           );
           
-          console.log('Sorted comments:', sortedComments);
           setComments(sortedComments);
         } else {
-          console.log('No comments found in response');
           setComments([]);
         }
       } catch (err) {
@@ -160,40 +145,28 @@ const BlogDetail = () => {
       const fetchCommentsOnMount = async () => {
         try {
           setCommentsLoading(true);
-          console.log('Fetching comments on mount for blog:', blog.id);
           
           const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
-          console.log('Comments API response on mount:', response.data);
-          console.log('Response data type on mount:', typeof response.data);
-          console.log('Response data keys on mount:', Object.keys(response.data || {}));
-          console.log('Is response.data array on mount?', Array.isArray(response.data));
           
           let commentsData = [];
           if (Array.isArray(response.data)) {
             commentsData = response.data;
-            console.log('Using response.data directly as array on mount');
           } else if (response.data && response.data.comments && Array.isArray(response.data.comments)) {
             commentsData = response.data.comments;
-            console.log('Using response.data.comments on mount');
           } else if (response.data && Array.isArray(response.data.content)) {
             // Handle case where API returns { content: [...], pageable: {...} }
             commentsData = response.data.content;
-            console.log('Using response.data.content on mount');
           } else {
-            console.log('Unexpected response structure on mount:', response.data);
           }
           
-          console.log('Extracted comments data on mount:', commentsData);
           
           if (commentsData.length > 0) {
             const sortedComments = commentsData.sort((a, b) => 
               new Date(b.createdAt || b.created_at || b.timestamp) - new Date(a.createdAt || a.created_at || a.timestamp)
             );
             
-            console.log('Sorted comments on mount:', sortedComments);
             setComments(sortedComments);
           } else {
-            console.log('No comments found in response on mount');
             setComments([]);
           }
         } catch (err) {
@@ -219,40 +192,28 @@ const BlogDetail = () => {
     
     try {
       setCommentsLoading(true);
-      console.log('Refreshing comments for blog:', blog.id);
       
       const response = await api.get(`interactions/blogpost/${blog.id}/comments`);
-      console.log('Comments refresh response:', response.data);
-      console.log('Response data type for refresh:', typeof response.data);
-      console.log('Response data keys for refresh:', Object.keys(response.data || {}));
-      console.log('Is response.data array for refresh?', Array.isArray(response.data));
       
       let commentsData = [];
       if (Array.isArray(response.data)) {
         commentsData = response.data;
-        console.log('Using response.data directly as array for refresh');
       } else if (response.data && response.data.comments && Array.isArray(response.data.comments)) {
         commentsData = response.data.comments;
-        console.log('Using response.data.comments for refresh');
       } else if (response.data && Array.isArray(response.data.content)) {
         // Handle case where API returns { content: [...], pageable: {...} }
         commentsData = response.data.content;
-        console.log('Using response.data.content for refresh');
       } else {
-        console.log('Unexpected response structure for refresh:', response.data);
       }
       
-      console.log('Extracted comments data for refresh:', commentsData);
       
       if (commentsData.length > 0) {
         const sortedComments = commentsData.sort((a, b) => 
           new Date(b.createdAt || b.created_at || b.timestamp) - new Date(a.createdAt || a.created_at || a.timestamp)
         );
         
-        console.log('Refreshed comments:', sortedComments);
         setComments(sortedComments);
       } else {
-        console.log('No comments found in refresh response');
         setComments([]);
       }
     } catch (err) {
@@ -390,17 +351,8 @@ const BlogDetail = () => {
           <span className="text-gray-300">•</span>
           {/* Category */}
           <span className="text-blue-600 font-medium">
-            {getCategoryNameSmart(blog.categoryId || blog.categoryName, t)}
+            {blog.categoryName}
           </span>
-          {/* User Rating Display */}
-          {userRating && (
-            <>
-              <span className="text-gray-300">•</span>
-              <span className="text-yellow-600 font-medium">
-                ⭐ {userRating.rating}/5
-              </span>
-            </>
-          )}
         </div>
       </div>
 

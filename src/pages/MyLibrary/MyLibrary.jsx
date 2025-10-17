@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Tabs,
   Button,
@@ -12,6 +12,7 @@ import {
   Tooltip,
   Pagination,
   Modal,
+  Dropdown,
 } from "antd";
 import {
   BookOutlined,
@@ -34,6 +35,7 @@ const { Option } = Select;
 const MyLibrary = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -48,7 +50,6 @@ const MyLibrary = () => {
   const [testsPage, setTestsPage] = useState(1);
   const [cardsPerPage] = useState(6);
 
-  console.log("Day la flashcards: ", flashcards);
 
   // Fetch flashcards data
   const fetchFlashcards = async () => {
@@ -65,8 +66,16 @@ const MyLibrary = () => {
   const fetchQuizzes = async () => {
     try {
       const response = await api.get("/quiz-sets/my-quiz-sets");
-      console.log("Day la response cua quizzes: ", response.data);
-      setQuizzes(response.data || []);
+      const quizData = response.data || [];
+      
+      // Sort quizzes by creation date (newest first)
+      const sortedQuizzes = quizData.sort((a, b) => {
+        const dateA = new Date(a.createdAt || a.created_at || 0);
+        const dateB = new Date(b.createdAt || b.created_at || 0);
+        return dateB - dateA; // Newest first
+      });
+      
+      setQuizzes(sortedQuizzes);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
       message.error("Không thể tải dữ liệu quiz. Vui lòng thử lại.");
@@ -92,6 +101,15 @@ const MyLibrary = () => {
     }
     fetchAllData();
   }, []);
+
+  // Handle success message from navigation state
+  useEffect(() => {
+    if (location.state?.showSuccessMessage) {
+      message.success(location.state.message);
+      // Clear the state to prevent showing the message again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   // Pagination helper functions
   const getCurrentPageItems = (items, currentPage) => {
@@ -198,7 +216,7 @@ const MyLibrary = () => {
             <div className="flex text-sm font-medium text-gray-500">
               <span className="flex items-center">
                 {t("myLibrary.questions", "Questions")}:{" "}
-                {item.totalQuestions || item.questionCount}
+                {item.maxQuestions || item.totalQuestions || item.questionCount}
               </span>
               {/* <span className="text-gray-500 mx-2">•</span> */}
               {/* <span>{getTimeAgo(item.createdAt || item.created_at)}</span> */}
@@ -210,7 +228,7 @@ const MyLibrary = () => {
         <div className="flex justify-end cursor-pointer text-white rounded-md">
           <div
             className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px]"
-            onClick={() => navigate(`/flashcard/${item.id}`)}
+            onClick={() => navigate(`/quiz/${item.id}`, { state: { from: 'myLibrary' } })}
           >
             {t("myLibrary.study", "Study")}
           </div>
@@ -218,6 +236,38 @@ const MyLibrary = () => {
       </div>
     );
   };
+
+  // Create dropdown items for quiz creation
+  const createQuizItems = [
+    {
+      key: "ai",
+      label: (
+        <div
+          onClick={() => navigate("/quiz")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          {t("myLibrary.createWithAI", "Tạo với AI")}
+        </div>
+      ),
+    },
+    {
+      key: "scratch",
+      label: (
+        <div
+          onClick={() => navigate("/quiz/create")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          {t("myLibrary.createFromScratch", "Tạo từ đầu")}
+        </div>
+      ),
+    },
+  ];
 
   const renderTabContent = (type) => {
     let items = [];
@@ -248,14 +298,24 @@ const MyLibrary = () => {
           description={t("myLibrary.noItemsFound", "No items found")}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         >
-          <Button type="primary" icon={<PlusOutlined />}>
-            {t("myLibrary.createNew", "Create New")}{" "}
-            {type === "flashcards"
-              ? t("myLibrary.flashcardSet", "Flashcard Set")
-              : type === "quizzes"
-              ? t("myLibrary.quiz", "Quiz")
-              : t("myLibrary.test", "Test")}
-          </Button>
+          {type === "quizzes" ? (
+            <Dropdown
+              menu={{ items: createQuizItems }}
+              placement="bottomLeft"
+              trigger={["click"]}
+            >
+              <Button icon={<PlusOutlined />}>
+                {t("myLibrary.createNewQuiz", "Tạo Quiz mới")}
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button type="primary" icon={<PlusOutlined />}>
+              {t("myLibrary.createNew", "Create New")}{" "}
+              {type === "flashcards"
+                ? t("myLibrary.flashcardSet", "Flashcard Set")
+                : t("myLibrary.test", "Test")}
+            </Button>
+          )}
         </Empty>
       );
     }
@@ -299,6 +359,13 @@ const MyLibrary = () => {
           onOk={() => navigate("/login")}
           onCancel={() => navigate("/")}
         />
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("myLibrary.title", "Thư viện của tôi")}
+          </h1>
+        </div>
+
         {/* Tabs */}
         <div>
           <Tabs defaultActiveKey="flashcards" size="large">
@@ -321,7 +388,20 @@ const MyLibrary = () => {
               }
               key="quizzes"
             >
-              {renderTabContent("quizzes")}
+              <div>
+                <div className="mb-4">
+                  <Dropdown
+                    menu={{ items: createQuizItems }}
+                    placement="bottomLeft"
+                    trigger={["click"]}
+                  >
+                    <Button icon={<PlusOutlined />}>
+                      {t("myLibrary.createNewQuiz", "Tạo Quiz mới")}
+                    </Button>
+                  </Dropdown>
+                </div>
+                {renderTabContent("quizzes")}
+              </div>
             </TabPane>
           </Tabs>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactGA from "react-ga4";
 import api from "../../config/axios";
@@ -12,6 +12,7 @@ const QuizDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
 
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +61,6 @@ const QuizDetail = () => {
   const checkUserPermissions = () => {
     try {
       const loginData = getLoginData();
-      console.log("Login data from localStorage:", loginData);
 
       if (loginData) {
         // Try multiple ways to get userId
@@ -69,7 +69,6 @@ const QuizDetail = () => {
           loginData.user?.id ||
           loginData.user?.userId ||
           loginData.id;
-        console.log("Extracted userId:", userId);
 
         if (userId) {
           setCurrentUser({
@@ -114,7 +113,6 @@ const QuizDetail = () => {
       setLoading(true);
       setError(null);
       const response = await api.get(`/quiz-sets/${id}`);
-      console.log("Quiz API response:", response.data);
       setQuiz(response.data);
     } catch (err) {
       console.error("Error fetching quiz detail:", err);
@@ -129,7 +127,6 @@ const QuizDetail = () => {
   const startQuizAttempt = async () => {
     try {
       const response = await api.get(`/quiz-attempts/${quiz.id}/start`);
-      console.log("Start quiz response:", response.data);
 
       // Lấy id từ response.attempt.id thay vì quiz.id
       const attemptId = response.data?.attempt?.id;
@@ -171,7 +168,6 @@ const QuizDetail = () => {
       } else if (commentsData && Array.isArray(commentsData.comments)) {
         setComments(commentsData.comments);
       } else {
-        console.log("API response format:", commentsData);
         setComments([]);
       }
     } catch (err) {
@@ -207,7 +203,28 @@ const QuizDetail = () => {
   // Handle invite success
   const handleInviteSuccess = () => {
     // You can add any additional logic here after successful invitation
-    console.log("Invitation sent successfully");
+  };
+
+  // Handle back navigation based on referrer
+  const handleBackNavigation = () => {
+    const state = location.state;
+    
+    // Check if there's state with referrer information
+    if (state?.from === 'myLibrary') {
+      navigate('/my-library');
+    } else if (state?.from === 'userDetail') {
+      // Check if we have userId and tab info
+      if (state?.userId && state?.tab) {
+        navigate(`/user/profile/${state.userId}?tab=${state.tab}`);
+      } else if (state?.userId) {
+        navigate(`/user/profile/${state.userId}`);
+      } else {
+        navigate('/user/profile');
+      }
+    } else {
+      // Default behavior - go back to previous page
+      navigate(-1);
+    }
   };
 
   // Handle copy link
@@ -227,12 +244,12 @@ const QuizDetail = () => {
       }
 
       await navigator.clipboard.writeText(link);
-      setCopyMessage("Đã sao chép link!");
+      setCopyMessage("Đã sao chép link quiz vào clipboard!");
       setTimeout(() => setCopyMessage(""), 3000);
       setIsShareDropdownOpen(false); // Close dropdown after copying
     } catch (error) {
       console.error("Error copying link:", error);
-      setCopyMessage("Không thể sao chép link");
+      setCopyMessage("Không thể sao chép link. Vui lòng thử lại!");
       setTimeout(() => setCopyMessage(""), 3000);
     }
   };
@@ -289,7 +306,7 @@ const QuizDetail = () => {
             {t("quiz.detail.actions.tryAgain", "Thử lại")}
           </button>
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleBackNavigation}
             className="w-full bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
           >
             {t("quiz.detail.actions.back", "Quay lại")}
@@ -331,22 +348,10 @@ const QuizDetail = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          {/* Copy message */}
-          {copyMessage && (
-            <div
-              className={`mb-4 p-3 rounded-lg text-center ${
-                copyMessage.includes("riêng tư")
-                  ? "bg-yellow-100 text-yellow-800 border border-yellow-300"
-                  : "bg-green-100 text-green-800 border border-green-300"
-              }`}
-            >
-              {copyMessage}
-            </div>
-          )}
 
           <div className="flex items-center justify-between">
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleBackNavigation}
               className="flex items-center text-gray-600 hover:text-gray-900 transition-colors group"
             >
               <div className="bg-gray-100 rounded-full p-2 mr-3 group-hover:bg-gray-200 transition-colors">
@@ -367,91 +372,14 @@ const QuizDetail = () => {
               <span className="font-medium">Quay lại</span>
             </button>
 
-            {/* Secondary Actions - Only show action buttons */}
+            {/* Secondary Actions - Share button */}
             <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
-              {/* Copy Link Button */}
-              <div className="relative group">
-                <button
-                  onClick={handleCopyLink}
-                  disabled={quiz.visibility === "PRIVATE"}
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                    quiz.visibility === "PRIVATE"
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 cursor-pointer shadow-md hover:shadow-lg"
-                  }`}
-                  title="Copy Link"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  {quiz.visibility === "PRIVATE"
-                    ? "Set này là riêng tư"
-                    : "Copy Link"}
-                </div>
-              </div>
-
               {/* Share Dropdown */}
-              {isShareDropdownOpen && (
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
-                  <button
-                    onClick={handleCopyLink}
-                    disabled={quiz.visibility === 'PRIVATE'}
-                    className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
-                      quiz.visibility === 'PRIVATE'
-                        ? "text-gray-400 cursor-not-allowed"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                      />
-                    </svg>
-                    Copy Link
-                  </button>
-
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    Mời người dùng
-                  </div>
-                </div>
-              )}
-
-              {/* Edit Button */}
-              <div className="relative group">
+              <div className="relative group share-dropdown">
                 <button
-                  onClick={
-                    canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined
-                  }
-                  disabled={!canEdit}
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                    canEdit
-                      ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg"
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  }`}
-                  title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                  onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                  className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  title="Chia sẻ"
                 >
                   <svg
                     className="w-5 h-5"
@@ -463,15 +391,70 @@ const QuizDetail = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
                     />
                   </svg>
                 </button>
 
                 {/* Tooltip */}
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  {canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                  Chia sẻ
                 </div>
+
+                {/* Share Dropdown Menu */}
+                {isShareDropdownOpen && (
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                    <button
+                      onClick={handleCopyLink}
+                      disabled={quiz.visibility === "PRIVATE"}
+                      className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
+                        quiz.visibility === "PRIVATE"
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4 mr-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Copy Link
+                    </button>
+
+                    {canEdit && (
+                      <button
+                        onClick={() => {
+                          setIsInviteModalOpen(true);
+                          setIsShareDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                          />
+                        </svg>
+                        Mời người dùng
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -696,6 +679,38 @@ const QuizDetail = () => {
         entityType="quiz"
         onInviteSuccess={handleInviteSuccess}
       />
+
+      {/* Toast Notification */}
+      {copyMessage && (
+        <div className="fixed top-4 right-4 z-50 transform transition-all duration-300 ease-in-out animate-pulse">
+          <div
+            className={`px-4 py-2 rounded-lg shadow-lg text-sm font-medium max-w-xs ${
+              copyMessage.includes("riêng tư")
+                ? "bg-yellow-500 text-white"
+                : copyMessage.includes("Không thể")
+                ? "bg-red-500 text-white"
+                : "bg-green-500 text-white"
+            }`}
+          >
+            <div className="flex items-center">
+              {copyMessage.includes("riêng tư") ? (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : copyMessage.includes("Không thể") ? (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
+              <span>{copyMessage}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

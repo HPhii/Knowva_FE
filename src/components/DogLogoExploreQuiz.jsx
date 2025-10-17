@@ -34,12 +34,12 @@ const DogLogoExplore = ({ activeTab }) => {
           >
             <path
               fill="#fcdb12"
-              fill-opacity="0"
+              fillOpacity="0"
               d="M12 3l2.35 5.76l6.21 0.46l-4.76 4.02l1.49 6.04l-5.29 -3.28l-5.29 3.28l1.49 -6.04l-4.76 -4.02l6.21 -0.46Z"
             >
               <animate
                 fill="freeze"
-                attributeName="fill-opacity"
+                attributeName="fillOpacity"
                 begin="0.5s"
                 dur="0.5s"
                 values="0;1"
@@ -48,16 +48,16 @@ const DogLogoExplore = ({ activeTab }) => {
             <path
               fill="none"
               stroke="#fcdb12"
-              stroke-dasharray="36"
-              stroke-dashoffset="36"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="4"
+              strokeDasharray="36"
+              strokeDashoffset="36"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
               d="M12 3L9.65 8.76L3.44 9.22L8.2 13.24L6.71 19.28L12 16M12 3L14.35 8.76L20.56 9.22L15.8 13.24L17.29 19.28L12 16"
             >
               <animate
                 fill="freeze"
-                attributeName="stroke-dashoffset"
+                attributeName="strokeDashoffset"
                 dur="0.5s"
                 values="36;0"
               />
@@ -83,12 +83,12 @@ const DogLogoExplore = ({ activeTab }) => {
           >
             <path
               fill="#fcdb12"
-              fill-opacity="0"
+              fillOpacity="0"
               d="M12 3l2.35 5.76l6.21 0.46l-4.76 4.02l1.49 6.04l-5.29 -3.28l-5.29 3.28l1.49 -6.04l-4.76 -4.02l6.21 -0.46Z"
             >
               <animate
                 fill="freeze"
-                attributeName="fill-opacity"
+                attributeName="fillOpacity"
                 begin="0.5s"
                 dur="0.5s"
                 values="0;1"
@@ -97,16 +97,16 @@ const DogLogoExplore = ({ activeTab }) => {
             <path
               fill="none"
               stroke="#fcdb12"
-              stroke-dasharray="36"
-              stroke-dashoffset="36"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="4"
+              strokeDasharray="36"
+              strokeDashoffset="36"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
               d="M12 3L9.65 8.76L3.44 9.22L8.2 13.24L6.71 19.28L12 16M12 3L14.35 8.76L20.56 9.22L15.8 13.24L17.29 19.28L12 16"
             >
               <animate
                 fill="freeze"
-                attributeName="stroke-dashoffset"
+                attributeName="strokeDashoffset"
                 dur="0.5s"
                 values="36;0"
               />
@@ -132,12 +132,12 @@ const DogLogoExplore = ({ activeTab }) => {
           >
             <path
               fill="#fcdb12"
-              fill-opacity="0"
+              fillOpacity="0"
               d="M12 3l2.35 5.76l6.21 0.46l-4.76 4.02l1.49 6.04l-5.29 -3.28l-5.29 3.28l1.49 -6.04l-4.76 -4.02l6.21 -0.46Z"
             >
               <animate
                 fill="freeze"
-                attributeName="fill-opacity"
+                attributeName="fillOpacity"
                 begin="0.5s"
                 dur="0.5s"
                 values="0;1"
@@ -146,16 +146,16 @@ const DogLogoExplore = ({ activeTab }) => {
             <path
               fill="none"
               stroke="#fcdb12"
-              stroke-dasharray="36"
-              stroke-dashoffset="36"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="4"
+              strokeDasharray="36"
+              strokeDashoffset="36"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
               d="M12 3L9.65 8.76L3.44 9.22L8.2 13.24L6.71 19.28L12 16M12 3L14.35 8.76L20.56 9.22L15.8 13.24L17.29 19.28L12 16"
             >
               <animate
                 fill="freeze"
-                attributeName="stroke-dashoffset"
+                attributeName="strokeDashoffset"
                 dur="0.5s"
                 values="36;0"
               />
@@ -181,12 +181,12 @@ const DogLogoExplore = ({ activeTab }) => {
           >
             <path
               fill="#fcdb12"
-              fill-opacity="0"
+              fillOpacity="0"
               d="M12 3l2.35 5.76l6.21 0.46l-4.76 4.02l1.49 6.04l-5.29 -3.28l-5.29 3.28l1.49 -6.04l-4.76 -4.02l6.21 -0.46Z"
             >
               <animate
                 fill="freeze"
-                attributeName="fill-opacity"
+                attributeName="fillOpacity"
                 begin="0.5s"
                 dur="0.5s"
                 values="0;1"
@@ -195,16 +195,16 @@ const DogLogoExplore = ({ activeTab }) => {
             <path
               fill="none"
               stroke="#fcdb12"
-              stroke-dasharray="36"
-              stroke-dashoffset="36"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="4"
+              strokeDasharray="36"
+              strokeDashoffset="36"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
               d="M12 3L9.65 8.76L3.44 9.22L8.2 13.24L6.71 19.28L12 16M12 3L14.35 8.76L20.56 9.22L15.8 13.24L17.29 19.28L12 16"
             >
               <animate
                 fill="freeze"
-                attributeName="stroke-dashoffset"
+                attributeName="strokeDashoffset"
                 dur="0.5s"
                 values="36;0"
               />
