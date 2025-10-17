@@ -36,13 +36,15 @@ import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
 import EditFlashcard from "../pages/Flashcard/components/EditFlashcard";
 import Notification from "../pages/Notification/Notification";
 import SearchResult from "../pages/SearchResult/SearchResult";
+import ScratchFlashcard from "../pages/ScratchFlashcard/ScratchFlashcard";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Explore/> },
+      { index: true, element: <Explore /> },
+      { path: "create-flashcard", element: <ScratchFlashcard /> },
       { path: "my-library", element: <MyLibrary /> },
       { path: "edit-flashcard/:id", element: <EditFlashcard /> },
       { path: "flashcard/:id", element: <StudyFlashcard /> },

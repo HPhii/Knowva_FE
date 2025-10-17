@@ -12,6 +12,7 @@ import {
   Tooltip,
   Pagination,
   Modal,
+  Dropdown,
 } from "antd";
 import {
   BookOutlined,
@@ -26,6 +27,7 @@ import api from "../../config/axios";
 import "./MyLibrary.scss";
 import { isLoggedIn } from "../../utils/auth";
 import RequireLoginModal from "../../components/RequireLoginModal";
+import { ToastContainer } from "react-toastify";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -36,6 +38,9 @@ const MyLibrary = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showGenerateOption, setShowGenerateOption] = useState(false);
+
+  console.log("generate option: ", showGenerateOption);
 
   // Separate states for different data types
   const [flashcards, setFlashcards] = useState([]);
@@ -54,7 +59,10 @@ const MyLibrary = () => {
   const fetchFlashcards = async () => {
     try {
       const response = await api.get("/flashcard-sets/my-flashcard-sets");
-      setFlashcards(response.data || []);
+      const sorted = response.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setFlashcards(sorted || []);
     } catch (error) {
       console.error("Error fetching flashcards:", error);
       message.error("Không thể tải dữ liệu flashcard. Vui lòng thử lại.");
@@ -114,6 +122,33 @@ const MyLibrary = () => {
     }
   };
 
+  const toggleGenerateOption = () => {
+    setShowGenerateOption((prev) => !prev);
+  };
+
+  const flashcardItems = [
+    {
+      key: "ai",
+      label: (
+        <div
+          onClick={() => navigate("/flashcards")} // 👈 đổi đường dẫn theo route của bạn
+        >
+          Create with AI
+        </div>
+      ),
+    },
+    {
+      key: "scratch",
+      label: (
+        <div
+          onClick={() => navigate("/create-flashcard")} // 👈 đổi đường dẫn theo route của bạn
+        >
+          Create from Scratch
+        </div>
+      ),
+    },
+  ];
+
   // Function to format time ago
   // const getTimeAgo = (dateString) => {
   //   const now = new Date();
@@ -164,7 +199,6 @@ const MyLibrary = () => {
               </div>
             </div>
           </div>
-
           <div className="flex justify-end gap-2 text-white rounded-md">
             <div
               className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
@@ -205,7 +239,6 @@ const MyLibrary = () => {
             </div>
           </div>
         </div>
-
         {/* button  */}
         <div className="flex justify-end cursor-pointer text-white rounded-md">
           <div
@@ -311,6 +344,22 @@ const MyLibrary = () => {
               }
               key="flashcards"
             >
+              <div className="flex justify-baseline mb-5">
+                {/* <div className="cursor bg-[#CA56D2] text-white px-3 py-2 rounded-xl">
+                  Create New
+                </div> */}
+                {/* <div className="relative">
+                  <Button onClick={toggleGenerateOption}>Create New</Button>
+                  {showGenerateOption && <div>cc</div>}
+                </div> */}
+                <Dropdown
+                  menu={{ items: flashcardItems }}
+                  placement="bottomLeft"
+                  trigger={["click"]}
+                >
+                  <Button icon={<PlusOutlined />}>Create New</Button>
+                </Dropdown>
+              </div>
               {renderTabContent("flashcards")}
             </TabPane>
             <TabPane
@@ -326,6 +375,7 @@ const MyLibrary = () => {
           </Tabs>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
