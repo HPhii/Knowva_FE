@@ -44,12 +44,12 @@ const StudyFlashcard = () => {
   const [isSpacedRepetitionCompleted, setIsSpacedRepetitionCompleted] =
     useState(false);
   const [performanceStats, setPerformanceStats] = useState(null);
-  
+
   // User and invite states
   const [currentUser, setCurrentUser] = useState(null);
   const [canEdit, setCanEdit] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  
+
   // Copy link state
   const [copyMessage, setCopyMessage] = useState("");
 
@@ -81,17 +81,21 @@ const StudyFlashcard = () => {
     try {
       const loginData = getLoginData();
       console.log("Login data from localStorage:", loginData);
-      
+
       if (loginData) {
         // Try multiple ways to get userId
-        const userId = loginData.userId || loginData.user?.id || loginData.user?.userId || loginData.id;
+        const userId =
+          loginData.userId ||
+          loginData.user?.id ||
+          loginData.user?.userId ||
+          loginData.id;
         console.log("Extracted userId:", userId);
-        
+
         if (userId) {
           setCurrentUser({
             ...loginData,
             userId: userId,
-            id: userId
+            id: userId,
           });
         }
       }
@@ -103,13 +107,14 @@ const StudyFlashcard = () => {
   // Check if current user can edit this flashcard set
   useEffect(() => {
     if (flashcardSet && currentUser) {
-      const flashcardUserId = flashcardSet.userId || flashcardSet.authorId || flashcardSet.createdBy;
+      const flashcardUserId =
+        flashcardSet.userId || flashcardSet.authorId || flashcardSet.createdBy;
       const currentUserId = currentUser.userId || currentUser.id;
-      
+
       // Convert both to strings for comparison to handle number/string mismatches
-      const flashcardUserIdStr = String(flashcardUserId || '');
-      const currentUserIdStr = String(currentUserId || '');
-      
+      const flashcardUserIdStr = String(flashcardUserId || "");
+      const currentUserIdStr = String(currentUserId || "");
+
       console.log("Checking edit permissions:", {
         flashcardSet: flashcardSet,
         currentUser: currentUser,
@@ -118,38 +123,42 @@ const StudyFlashcard = () => {
         flashcardUserIdStr,
         currentUserIdStr,
         canEdit: flashcardUserIdStr === currentUserIdStr,
-        strictEqual: flashcardUserId === currentUserId
+        strictEqual: flashcardUserId === currentUserId,
       });
-      
-      setCanEdit(flashcardUserIdStr === currentUserIdStr && flashcardUserIdStr !== '');
+
+      setCanEdit(
+        flashcardUserIdStr === currentUserIdStr && flashcardUserIdStr !== ""
+      );
     }
   }, [flashcardSet, currentUser]);
 
   // Handle invite success
   const handleInviteSuccess = () => {
     // You can add any additional logic here after successful invitation
-    console.log('Invitation sent successfully');
+    console.log("Invitation sent successfully");
   };
 
   // Handle copy link
   const handleCopyLink = async () => {
     try {
-      const baseUrl = import.meta.env.VITE_BASE_URL || 'https://knowva.me';
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://knowva.me";
       let link = `${baseUrl}/flashcard/${id}`;
-      
+
       // Check visibility and add token if needed
-      if (flashcardSet.visibility === 'HIDDEN' && flashcardSet.accessToken) {
+      if (flashcardSet.visibility === "HIDDEN" && flashcardSet.accessToken) {
         link += `?token=${flashcardSet.accessToken}`;
-      } else if (flashcardSet.visibility === 'PRIVATE') {
-        setCopyMessage("Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ.");
+      } else if (flashcardSet.visibility === "PRIVATE") {
+        setCopyMessage(
+          "Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ."
+        );
         return;
       }
-      
+
       await navigator.clipboard.writeText(link);
       setCopyMessage("Đã sao chép link!");
       setTimeout(() => setCopyMessage(""), 3000);
     } catch (error) {
-      console.error('Error copying link:', error);
+      console.error("Error copying link:", error);
       setCopyMessage("Không thể sao chép link");
       setTimeout(() => setCopyMessage(""), 3000);
     }
@@ -671,15 +680,17 @@ const StudyFlashcard = () => {
         <div className="mb-6">
           {/* Copy message */}
           {copyMessage && (
-            <div className={`mb-4 p-3 rounded-lg text-center ${
-              copyMessage.includes('riêng tư') 
-                ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
-                : 'bg-green-100 text-green-800 border border-green-300'
-            }`}>
+            <div
+              className={`mb-4 p-3 rounded-lg text-center ${
+                copyMessage.includes("riêng tư")
+                  ? "bg-yellow-100 text-yellow-800 border border-yellow-300"
+                  : "bg-green-100 text-green-800 border border-green-300"
+              }`}
+            >
               {copyMessage}
             </div>
           )}
-          
+
           <div className="flex justify-between items-center mb-4">
             <div>
               <Title level={2} className="!mb-2">
@@ -697,29 +708,43 @@ const StudyFlashcard = () => {
               >
                 Bắt đầu lại
               </Button>
-              
+
               {/* Secondary Actions - Moved to right */}
               <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
                 {/* Copy Link Button */}
                 <div className="relative group">
                   <Button
-                    icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>}
+                    icon={
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                    }
                     onClick={handleCopyLink}
-                    disabled={flashcardSet.visibility === 'PRIVATE'}
+                    disabled={flashcardSet.visibility === "PRIVATE"}
                     className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                      flashcardSet.visibility === 'PRIVATE'
+                      flashcardSet.visibility === "PRIVATE"
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-100"
                         : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 border-green-100 hover:border-green-200 cursor-pointer shadow-md hover:shadow-lg"
                     }`}
                     type="default"
                     title="Copy Link"
                   />
-                  
+
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    {flashcardSet.visibility === 'PRIVATE' ? "Set này là riêng tư" : "Copy Link"}
+                    {flashcardSet.visibility === "PRIVATE"
+                      ? "Set này là riêng tư"
+                      : "Copy Link"}
                   </div>
                 </div>
 
@@ -727,15 +752,27 @@ const StudyFlashcard = () => {
                 {canEdit && (
                   <div className="relative group">
                     <Button
-                      icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                      </svg>}
+                      icon={
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                          />
+                        </svg>
+                      }
                       onClick={() => setIsInviteModalOpen(true)}
                       type="default"
                       className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 border-purple-100 hover:border-purple-200 transition-all duration-200 shadow-md hover:shadow-lg"
                       title="Mời người dùng"
                     />
-                    
+
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                       Mời người dùng

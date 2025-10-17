@@ -76,7 +76,7 @@ const Header = () => {
     clearLoginData();
     setUserLoggedIn(false);
     setUserInfo(null);
-    navigate("/"); // chuyển về trang chủ sau khi logout
+    navigate("/", { replace: true }); // chuyển về trang chủ sau khi logout và chặn quay lại
   };
 
   // Lấy initials từ tên user để hiển thị avatar
@@ -376,6 +376,17 @@ const Header = () => {
     return false;
   };
 
+  // Kiểm tra trạng thái xác thực email từ localStorage (fallback userInfo)
+  const isEmailVerified = (() => {
+    try {
+      const lsUser = getUserInfo();
+      const value = lsUser?.isVerified ?? userInfo?.isVerified;
+      return value === true || value === "true";
+    } catch (e) {
+      return !!userInfo?.isVerified;
+    }
+  })();
+
   return (
     // BUG: xóa overflow-hidden
     <header className="sticky top-0 z-50 bg-slate-900 h-[70px] w-full py-0 px-4 sm:px-6 flex items-center justify-between shadow-md relative">
@@ -425,62 +436,36 @@ const Header = () => {
               {t("header.myLibrary")}
             </Link>
           </div>
-          {/* Generate Tab (Dropdown for Quizzes/Flashcards) */}
+          {/* Quizzes */}
           <div
-            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 relative ${
-              isCurrentPage("/quizzes") || isCurrentPage("/flashcards")
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
+              isCurrentPage("/quizzes")
                 ? "bg-white/20 border-b-2 border-white/40"
                 : "hover:bg-white/10"
             }`}
           >
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    key: "quizzes",
-                    label: (
-                      <Link
-                        to="/quizzes"
-                        className="block text-[16px] px-4 py-2 text-gray-900 hover:bg-blue-50"
-                      >
-                        {t("header.quizzes")}
-                      </Link>
-                    ),
-                  },
-                  {
-                    key: "flashcards",
-                    label: (
-                      <Link
-                        to="/flashcards"
-                        className="block text-[16px] px-4 py-2 text-gray-900 hover:bg-blue-50"
-                      >
-                        {t("header.flashcards")}
-                      </Link>
-                    ),
-                  },
-                ],
-              }}
-              placement="bottom"
-              arrow
-              trigger={["click"]}
+            <Link
+              to="/quizzes"
+              className="text-white text-lg transition-all duration-300 font-medium"
             >
-              <button className="!text-white !text-[18px] transition-all duration-300 font-medium flex items-center gap-2">
-                {t("header.generate", "Generate")}
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-            </Dropdown>
+              {t("header.quizzes")}
+            </Link>
+          </div>
+
+          {/* Flashcards */}
+          <div
+            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
+              isCurrentPage("/flashcards")
+                ? "bg-white/20 border-b-2 border-white/40"
+                : "hover:bg-white/10"
+            }`}
+          >
+            <Link
+              to="/flashcards"
+              className="text-white text-lg transition-all duration-300 font-medium"
+            >
+              {t("header.flashcards")}
+            </Link>
           </div>
 
           {/* Blog */}
@@ -499,21 +484,7 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Explore */}
-          <div
-            className={`cursor-pointer flex items-center h-full transition-all duration-300 group px-6 ${
-              isCurrentPage("/Explore")
-                ? "bg-white/20 border-b-2 border-white/40"
-                : "hover:bg-white/10"
-            }`}
-          >
-            <Link
-              to="/Explore"
-              className="text-white text-lg transition-all duration-300 font-medium"
-            >
-              {t("header.explore")}
-            </Link>
-          </div>
+          {/* Explore - removed as requested */}
         </nav>
       </div>
 
@@ -568,7 +539,11 @@ const Header = () => {
 
             {/* User Avatar & Dropdown */}
             <Dropdown
-              menu={{ items: dropdownItems }}
+              menu={{
+                items: dropdownItems.filter(
+                  (item) => item.key !== "verifyEmail" || !isEmailVerified
+                ),
+              }}
               placement="bottomRight"
               arrow
               trigger={["click"]}
