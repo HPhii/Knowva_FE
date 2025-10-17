@@ -42,7 +42,7 @@ const FlashcardSet = () => {
       }
     } catch (err) {
       console.error("Error fetching flashcard sets:", err);
-      setError(err.response?.data?.message || "Không thể tải danh sách flashcard sets");
+      setError(err.response?.data?.message || t("userDetailsPage.flashcardSet.cannotLoadFlashcardSets"));
     } finally {
       setLoading(false);
     }
@@ -84,7 +84,7 @@ const FlashcardSet = () => {
         onClick={fetchFlashcardSets}
         className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
       >
-        Thử lại
+        {t("userDetailsPage.flashcardSet.tryAgain")}
       </button>
     </div>
   );
@@ -110,13 +110,13 @@ const FlashcardSet = () => {
       <h3 className="text-lg font-medium text-gray-900 mb-2">
         {isCurrentUser 
           ? (t("noFlashcardSets") || "No Flashcard Sets Available")
-          : "Chưa có flashcard công khai"
+          : t("userDetailsPage.flashcardSet.noPublicFlashcards")
         }
       </h3>
       <p className="text-gray-500 mb-6">
         {isCurrentUser 
           ? "Bạn chưa có bộ flashcard nào. Hãy bắt đầu tạo flashcard để học tập hiệu quả!"
-          : "Người dùng này chưa có flashcard nào được công khai."
+          : t("userDetailsPage.flashcardSet.noPublicFlashcardsDesc")
         }
       </p>
       {isCurrentUser && (
@@ -127,7 +127,7 @@ const FlashcardSet = () => {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          <span>Tạo flashcard mới</span>
+          <span>{t("userDetailsPage.flashcardSet.createNewFlashcard")}</span>
         </button>
       )}
     </div>

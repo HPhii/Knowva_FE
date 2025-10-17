@@ -424,7 +424,7 @@ const UserManagement = () => {
             title="Bạn có chắc muốn vô hiệu hóa user này không?"
             onConfirm={() => handleDeleteUser(record.userId)}
             okText="Có"
-            cancelText="Không"
+            cancelText="No"
             disabled={deletingUserId === record.userId}
           >
             <Button 
@@ -493,7 +493,7 @@ const UserManagement = () => {
         locale={{
           emptyText: (
             <Empty
-              description="Không tìm thấy user nào"
+              description="No users found"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
           )
@@ -592,7 +592,7 @@ const UserManagement = () => {
                 title="Bạn có chắc muốn đăng xuất bắt buộc user này không?"
                 onConfirm={() => handleForceLogout(viewingUser.userId)}
                 okText="Có"
-                cancelText="Không"
+                cancelText="No"
                 disabled={forceLogoutUserId === viewingUser.userId}
               >
                 <Button
@@ -674,11 +674,11 @@ const UserManagement = () => {
                   </div>
                 </div>
                 <div>
-                  <div style={{ color: '#8c8c8c', fontSize: '12px', marginBottom: '4px' }}>Ngày VIP còn lại</div>
+                  <div style={{ color: '#8c8c8c', fontSize: '12px', marginBottom: '4px' }}>VIP Days Left</div>
                   <div>
                     {viewingUser.vipDaysLeft ? (
-                      <Tag color="gold">{viewingUser.vipDaysLeft} ngày</Tag>
-                    ) : 'Không có VIP'}
+                      <Tag color="gold">{viewingUser.vipDaysLeft} days</Tag>
+                    ) : 'No VIP'}
                   </div>
                 </div>
               </div>

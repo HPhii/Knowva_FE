@@ -78,10 +78,13 @@ const SearchResult = () => {
         (item.visibility || item.visibilityStatus) === "PUBLIC"
       );
       
+      // Filter out ADMIN users from search results
+      const filteredUsers = (users || []).filter(user => user.role !== 'ADMIN');
+      
       setResults({
         quizSets: filteredQuizSets,
         flashcardSets: filteredFlashcardSets,
-        users: users || []
+        users: filteredUsers
       });
     } catch (error) {
       console.error("Search failed:", error);

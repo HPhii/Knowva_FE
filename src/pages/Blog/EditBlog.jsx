@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -9,11 +9,12 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import api from '../../config/axios';
 import { getCategoriesForSelect } from '../../utils/blogCategories';
-import { UploadOutlined, UserOutlined, EyeOutlined } from '@ant-design/icons';
+import { UploadOutlined, SaveOutlined, EyeOutlined } from '@ant-design/icons';
 import { message, Modal } from 'antd';
 
-const PostBlog = () => {
+const EditBlog = () => {
     const { t } = useTranslation();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -24,46 +25,81 @@ const PostBlog = () => {
         imageUrl: '',
         status: 'DRAFT'
     });
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState(null);
     const [showImageModal, setShowImageModal] = useState(false);
     const fileInputRef = useRef();
+    
     // Get categories from utility file
     const categories = getCategoriesForSelect(t);
+
+    // Initialize editor
+    const editor = useEditor({
+        extensions: [ 
+            StarterKit, 
+            Link, 
+            Image, 
+            TextAlign.configure({ types: ['heading', 'paragraph'] }), 
+            Placeholder.configure({ placeholder: 'Viết nội dung blog...' })
+        ],
+        content: formData.content,
+        onUpdate: ({ editor }) => {
+            setFormData(prev => ({ ...prev, content: editor.getHTML() }));
+        },
+    });
+
+    // Update editor content when formData.content changes
+    if (editor && formData.content !== editor.getHTML()) {
+        editor.commands.setContent(formData.content);
+    }
+
+    // Fetch blog data
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await api.get(`/blog/posts/${id}`);
+                const blogData = response.data;
+                
+                setFormData({
+                    title: blogData.title || '',
+                    excerpt: blogData.excerpt || '',
+                    content: blogData.content || '',
+                    categoryId: blogData.categoryId || blogData.category?.id || '',
+                    imageUrl: blogData.imageUrl || '',
+                    status: blogData.status || 'DRAFT'
+                });
+            } catch (err) {
+                console.error('Error fetching blog:', err);
+                setError('Không thể tải thông tin blog. Vui lòng thử lại.');
+                message.error('Không thể tải thông tin blog');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchBlog();
+        }
+    }, [id]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const resetForm = () => {
-        setFormData({
-            title: '', excerpt: '', content: '', categoryId: '', imageUrl: '', status: 'DRAFT'
-        });
-        if (editor) {
-            editor.commands.setContent('');
-        }
-    };
-
-    const showToast = (message, type = 'success') => {
-        const toast = document.createElement('div');
-        toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => { document.body.removeChild(toast); }, 3000);
-    };
-
     const handleImageUpload = async (file) => {
         const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
         if (!isJpgOrPng) {
-            message.error(
-                t("imageTypeError") || "You can only upload JPG/PNG files!"
-            );
+            message.error("Chỉ được upload file JPG/PNG!");
             return false;
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error(t("imageSizeError") || "Image must be smaller than 2MB!");
+            message.error("Kích thước ảnh phải nhỏ hơn 2MB!");
             return false;
         }
 
@@ -88,72 +124,122 @@ const PostBlog = () => {
 
             const result = await response.json();
             setFormData(prev => ({ ...prev, imageUrl: result.secure_url }));
-            message.success(
-                t("imageUploadSuccess") || "Image uploaded successfully!"
-            );
+            message.success("Upload ảnh thành công!");
         } catch (err) {
             console.error("Upload error:", err);
-            message.error(t("imageUploadError") || "Failed to upload image");
+            message.error("Upload ảnh thất bại");
         } finally {
             setUploading(false);
         }
-        return false; // Prevent default upload behavior
+        return false;
     };
 
-    const handleSubmit = async (status) => {
+    const handleSave = async (status = 'DRAFT') => {
         if (!formData.title || !formData.excerpt || !formData.content || !formData.categoryId) {
-            showToast(t('postBlog.errors.fillRequiredFields'), 'error');
+            message.error('Vui lòng điền đầy đủ thông tin bắt buộc');
             return;
         }
-        setLoading(true);
+
+        setSaving(true);
         try {
+            // Ensure all required fields are present and properly formatted
             const submitData = {
-                ...formData,
-                categoryId: parseInt(formData.categoryId, 10), // This will now use our hardcoded IDs 1-6
-                status
+                title: formData.title?.trim() || '',
+                excerpt: formData.excerpt?.trim() || '',
+                content: formData.content || '',
+                categoryId: parseInt(formData.categoryId, 10) || 1,
+                imageUrl: formData.imageUrl || '',
+                status: status || 'DRAFT'
             };
-            await api.post('/blog/posts', submitData);
-            showToast(t('postBlog.success.postCreated'));
-            resetForm();
-            if (status === 'PENDING_APPROVAL') {
-                navigate('/blog');
+            
+            const response = await api.put(`/blog/posts/${id}`, submitData);
+            message.success(status === 'DRAFT' ? 'Lưu bản nháp thành công!' : 'Cập nhật blog thành công!');
+            
+            if (status === 'PUBLISHED') {
+                // Navigate back to blog list or user's blog tab
+                navigate('/user/profile?tab=blogs');
             }
         } catch (error) {
-            console.error('Lỗi khi tạo bài viết:', error);
-            showToast(t('postBlog.errors.createFailed'), 'error');
+            if (error.response?.status === 404) {
+                message.error('Không tìm thấy blog này. Có thể blog đã bị xóa.');
+            } else if (error.response?.status === 403) {
+                message.error('Bạn không có quyền chỉnh sửa blog này.');
+            } else if (error.response?.status === 400) {
+                const errorMsg = error.response?.data?.message || 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.';
+                message.error(errorMsg);
+            } else if (error.response?.status === 401) {
+                message.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            } else {
+                message.error('Không thể cập nhật blog. Vui lòng thử lại.');
+            }
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
-    const editor = useEditor({
-        extensions: [ StarterKit, Link, Image, TextAlign.configure({ types: ['heading', 'paragraph'] }), Placeholder.configure({ placeholder: t('postBlog.form.contentPlaceholder') })],
-        content: formData.content,
-        onUpdate: ({ editor }) => {
-            setFormData(prev => ({ ...prev, content: editor.getHTML() }));
-        },
-    });
+    const handlePreview = () => {
+        // Navigate to blog detail for preview
+        navigate(`/blog/${formData.slug || id}`);
+    };
 
-    // Update editor content when formData.content changes
-    if (editor && formData.content !== editor.getHTML()) {
-        editor.commands.setContent(formData.content);
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Đang tải thông tin blog...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Có lỗi xảy ra</h3>
+                    <p className="text-gray-600 mb-4">{error}</p>
+                    <button
+                        onClick={() => navigate('/user/profile?tab=blogs')}
+                        className="px-4 py-2 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Quay lại
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('postBlog.title')}</h1>
-                    <p className="text-gray-600">{t('postBlog.subtitle')}</p>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Chỉnh sửa blog</h1>
+                            <p className="text-gray-600">Cập nhật thông tin và nội dung blog của bạn</p>
+                        </div>
+                        <button
+                            onClick={() => navigate('/user/profile?tab=blogs')}
+                            className="px-4 py-2 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            Quay lại
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
                     <form onSubmit={(e) => e.preventDefault()}>
                         
-                        {/* === CÁC TRƯỜNG INPUT CHO BÀI VIẾT === */}
+                        {/* Title */}
                         <div className="mb-6">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.title')} *
+                                Tiêu đề blog *
                             </label>
                             <input
                                 type="text"
@@ -162,14 +248,15 @@ const PostBlog = () => {
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                placeholder={t('postBlog.form.titlePlaceholder')}
+                                placeholder="Nhập tiêu đề blog..."
                                 required
                             />
                         </div>
 
+                        {/* Excerpt */}
                         <div className="mb-6">
                             <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.excerpt')} *
+                                Mô tả ngắn *
                             </label>
                             <textarea
                                 id="excerpt"
@@ -178,14 +265,15 @@ const PostBlog = () => {
                                 onChange={handleInputChange}
                                 rows="3"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-                                placeholder={t('postBlog.form.excerptPlaceholder')}
+                                placeholder="Mô tả ngắn gọn về nội dung blog..."
                                 required
                             />
                         </div>
 
+                        {/* Category */}
                         <div className="mb-6">
                             <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.category')} *
+                                Danh mục *
                             </label>
                             <select
                                 id="categoryId"
@@ -195,9 +283,7 @@ const PostBlog = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 required
                             >
-                                <option value="">
-                                    {t('postBlog.form.selectCategory')}
-                                </option>
+                                <option value="">Chọn danh mục</option>
                                 {categories.map(category => (
                                     <option key={category.id} value={category.id}>
                                         {t(category.nameKey)}
@@ -206,12 +292,12 @@ const PostBlog = () => {
                             </select>
                         </div>
                         
+                        {/* Image Upload */}
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.imageUrl')}
+                                Ảnh đại diện
                             </label>
                             
-                            {/* Upload Area */}
                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                                 {formData.imageUrl ? (
                                     <div className="space-y-4">
@@ -232,7 +318,7 @@ const PostBlog = () => {
                                             </button>
                                         </div>
                                         <p className="text-sm text-gray-500">
-                                            {t('postBlog.form.imageUploaded') || 'Ảnh đã được tải lên'}
+                                            Ảnh đã được tải lên
                                         </p>
                                     </div>
                                 ) : (
@@ -242,10 +328,10 @@ const PostBlog = () => {
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-600 mb-2">
-                                                {t('postBlog.form.dragDropImage') || 'Kéo thả ảnh vào đây hoặc click để chọn'}
+                                                Kéo thả ảnh vào đây hoặc click để chọn
                                             </p>
                                             <p className="text-xs text-gray-500">
-                                                {t('postBlog.form.imageFormat') || 'JPG, PNG tối đa 2MB'}
+                                                JPG, PNG tối đa 2MB
                                             </p>
                                         </div>
                                     </div>
@@ -260,7 +346,7 @@ const PostBlog = () => {
                                         const file = e.target.files[0];
                                         if (file) {
                                             await handleImageUpload(file);
-                                            e.target.value = ""; // reset input so same file can be selected again
+                                            e.target.value = "";
                                         }
                                     }}
                                 />
@@ -278,37 +364,19 @@ const PostBlog = () => {
                                     {uploading ? (
                                         <span className="flex items-center">
                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
-                                            {t('postBlog.form.uploading') || 'Đang tải lên...'}
+                                            Đang tải lên...
                                         </span>
                                     ) : (
-                                        t('postBlog.form.selectImage') || 'Chọn ảnh'
+                                        'Chọn ảnh'
                                     )}
                                 </button>
                             </div>
-                            
-                            {/* Paste URL option */}
-                            <div className="mt-4">
-                                <details className="group">
-                                    <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
-                                        {t('postBlog.form.orPasteUrl') || 'Hoặc dán URL ảnh'}
-                                    </summary>
-                                    <div className="mt-2">
-                                        <input
-                                            type="text"
-                                            value={formData.imageUrl}
-                                            onChange={handleInputChange}
-                                            name="imageUrl"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                            placeholder="https://example.com/image.jpg"
-                                        />
-                                    </div>
-                                </details>
-                            </div>
                         </div>
 
+                        {/* Content Editor */}
                         <div className="mb-8">
                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.content')} *
+                                Nội dung blog *
                            </label>
                            <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
                                {/* Toolbar */}
@@ -370,50 +438,6 @@ const PostBlog = () => {
                                        
                                        <div className="w-px h-6 bg-gray-300 mx-1"></div>
                                        
-                                       {/* Text Alignment */}
-                                       <button
-                                           type="button"
-                                           onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'left' }) ? 'bg-gray-200' : ''}`}
-                                           title="Align Left"
-                                       >
-                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                           </svg>
-                                       </button>
-                                       <button
-                                           type="button"
-                                           onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'center' }) ? 'bg-gray-200' : ''}`}
-                                           title="Align Center"
-                                       >
-                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm2 4a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm-2 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm2 4a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
-                                           </svg>
-                                       </button>
-                                       <button
-                                           type="button"
-                                           onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'right' }) ? 'bg-gray-200' : ''}`}
-                                           title="Align Right"
-                                       >
-                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                           </svg>
-                                       </button>
-                                       <button
-                                           type="button"
-                                           onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-gray-200' : ''}`}
-                                           title="Justify"
-                                       >
-                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                               <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                                           </svg>
-                                       </button>
-                                       
-                                       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                                       
                                        {/* Lists */}
                                        <button
                                            type="button"
@@ -433,20 +457,6 @@ const PostBlog = () => {
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                <path fillRule="evenodd" d="M3 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zM7 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7z" clipRule="evenodd" />
-                                           </svg>
-                                       </button>
-                                       
-                                       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                                       
-                                       {/* Blockquote */}
-                                       <button
-                                           type="button"
-                                           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('blockquote') ? 'bg-gray-200' : ''}`}
-                                           title="Quote"
-                                       >
-                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                               <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V8a1 1 0 112 0v2.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
                                            </svg>
                                        </button>
                                        
@@ -477,26 +487,46 @@ const PostBlog = () => {
                                        </button>
                                    </div>
                                )}
-                               <EditorContent editor={editor} className="min-h-[300px] p-4 prose max-w-none focus:outline-none" />
+                               <EditorContent editor={editor} className="min-h-[400px] p-4 prose max-w-none focus:outline-none" />
                            </div>
                         </div>
 
+
+                        {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
                              <button
                                 type="button"
-                                onClick={() => handleSubmit('DRAFT')}
-                                disabled={loading}
-                                className="flex-1 px-6 py-3 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                                onClick={() => handleSave('DRAFT')}
+                                className="flex-1 px-6 py-3 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 flex items-center justify-center"
                             >
-                                {loading ? t('postBlog.form.saving') : t('postBlog.form.saveDraft')}
+                                {saving ? (
+                                    <span className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
+                                        Đang lưu...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center">
+                                        <SaveOutlined className="w-4 h-4 mr-2" />
+                                        Lưu bản nháp
+                                    </span>
+                                )}
                             </button>
                             <button
                                 type="button"
-                                onClick={() => handleSubmit('PENDING_APPROVAL')}
-                                disabled={loading}
-                                className="flex-1 px-6 py-3 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                onClick={() => handleSave('PUBLISHED')}
+                                className="flex-1 px-6 py-3 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 flex items-center justify-center"
                             >
-                                {loading ? t('postBlog.form.submitting') : t('postBlog.form.submitForApproval')}
+                                {saving ? (
+                                    <span className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
+                                        Đang cập nhật...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center">
+                                        <EyeOutlined className="w-4 h-4 mr-2" />
+                                        Cập nhật và xuất bản
+                                    </span>
+                                )}
                             </button>
                         </div>
                     </form>
@@ -536,4 +566,4 @@ const PostBlog = () => {
     );
 };
 
-export default PostBlog;
+export default EditBlog;

@@ -22,7 +22,6 @@ const handleBefore = (config) => {
 };
 
 const handleError = (error) => {
-  console.log(error);
 };
 
 api.interceptors.request.use(handleBefore, handleError);

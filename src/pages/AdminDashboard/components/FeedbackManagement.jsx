@@ -314,7 +314,7 @@ const FeedbackManagement = () => {
         locale={{
           emptyText: (
             <Empty
-              description="Chưa có feedback nào"
+              description="No feedback found"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
           )
@@ -324,7 +324,7 @@ const FeedbackManagement = () => {
       {/* Statistics Card */}
       {totalElements > 0 && (
         <Card 
-          title="Thống kê"
+          title="Statistics"
           style={{ 
             marginTop: '24px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
@@ -335,19 +335,19 @@ const FeedbackManagement = () => {
               <div style={{ fontSize: '24px', fontWeight: 600, color: '#1890ff' }}>
                 {totalElements}
               </div>
-              <Text type="secondary">Tổng số feedback</Text>
+              <Text type="secondary">Total feedback</Text>
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 600, color: '#52c41a' }}>
                 {feedbacks.filter(f => f.userId).length}
               </div>
-              <Text type="secondary">Feedback có thông tin user</Text>
+              <Text type="secondary">Feedback with user info</Text>
             </div>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 600, color: '#faad14' }}>
                 {feedbacks.filter(f => !f.userId).length}
               </div>
-              <Text type="secondary">Feedback ẩn danh</Text>
+              <Text type="secondary">Anonymous feedback</Text>
             </div>
           </div>
         </Card>

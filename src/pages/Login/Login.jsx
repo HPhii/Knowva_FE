@@ -41,7 +41,6 @@ const Login = () => {
 
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
-        console.log("Login data saved successfully");
         // Track login event
         ReactGA.event({
           category: "User",
@@ -78,7 +77,6 @@ const Login = () => {
 
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
-        console.log("Google login data saved successfully");
         // Track Google login event
         ReactGA.event({
           category: "User",

@@ -507,7 +507,7 @@ const BlogManagement = () => {
             size="small"
             icon={<StrikethroughOutlined />}
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            title="Gạch ngang"
+            title="Strikethrough"
           />
         </div>
 
@@ -518,28 +518,28 @@ const BlogManagement = () => {
             size="small"
             icon={<AlignLeftOutlined />}
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
-            title="Căn trái"
+            title="Align Left"
           />
           <Button
             type={editor.isActive({ textAlign: 'center' }) ? 'primary' : 'text'}
             size="small"
             icon={<AlignCenterOutlined />}
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
-            title="Căn giữa"
+            title="Align Center"
           />
           <Button
             type={editor.isActive({ textAlign: 'right' }) ? 'primary' : 'text'}
             size="small"
             icon={<AlignRightOutlined />}
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
-            title="Căn phải"
+            title="Align Right"
           />
           <Button
             type={editor.isActive({ textAlign: 'justify' }) ? 'primary' : 'text'}
             size="small"
             icon={<MenuOutlined />}
             onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-            title="Căn đều"
+            title="Justify"
           />
         </div>
 
@@ -548,7 +548,7 @@ const BlogManagement = () => {
           <Select
             size="small"
             style={{ width: 120 }}
-            placeholder="Cỡ chữ"
+            placeholder="Font Size"
             value={editor.getAttributes('heading').level ? `h${editor.getAttributes('heading').level}` : 'p'}
             onChange={(value) => {
               if (value === 'p') {
@@ -574,14 +574,14 @@ const BlogManagement = () => {
             size="small"
             icon={<UnorderedListOutlined />}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            title="Danh sách có dấu đầu dòng"
+            title="Bulleted List"
           />
           <Button
             type={editor.isActive('orderedList') ? 'primary' : 'text'}
             size="small"
             icon={<OrderedListOutlined />}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            title="Danh sách có số thứ tự"
+            title="Numbered List"
           />
         </div>
 
@@ -590,7 +590,7 @@ const BlogManagement = () => {
           <Select
             size="small"
             style={{ width: 100 }}
-            placeholder="Màu chữ"
+            placeholder="Text Color"
             value={editor.getAttributes('textStyle').color || '#000000'}
             onChange={(color) => editor.chain().focus().setColor(color).run()}
           >
@@ -611,7 +611,7 @@ const BlogManagement = () => {
             size="small"
             icon={<HighlightOutlined />}
             onClick={() => editor.chain().focus().toggleHighlight().run()}
-            title="Đánh dấu văn bản"
+            title="Highlight Text"
           />
         </div>
 
@@ -803,8 +803,8 @@ const BlogManagement = () => {
           <Popconfirm
             title="Bạn có chắc chắn muốn xóa bài viết này không? Hành động này không thể hoàn tác."
             onConfirm={() => handleDeleteBlog(record.id)}
-            okText="Xác nhận"
-            cancelText="Hủy"
+            okText="Confirm"
+            cancelText="Cancel"
             okType="danger"
           >
             <Button 
@@ -1025,7 +1025,7 @@ const BlogManagement = () => {
                   name="categoryId"
                   value={blogFormData.categoryId}
                   onChange={(value) => setBlogFormData(prev => ({ ...prev, categoryId: value }))}
-                  placeholder="Chọn danh mục bài viết"
+                  placeholder="Select blog category"
                   size="large"
                 >
                   {categories.map(category => (
@@ -1038,7 +1038,7 @@ const BlogManagement = () => {
 
               {/* Image URL */}
               <Form.Item
-                label="URL hình ảnh"
+                label="Image URL"
               >
                 <Input
                   name="imageUrl"
@@ -1273,7 +1273,7 @@ const BlogManagement = () => {
 
       {/* Create Category Modal */}
       <Modal
-        title="Tạo Category Mới"
+        title="Create New Category"
         open={categoryModalVisible}
         onCancel={() => setCategoryModalVisible(false)}
         footer={null}
@@ -1286,10 +1286,10 @@ const BlogManagement = () => {
         >
           <Form.Item
             name="name"
-            label="Tên Category"
+            label="Category Name"
             rules={[{ required: true, message: 'Vui lòng nhập tên category' }]}
           >
-            <Input placeholder="Nhập tên category" />
+            <Input placeholder="Enter category name" />
           </Form.Item>
           
           <Form.Item style={{ marginBottom: 0, marginTop: '32px' }}>
@@ -1311,7 +1311,7 @@ const BlogManagement = () => {
 
       {/* Edit Category Modal */}
       <Modal
-        title="Chỉnh sửa Category"
+        title="Edit Category"
         open={editCategoryModalVisible}
         onCancel={() => setEditCategoryModalVisible(false)}
         footer={null}
@@ -1324,10 +1324,10 @@ const BlogManagement = () => {
         >
           <Form.Item
             name="name"
-            label="Tên Category"
+            label="Category Name"
             rules={[{ required: true, message: 'Vui lòng nhập tên category' }]}
           >
-            <Input placeholder="Nhập tên category" />
+            <Input placeholder="Enter category name" />
           </Form.Item>
           
           <Form.Item style={{ marginBottom: 0, marginTop: '32px' }}>

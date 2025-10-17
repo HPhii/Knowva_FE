@@ -10,6 +10,7 @@ import {
 } from "../../utils/dateUtils";
 import QuizSet from "./QuizSet";
 import FlashcardSet from "./FlashcardSet";
+import BlogSet from "./BlogSet";
 import Transaction from "./Transaction";
 import UserActivities from "./UserActivities";
 
@@ -24,6 +25,7 @@ import {
   BarChart3, 
   BookOpen, 
   Brain, 
+  FileText,
   CreditCard, 
   Settings,
   Edit3,
@@ -47,7 +49,7 @@ const UserDetails = () => {
   // Initialize active tab from URL
   useEffect(() => {
     const tabFromUrl = searchParams.get('tab');
-    if (tabFromUrl && ['overview', 'quizzes', 'flashcards', 'transactions', 'activities'].includes(tabFromUrl)) {
+    if (tabFromUrl && ['overview', 'quizzes', 'flashcards', 'blogs', 'transactions', 'activities'].includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
     }
   }, [searchParams]);
@@ -78,24 +80,19 @@ const UserDetails = () => {
         let processedUserData = { ...response.data };
         processedUserData.birthdate = processBirthdate(response.data.birthdate);
         
-        // Debug log for averageQuizScore
-        console.log("API Response:", response.data);
-        console.log("averageQuizScore:", response.data.averageQuizScore);
-        console.log("Type of averageQuizScore:", typeof response.data.averageQuizScore);
         
         setUserData(processedUserData);
       } catch (err) {
-        console.error("❌ Error fetching user data:", err);
 
         const localDateError = getLocalDateErrorMessage(err);
         if (localDateError) {
           setError(localDateError);
         } else if (err.response?.status === 401) {
-          setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          setError(t("userDetailsPage.sessionExpired"));
         } else if (err.response?.status === 404) {
-          setError("Không tìm thấy người dùng này.");
+          setError(t("userDetailsPage.userNotFound"));
         } else {
-          setError(t("loadUserError") || "Không thể tải thông tin người dùng");
+          setError(t("loadUserError") || t("userDetailsPage.loadUserError"));
         }
       } finally {
         setLoading(false);
@@ -181,12 +178,13 @@ const UserDetails = () => {
   // Tab navigation items
   const tabs = [
     { id: "overview", label: t("Overview") || "Tổng quan", icon: BarChart3 },
-    { id: "quizzes", label: t("Quizzes") || "Quiz", icon: Brain },
-    { id: "flashcards", label: t("Flashcards") || "Flashcard", icon: BookOpen },
-    // Only show transactions and activities for current user
+    { id: "quizzes", label: t("Quizzes") || "Câu hỏi", icon: Brain },
+    { id: "flashcards", label: t("Flashcards") || "Thẻ ghi nhớ", icon: BookOpen },
+    // Only show blogs, transactions and activities for current user
     ...(isCurrentUser ? [
+      { id: "blogs", label: t("Blogs") || "Blog", icon: FileText },
       { id: "transactions", label: t("Transactions") || "Giao dịch", icon: CreditCard },
-      { id: "activities", label: t("activities.title") || "Hoạt động", icon: Activity },
+      { id: "activities", label: t("activities.title") || "Hoạt động gần đây", icon: Activity },
     ] : []),
   ];
 
@@ -202,7 +200,7 @@ const UserDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">{t("flashcardSets")}</p>
-                    <p className="text-3xl font-bold text-emerald-600">{userData.stats.totalFlashcardSets}</p>
+                    <p className="text-3xl font-bold text-emerald-600">{userData.stats?.totalFlashcardSets || 0}</p>
                   </div>
                   <div className="p-3 bg-emerald-50 rounded-xl">
                     <BookOpen className="w-6 h-6 text-emerald-600" />
@@ -214,7 +212,7 @@ const UserDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">{t("quizSets")}</p>
-                    <p className="text-3xl font-bold text-blue-600">{userData.stats.totalQuizSets}</p>
+                    <p className="text-3xl font-bold text-blue-600">{userData.stats?.totalQuizSets || 0}</p>
                   </div>
                   <div className="p-3 bg-blue-50 rounded-xl">
                     <Brain className="w-6 h-6 text-blue-600" />
@@ -227,7 +225,7 @@ const UserDetails = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">{t("avgQuizScore")}</p>
                     <p className="text-3xl font-bold text-orange-600">
-                      {userData.averageQuizScore !== null && userData.averageQuizScore !== undefined && userData.averageQuizScore !== "" ? userData.averageQuizScore : "N/A"}
+                      {userData.stats?.averageQuizScore !== null && userData.stats?.averageQuizScore !== undefined && userData.stats?.averageQuizScore !== "" ? userData.stats.averageQuizScore : "N/A"}
                     </p>
                   </div>
                   <div className="p-3 bg-orange-50 rounded-xl">
@@ -306,7 +304,7 @@ const UserDetails = () => {
                     <div className="flex-1">
                       <p className="text-sm text-gray-600 mb-1">{t("vipDaysLeft")}</p>
                       <p className="font-medium text-gray-900">
-                        {userData.vipDaysLeft ? `${userData.vipDaysLeft} ${t("days")}` : t("noVIP")}
+                        {userData.vipDaysLeft && userData.vipDaysLeft !== null ? `${userData.vipDaysLeft} ${t("days")}` : t("noVIP")}
                       </p>
                     </div>
                   </div>
@@ -319,7 +317,7 @@ const UserDetails = () => {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <Settings className="w-5 h-5 mr-2 text-gray-600" />
-                  Thao tác nhanh
+                  {t("userDetailsPage.quickActions")}
                 </h3>
                 <div className="space-y-3">
                   <button 
@@ -328,7 +326,7 @@ const UserDetails = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <Edit3 className="w-5 h-5 text-white" />
-                      <span className="font-medium text-white">Chỉnh sửa hồ sơ</span>
+                      <span className="font-medium text-white">{t("userDetailsPage.editProfile")}</span>
                     </div>
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -340,7 +338,7 @@ const UserDetails = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <Activity className="w-5 h-5 text-gray-600" />
-                      <span className="font-medium text-gray-900">Xem hoạt động chi tiết</span>
+                      <span className="font-medium text-gray-900">{t("userDetailsPage.viewDetailedActivities")}</span>
                     </div>
                     <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -357,6 +355,9 @@ const UserDetails = () => {
       
       case "flashcards":
         return <FlashcardSet />;
+      
+      case "blogs":
+        return <BlogSet />;
       
       case "transactions":
         return <Transaction />;
@@ -381,7 +382,7 @@ const UserDetails = () => {
                   <div className="w-20 h-20 rounded-full overflow-hidden">
                     <img
                       src={userData.avatarUrl}
-                      alt={userData.fullName || "User"}
+                      alt={userData.fullName || t("User")}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -398,14 +399,14 @@ const UserDetails = () => {
                 <p className="text-gray-600 mb-2">{userData.email}</p>
                 <div className="flex items-center space-x-4">
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    userData.role === 'VIP' || userData.vipDaysLeft
+                    userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null)
                       ? 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white shadow-lg animate-pulse' 
                       : 'bg-gray-100 text-gray-700'
                   }`}>
                     <Crown className="w-4 h-4 mr-1" />
-                    {userData.role === 'VIP' || userData.vipDaysLeft ? 'VIP User' : t("freeUser")}
+                    {userData.role === 'VIP' || (userData.vipDaysLeft && userData.vipDaysLeft !== null) ? t("userDetailsPage.vipUser") : t("userDetailsPage.freeUser")}
                   </span>
-                  {userData.vipDaysLeft && (
+                  {userData.vipDaysLeft && userData.vipDaysLeft !== null && (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
                       <Clock className="w-4 h-4 mr-1" />
                       {userData.vipDaysLeft} {t("days")}
@@ -429,7 +430,7 @@ const UserDetails = () => {
         {/* Tab Navigation */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8">
           <div className="border-b border-gray-100">
-            <nav className="flex justify-center space-x-12 px-8" aria-label="Tabs">
+            <nav className="flex justify-center space-x-12 px-8" aria-label={t("Tabs")}>
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (

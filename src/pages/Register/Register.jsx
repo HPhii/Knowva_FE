@@ -62,7 +62,6 @@ const Register = () => {
       });
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
-        console.log("Google login data saved successfully");
         // Track Google registration/login event
         ReactGA.event({
           category: "User",

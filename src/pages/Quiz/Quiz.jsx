@@ -437,7 +437,6 @@ const Quiz = () => {
 
       const res = await api.post("/quiz-sets/generate", formData); // không set headers
 
-      console.log("res: ", res);
 
       // Lưu quiz đã tạo vào state
       const newQuiz = {
@@ -456,7 +455,6 @@ const Quiz = () => {
       setIsModalOpen(false);
       form.resetFields();
     } catch (err) {
-      console.log("Generate quiz error: ", err.response?.data);
 
       // Kiểm tra nếu lỗi là do chưa xác thực email
       if (
