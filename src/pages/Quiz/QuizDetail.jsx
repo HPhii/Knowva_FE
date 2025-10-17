@@ -32,12 +32,29 @@ const QuizDetail = () => {
 
   // Copy link state
   const [copyMessage, setCopyMessage] = useState("");
+  
+  // Share dropdown state
+  const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
 
   useEffect(() => {
     fetchQuizDetail();
     fetchComments();
     checkUserPermissions();
   }, [id]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isShareDropdownOpen && !event.target.closest('.share-dropdown')) {
+        setIsShareDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isShareDropdownOpen]);
 
   // Check user permissions for editing
   const checkUserPermissions = () => {
@@ -212,6 +229,7 @@ const QuizDetail = () => {
       await navigator.clipboard.writeText(link);
       setCopyMessage("Đã sao chép link!");
       setTimeout(() => setCopyMessage(""), 3000);
+      setIsShareDropdownOpen(false); // Close dropdown after copying
     } catch (error) {
       console.error("Error copying link:", error);
       setCopyMessage("Không thể sao chép link");
@@ -386,13 +404,17 @@ const QuizDetail = () => {
                 </div>
               </div>
 
-              {/* Invite Button - Only show for owner */}
-              {canEdit && (
-                <div className="relative group">
+              {/* Share Dropdown */}
+              {isShareDropdownOpen && (
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
                   <button
-                    onClick={() => setIsInviteModalOpen(true)}
-                    className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
-                    title="Mời người dùng"
+                    onClick={handleCopyLink}
+                    disabled={quiz.visibility === 'PRIVATE'}
+                    className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
+                      quiz.visibility === 'PRIVATE'
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
                   >
                     <svg
                       className="w-5 h-5"
@@ -407,6 +429,7 @@ const QuizDetail = () => {
                         d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                       />
                     </svg>
+                    Copy Link
                   </button>
 
                   {/* Tooltip */}
@@ -530,6 +553,22 @@ const QuizDetail = () => {
                       />
                     </svg>
                     Bắt đầu làm quiz
+                  </button>
+                  
+                  {/* Edit Button */}
+                  <button
+                    onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
+                    disabled={!canEdit}
+                    className={`flex items-center justify-center w-12 py-4 rounded-xl transition-all duration-200 -ml-2 ${
+                      canEdit 
+                        ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg" 
+                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    }`}
+                    title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </button>
                 </div>
               </div>
