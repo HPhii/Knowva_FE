@@ -35,6 +35,7 @@ import MyLibrary from "../pages/MyLibrary/MyLibrary";
 import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
 import EditFlashcard from "../pages/Flashcard/components/EditFlashcard";
 import Notification from "../pages/Notification/Notification";
+import SearchResult from "../pages/SearchResult/SearchResult";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,8 @@ const router = createBrowserRouter([
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancelled", element: <PaymentCancel /> },
       { path: "notification", element: <Notification /> },
+      { path: "search", element: <SearchResult /> },
+      { path: "users/:id", element: <UserDetails /> },
       //
       { path: "user/edit", element: <EditProfile /> },
       { path: "*", element: <NotFound /> },

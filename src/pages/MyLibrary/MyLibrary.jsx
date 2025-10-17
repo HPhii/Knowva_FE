@@ -11,6 +11,7 @@ import {
   message,
   Tooltip,
   Pagination,
+  Modal,
 } from "antd";
 import {
   BookOutlined,
@@ -23,6 +24,8 @@ import {
 } from "@ant-design/icons";
 import api from "../../config/axios";
 import "./MyLibrary.scss";
+import { isLoggedIn } from "../../utils/auth";
+import RequireLoginModal from "../../components/RequireLoginModal";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -32,9 +35,7 @@ const MyLibrary = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Separate states for different data types
   const [flashcards, setFlashcards] = useState([]);
@@ -85,24 +86,12 @@ const MyLibrary = () => {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      setShowLoginModal(true);
+      return;
+    }
     fetchAllData();
   }, []);
-
-  const handleSearch = (value) => {
-    setSearchText(value);
-  };
-
-  const handleFilterChange = (value) => {
-    setFilterType(value);
-  };
-
-  const handleSortChange = (value) => {
-    setSortBy(value);
-  };
-
-  const getProgressPercentage = (studied, total) => {
-    return Math.round((studied / total) * 100);
-  };
 
   // Pagination helper functions
   const getCurrentPageItems = (items, currentPage) => {
@@ -126,30 +115,30 @@ const MyLibrary = () => {
   };
 
   // Function to format time ago
-  const getTimeAgo = (dateString) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now - date) / 1000);
+  // const getTimeAgo = (dateString) => {
+  //   const now = new Date();
+  //   const date = new Date(dateString);
+  //   const diffInSeconds = Math.floor((now - date) / 1000);
 
-    if (diffInSeconds < 60) {
-      return `${diffInSeconds} seconds ago`;
-    } else if (diffInSeconds < 3600) {
-      const minutes = Math.floor(diffInSeconds / 60);
-      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 86400) {
-      const hours = Math.floor(diffInSeconds / 3600);
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 2592000) {
-      const days = Math.floor(diffInSeconds / 86400);
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 31536000) {
-      const months = Math.floor(diffInSeconds / 2592000);
-      return `${months} month${months > 1 ? "s" : ""} ago`;
-    } else {
-      const years = Math.floor(diffInSeconds / 31536000);
-      return `${years} year${years > 1 ? "s" : ""} ago`;
-    }
-  };
+  //   if (diffInSeconds < 60) {
+  //     return `${diffInSeconds} seconds ago`;
+  //   } else if (diffInSeconds < 3600) {
+  //     const minutes = Math.floor(diffInSeconds / 60);
+  //     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 86400) {
+  //     const hours = Math.floor(diffInSeconds / 3600);
+  //     return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 2592000) {
+  //     const days = Math.floor(diffInSeconds / 86400);
+  //     return `${days} day${days > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 31536000) {
+  //     const months = Math.floor(diffInSeconds / 2592000);
+  //     return `${months} month${months > 1 ? "s" : ""} ago`;
+  //   } else {
+  //     const years = Math.floor(diffInSeconds / 31536000);
+  //     return `${years} year${years > 1 ? "s" : ""} ago`;
+  //   }
+  // };
 
   const renderCard = (item, type) => {
     // For flashcards, show simplified information
@@ -170,8 +159,8 @@ const MyLibrary = () => {
                   {item?.flashcards?.length || 0}{" "}
                   {t("myLibrary.cards", "Cards")}
                 </span>
-                <span className="text-gray-500 mx-2">•</span>
-                <span>{getTimeAgo(item.createdAt || item.created_at)}</span>
+                {/* <span className="text-gray-500 mx-2">•</span> */}
+                {/* <span>{getTimeAgo(item.createdAt || item.created_at)}</span> */}
               </div>
             </div>
           </div>
@@ -211,8 +200,8 @@ const MyLibrary = () => {
                 {t("myLibrary.questions", "Questions")}:{" "}
                 {item.totalQuestions || item.questionCount}
               </span>
-              <span className="text-gray-500 mx-2">•</span>
-              <span>{getTimeAgo(item.createdAt || item.created_at)}</span>
+              {/* <span className="text-gray-500 mx-2">•</span> */}
+              {/* <span>{getTimeAgo(item.createdAt || item.created_at)}</span> */}
             </div>
           </div>
         </div>
@@ -305,6 +294,11 @@ const MyLibrary = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <RequireLoginModal
+          open={showLoginModal}
+          onOk={() => navigate("/login")}
+          onCancel={() => navigate("/")}
+        />
         {/* Tabs */}
         <div>
           <Tabs defaultActiveKey="flashcards" size="large">
@@ -328,16 +322,6 @@ const MyLibrary = () => {
               key="quizzes"
             >
               {renderTabContent("quizzes")}
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  {t("myLibrary.tests", "Tests")} ({tests.length})
-                </span>
-              }
-              key="tests"
-            >
-              {renderTabContent("tests")}
             </TabPane>
           </Tabs>
         </div>

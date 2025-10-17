@@ -11,6 +11,9 @@ import FlashcardView from "./components/FlashcardView";
 import SpacedRepetitionView from "./components/SpacedRepetitionView";
 import CardLimitModal from "./components/CardLimitModal";
 import NextDayNotificationModal from "./components/NextDayNotificationModal";
+import InviteModal from "../../components/InviteModal";
+import CommentSection from "../../components/CommentSection";
+import { getLoginData } from "../../utils/auth";
 
 const { Title } = Typography;
 
@@ -44,14 +47,36 @@ const StudyFlashcard = () => {
   const [isSpacedRepetitionCompleted, setIsSpacedRepetitionCompleted] =
     useState(false);
   const [performanceStats, setPerformanceStats] = useState(null);
-  
+
   // User and invite states
   const [currentUser, setCurrentUser] = useState(null);
   const [canEdit, setCanEdit] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
+  
+  // Comments state
+  const [comments, setComments] = useState([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(false);
   
   // Copy link state
   const [copyMessage, setCopyMessage] = useState("");
+  
+  // Share dropdown state
+  const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isShareDropdownOpen && !event.target.closest('.share-dropdown')) {
+        setIsShareDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isShareDropdownOpen]);
 
   // Fetch flashcard set data
   const fetchFlashcardSet = async () => {
@@ -73,6 +98,7 @@ const StudyFlashcard = () => {
       fetchFlashcardSet();
       checkSpacedRepetitionSetup();
       checkUserPermissions();
+      fetchComments();
     }
   }, [id]);
 
@@ -81,17 +107,21 @@ const StudyFlashcard = () => {
     try {
       const loginData = getLoginData();
       console.log("Login data from localStorage:", loginData);
-      
+
       if (loginData) {
         // Try multiple ways to get userId
-        const userId = loginData.userId || loginData.user?.id || loginData.user?.userId || loginData.id;
+        const userId =
+          loginData.userId ||
+          loginData.user?.id ||
+          loginData.user?.userId ||
+          loginData.id;
         console.log("Extracted userId:", userId);
-        
+
         if (userId) {
           setCurrentUser({
             ...loginData,
             userId: userId,
-            id: userId
+            id: userId,
           });
         }
       }
@@ -103,13 +133,14 @@ const StudyFlashcard = () => {
   // Check if current user can edit this flashcard set
   useEffect(() => {
     if (flashcardSet && currentUser) {
-      const flashcardUserId = flashcardSet.userId || flashcardSet.authorId || flashcardSet.createdBy;
+      const flashcardUserId =
+        flashcardSet.userId || flashcardSet.authorId || flashcardSet.createdBy;
       const currentUserId = currentUser.userId || currentUser.id;
-      
+
       // Convert both to strings for comparison to handle number/string mismatches
-      const flashcardUserIdStr = String(flashcardUserId || '');
-      const currentUserIdStr = String(currentUserId || '');
-      
+      const flashcardUserIdStr = String(flashcardUserId || "");
+      const currentUserIdStr = String(currentUserId || "");
+
       console.log("Checking edit permissions:", {
         flashcardSet: flashcardSet,
         currentUser: currentUser,
@@ -118,41 +149,106 @@ const StudyFlashcard = () => {
         flashcardUserIdStr,
         currentUserIdStr,
         canEdit: flashcardUserIdStr === currentUserIdStr,
-        strictEqual: flashcardUserId === currentUserId
+        strictEqual: flashcardUserId === currentUserId,
       });
-      
-      setCanEdit(flashcardUserIdStr === currentUserIdStr && flashcardUserIdStr !== '');
+
+      setCanEdit(
+        flashcardUserIdStr === currentUserIdStr && flashcardUserIdStr !== ""
+      );
     }
   }, [flashcardSet, currentUser]);
 
   // Handle invite success
   const handleInviteSuccess = () => {
     // You can add any additional logic here after successful invitation
-    console.log('Invitation sent successfully');
+    console.log("Invitation sent successfully");
   };
 
   // Handle copy link
   const handleCopyLink = async () => {
     try {
-      const baseUrl = import.meta.env.VITE_BASE_URL || 'https://knowva.me';
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://knowva.me";
       let link = `${baseUrl}/flashcard/${id}`;
-      
+
       // Check visibility and add token if needed
-      if (flashcardSet.visibility === 'HIDDEN' && flashcardSet.accessToken) {
+      if (flashcardSet.visibility === "HIDDEN" && flashcardSet.accessToken) {
         link += `?token=${flashcardSet.accessToken}`;
-      } else if (flashcardSet.visibility === 'PRIVATE') {
-        setCopyMessage("Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ.");
+      } else if (flashcardSet.visibility === "PRIVATE") {
+        setCopyMessage(
+          "Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ."
+        );
         return;
       }
-      
+
       await navigator.clipboard.writeText(link);
       setCopyMessage("Đã sao chép link!");
       setTimeout(() => setCopyMessage(""), 3000);
+      setIsShareDropdownOpen(false); // Close dropdown after copying
     } catch (error) {
-      console.error('Error copying link:', error);
+      console.error("Error copying link:", error);
       setCopyMessage("Không thể sao chép link");
       setTimeout(() => setCopyMessage(""), 3000);
     }
+  };
+
+  // Handle invite from share dropdown
+  const handleInviteFromShare = () => {
+    setIsInviteModalOpen(true);
+    setIsShareDropdownOpen(false); // Close dropdown
+  };
+
+  // Fetch comments for the flashcard set
+  const fetchComments = async () => {
+    try {
+      setIsLoadingComments(true);
+      console.log('Fetching comments for flashcard set:', id);
+      const response = await api.get(`/interactions/flashcardset/${id}/comments`);
+      console.log('Comments API response:', response.data);
+      
+      // Ensure we always set an array
+      const commentsData = response.data;
+      if (Array.isArray(commentsData)) {
+        setComments(commentsData);
+        console.log('Set comments (array):', commentsData);
+      } else if (commentsData && Array.isArray(commentsData.content)) {
+        setComments(commentsData.content);
+        console.log('Set comments (content):', commentsData.content);
+      } else if (commentsData && Array.isArray(commentsData.comments)) {
+        setComments(commentsData.comments);
+        console.log('Set comments (nested):', commentsData.comments);
+      } else {
+        console.log('API response format:', commentsData);
+        setComments([]);
+      }
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+      console.error("Error details:", err.response?.data);
+      setComments([]);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  // Handle adding new comment
+  const handleAddComment = (newComment) => {
+    if (newComment.parentId) {
+      // This is a reply - find parent and add to replies
+      setComments(prevComments => 
+        prevComments.map(comment => 
+          comment.id === newComment.parentId 
+            ? { ...comment, replies: [...(comment.replies || []), newComment] }
+            : comment
+        )
+      );
+    } else {
+      // This is a new parent comment
+      setComments(prevComments => [newComment, ...prevComments]);
+    }
+  };
+
+  // Handle refreshing comments
+  const handleRefreshComments = () => {
+    fetchComments();
   };
 
   // Check if spaced repetition has been setup for this flashcard set
@@ -247,8 +343,8 @@ const StudyFlashcard = () => {
         ? sessionData
         : sessionData?.flashcards || [];
 
-      // Save into flashcardSet as requested
-      setFlashcardSet({ flashcards: normalizedFlashcards });
+      // Save into flashcardSet while preserving existing metadata (owner, visibility, etc.)
+      setFlashcardSet((prev) => ({ ...(prev || {}), flashcards: normalizedFlashcards }));
 
       // Initialize review session from API data
       setReviewCards(normalizedFlashcards);
@@ -434,8 +530,8 @@ const StudyFlashcard = () => {
         ? sessionData
         : sessionData?.flashcards || [];
 
-      // Save into flashcardSet as requested
-      setFlashcardSet({ flashcards: normalizedFlashcards });
+      // Save into flashcardSet while preserving existing metadata (owner, visibility, etc.)
+      setFlashcardSet((prev) => ({ ...(prev || {}), flashcards: normalizedFlashcards }));
 
       // Initialize review session from API data
       setReviewCards(normalizedFlashcards);
@@ -671,18 +767,20 @@ const StudyFlashcard = () => {
         <div className="mb-6">
           {/* Copy message */}
           {copyMessage && (
-            <div className={`mb-4 p-3 rounded-lg text-center ${
-              copyMessage.includes('riêng tư') 
-                ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' 
-                : 'bg-green-100 text-green-800 border border-green-300'
-            }`}>
+            <div
+              className={`mb-4 p-3 rounded-lg text-center ${
+                copyMessage.includes("riêng tư")
+                  ? "bg-yellow-100 text-yellow-800 border border-yellow-300"
+                  : "bg-green-100 text-green-800 border border-green-300"
+              }`}
+            >
               {copyMessage}
             </div>
           )}
-          
+
           <div className="flex justify-between items-center mb-4">
             <div>
-              <Title level={2} className="!mb-2">
+              <Title level={2} className="!mb-2 whitespace-nowrap">
                 {flashcardSet.title || flashcardSet.name}
               </Title>
             </div>
@@ -697,51 +795,102 @@ const StudyFlashcard = () => {
               >
                 Bắt đầu lại
               </Button>
-              
+
               {/* Secondary Actions - Moved to right */}
               <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
                 {/* Copy Link Button */}
                 <div className="relative group">
                   <Button
-                    icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>}
+                    icon={
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                    }
                     onClick={handleCopyLink}
-                    disabled={flashcardSet.visibility === 'PRIVATE'}
+                    disabled={flashcardSet.visibility === "PRIVATE"}
                     className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 ${
-                      flashcardSet.visibility === 'PRIVATE'
+                      flashcardSet.visibility === "PRIVATE"
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-100"
                         : "bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-700 border-green-100 hover:border-green-200 cursor-pointer shadow-md hover:shadow-lg"
                     }`}
                     type="default"
                     title="Copy Link"
                   />
-                  
+
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                    {flashcardSet.visibility === 'PRIVATE' ? "Set này là riêng tư" : "Copy Link"}
-                  </div>
-                </div>
+                    {flashcardSet.visibility === "PRIVATE"
+                      ? "Set này là riêng tư"
+                      : "Copy Link"}
+              {/* Secondary Actions - Restart + Share grouped on the right */}
+              <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
+                {/* Restart Button - icon only, purple, sits to the left of Share */}
+                <button
+                  onClick={handleRestart}
+                  className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  title="Bắt đầu lại"
+                >
+                  <RotateLeftOutlined />
+                </button>
 
-                {/* Invite Button - Only show for owner */}
-                {canEdit && (
-                  <div className="relative group">
-                    <Button
-                      icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                      </svg>}
-                      onClick={() => setIsInviteModalOpen(true)}
-                      type="default"
-                      className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-600 hover:text-purple-700 border-purple-100 hover:border-purple-200 transition-all duration-200 shadow-md hover:shadow-lg"
-                      title="Mời người dùng"
-                    />
-                    
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      Mời người dùng
-                    </div>
+                <div className="relative group share-dropdown">
+                  <button
+                    onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                    className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                    title="Chia sẻ"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                  </button>
+
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                    Chia sẻ
                   </div>
-                )}
+
+                  {/* Share Dropdown */}
+                  {isShareDropdownOpen && (
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                      <button
+                        onClick={handleCopyLink}
+                        disabled={flashcardSet.visibility === 'PRIVATE'}
+                        className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
+                          flashcardSet.visibility === 'PRIVATE'
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy Link
+                      </button>
+
+                      {canEdit && (
+                        <button
+                          onClick={handleInviteFromShare}
+                          className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                        >
+                          <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                          </svg>
+                          Mời người dùng
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -790,6 +939,19 @@ const StudyFlashcard = () => {
           </div>
         )}
 
+        {/* Comments Section */}
+        <div className="mb-12">
+          <CommentSection
+            variant="flashcard"
+            entityId={id}
+            entityType="flashcardset"
+            comments={comments}
+            onAddComment={handleAddComment}
+            isLoading={isLoadingComments}
+            onRefreshComments={handleRefreshComments}
+          />
+        </div>
+
         {/* Modals */}
         <CardLimitModal
           open={showLimitModal}
@@ -804,6 +966,14 @@ const StudyFlashcard = () => {
           open={nextDayNotiModal}
           onOk={handleNextDayModalConfirm}
           onCancel={handleModalCancel}
+        />
+
+        <InviteModal
+          isOpen={isInviteModalOpen}
+          onClose={() => setIsInviteModalOpen(false)}
+          entityId={id}
+          entityType="flashcard"
+          onInviteSuccess={handleInviteSuccess}
         />
       </div>
     </div>

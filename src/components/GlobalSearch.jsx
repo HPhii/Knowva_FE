@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, BrainCircuit, BookCopy, Users, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
 import api from "../config/axios";
 import ReactGA from "react-ga4";
@@ -13,6 +14,7 @@ const searchEndpoints = {
 
 const GlobalSearch = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("quiz");
   const [results, setResults] = useState([]);
@@ -42,10 +44,15 @@ const GlobalSearch = () => {
         const { data } = await api.get(`${endpoint}`, {
           params: { keyword: debouncedSearchTerm, page: 0, size: 5 },
         });
-        if (searchType === "quiz") setResults(data.quizSets || []);
-        else if (searchType === "flashcard")
-          setResults(data.flashcardSets || []);
-        else if (searchType === "user") setResults(data.accounts || []);
+        if (searchType === "quiz") {
+          const quizSets = data.quizSets || [];
+          setResults(quizSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC"));
+        } else if (searchType === "flashcard") {
+          const flashcardSets = data.flashcardSets || [];
+          setResults(flashcardSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC"));
+        } else if (searchType === "user") {
+          setResults(data.accounts || []);
+        }
       } catch (error) {
         console.error("Search failed:", error);
         setResults([]);
@@ -70,8 +77,22 @@ const GlobalSearch = () => {
   }, []);
 
   const handleResultClick = (item) => {
-    console.log("Navigating to item:", item);
     setIsFocused(false);
+    
+    if (searchType === "quiz") {
+      navigate(`/quiz/${item.id}`);
+    } else if (searchType === "flashcard") {
+      navigate(`/study-flashcard/${item.id}`);
+    } else if (searchType === "user") {
+      navigate(`/user/${item.accountId}`);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}&type=${searchType}`);
+      setIsFocused(false);
+    }
   };
 
   const clearSearch = () => {
@@ -108,6 +129,7 @@ const GlobalSearch = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => setIsFocused(true)}
+            onKeyPress={handleKeyPress}
             placeholder={t("globalSearch.searchPlaceholder", {
               type: t(`globalSearch.${searchType}`),
             })}

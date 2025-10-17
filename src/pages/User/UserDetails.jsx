@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../config/axios";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams, useParams } from "react-router-dom";
 import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
 import { 
   processBirthdate, 
@@ -33,11 +33,13 @@ import {
 
 const UserDetails = () => {
   const { t } = useTranslation();
+  const { id } = useParams(); // Get user ID from URL params
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,11 +65,23 @@ const UserDetails = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get("/users/me");
+        
+        // Determine if we're viewing current user or another user
+        const isViewingOtherUser = id && id !== "me";
+        setIsCurrentUser(!isViewingOtherUser);
+        
+        // Choose API endpoint based on whether we have an ID
+        const apiEndpoint = isViewingOtherUser ? `/users/${id}` : "/users/me";
+        const response = await api.get(apiEndpoint);
         
         // 🔧 Handle potential LocalDate serialization issues using utility function
         let processedUserData = { ...response.data };
         processedUserData.birthdate = processBirthdate(response.data.birthdate);
+        
+        // Debug log for averageQuizScore
+        console.log("API Response:", response.data);
+        console.log("averageQuizScore:", response.data.averageQuizScore);
+        console.log("Type of averageQuizScore:", typeof response.data.averageQuizScore);
         
         setUserData(processedUserData);
       } catch (err) {
@@ -78,6 +92,8 @@ const UserDetails = () => {
           setError(localDateError);
         } else if (err.response?.status === 401) {
           setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        } else if (err.response?.status === 404) {
+          setError("Không tìm thấy người dùng này.");
         } else {
           setError(t("loadUserError") || "Không thể tải thông tin người dùng");
         }
@@ -87,7 +103,7 @@ const UserDetails = () => {
     };
     fetchUserData();
     // eslint-disable-next-line
-  }, [navigate]);
+  }, [navigate, id]);
 
   const onEditProfileClick = () => {
     const loginResponse = JSON.parse(localStorage.getItem("loginResponse"));
@@ -167,8 +183,11 @@ const UserDetails = () => {
     { id: "overview", label: t("Overview") || "Tổng quan", icon: BarChart3 },
     { id: "quizzes", label: t("Quizzes") || "Quiz", icon: Brain },
     { id: "flashcards", label: t("Flashcards") || "Flashcard", icon: BookOpen },
-    { id: "transactions", label: t("Transactions") || "Giao dịch", icon: CreditCard },
-    { id: "activities", label: t("activities.title") || "Hoạt động", icon: Activity },
+    // Only show transactions and activities for current user
+    ...(isCurrentUser ? [
+      { id: "transactions", label: t("Transactions") || "Giao dịch", icon: CreditCard },
+      { id: "activities", label: t("activities.title") || "Hoạt động", icon: Activity },
+    ] : []),
   ];
 
   // Render tab content
@@ -208,7 +227,7 @@ const UserDetails = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">{t("avgQuizScore")}</p>
                     <p className="text-3xl font-bold text-orange-600">
-                      {userData.stats.averageQuizScore ? `${userData.stats.averageQuizScore}%` : "N/A"}
+                      {userData.averageQuizScore !== null && userData.averageQuizScore !== undefined && userData.averageQuizScore !== "" ? userData.averageQuizScore : "N/A"}
                     </p>
                   </div>
                   <div className="p-3 bg-orange-50 rounded-xl">
@@ -226,31 +245,39 @@ const UserDetails = () => {
                   {t("personalInfo")}
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <User className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("fullName")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <User className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("fullName")}</p>
                       <p className="font-medium text-gray-900">{userData.fullName || t("notSet")}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Mail className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("email")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <Mail className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("email")}</p>
                       <p className="font-medium text-gray-900">{userData.email}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Phone className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("phoneNumber")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <Phone className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("phoneNumber")}</p>
                       <p className="font-medium text-gray-900">{userData.phoneNumber || t("notSet")}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("birthdate")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("birthdate")}</p>
                       <p className="font-medium text-gray-900">{userData.birthdate || t("notSet")}</p>
                     </div>
                   </div>
@@ -263,17 +290,21 @@ const UserDetails = () => {
                   {t("accountDetails")}
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Crown className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("accountStatus")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <Crown className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("accountStatus")}</p>
                       <p className="font-medium text-green-600">{t("active")}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Clock className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <p className="text-sm text-gray-600">{t("vipDaysLeft")}</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center mt-0.5">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">{t("vipDaysLeft")}</p>
                       <p className="font-medium text-gray-900">
                         {userData.vipDaysLeft ? `${userData.vipDaysLeft} ${t("days")}` : t("noVIP")}
                       </p>
@@ -283,39 +314,41 @@ const UserDetails = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Settings className="w-5 h-5 mr-2 text-gray-600" />
-                Thao tác nhanh
-              </h3>
-              <div className="space-y-3">
-                <button 
-                  onClick={() => onEditProfileClick()}
-                  className="w-full flex items-center justify-between p-4 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    <Edit3 className="w-5 h-5 text-white" />
-                    <span className="font-medium text-white">Chỉnh sửa hồ sơ</span>
-                  </div>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-                <button 
-                  onClick={() => handleTabChange('activities')}
-                  className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    <Activity className="w-5 h-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">Xem hoạt động chi tiết</span>
-                  </div>
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+            {/* Quick Actions - Only show for current user */}
+            {isCurrentUser && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Settings className="w-5 h-5 mr-2 text-gray-600" />
+                  Thao tác nhanh
+                </h3>
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => onEditProfileClick()}
+                    className="w-full flex items-center justify-between p-4 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Edit3 className="w-5 h-5 text-white" />
+                      <span className="font-medium text-white">Chỉnh sửa hồ sơ</span>
+                    </div>
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  <button 
+                    onClick={() => handleTabChange('activities')}
+                    className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Activity className="w-5 h-5 text-gray-600" />
+                      <span className="font-medium text-gray-900">Xem hoạt động chi tiết</span>
+                    </div>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         );
       
@@ -365,12 +398,12 @@ const UserDetails = () => {
                 <p className="text-gray-600 mb-2">{userData.email}</p>
                 <div className="flex items-center space-x-4">
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    userData.vipDaysLeft 
-                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white' 
+                    userData.role === 'VIP' || userData.vipDaysLeft
+                      ? 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white shadow-lg animate-pulse' 
                       : 'bg-gray-100 text-gray-700'
                   }`}>
                     <Crown className="w-4 h-4 mr-1" />
-                    {userData.vipDaysLeft ? t("vipMember") : t("freeUser")}
+                    {userData.role === 'VIP' || userData.vipDaysLeft ? 'VIP User' : t("freeUser")}
                   </span>
                   {userData.vipDaysLeft && (
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
@@ -381,13 +414,15 @@ const UserDetails = () => {
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => onEditProfileClick()}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 !text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              <Edit3 className="w-5 h-5 mr-2" />
-              {t("editProfile")}
-            </button>
+            {isCurrentUser && (
+              <button
+                onClick={() => onEditProfileClick()}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 !text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                <Edit3 className="w-5 h-5 mr-2" />
+                {t("editProfile")}
+              </button>
+            )}
           </div>
         </div>
 

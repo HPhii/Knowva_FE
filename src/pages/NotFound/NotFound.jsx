@@ -6,7 +6,7 @@ const NotFound = () => {
     const { t } = useTranslation();
 
     return (
-        <>
+        <div className="notfound-container">
             <div className="container">
                 <div className="moon"></div>
                 <div className="moon__crater moon__crater1"></div>
@@ -61,13 +61,30 @@ const NotFound = () => {
             </div>
 
             <style>{`
-                .container {
+                .notfound-container {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
                     height: 100vh;
-                    width: 100%;
                     margin: 0;
+                    padding: 0;
                     background: linear-gradient(90deg, #2f3640 23%, #181b20 100%);
                     overflow: hidden;
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-sizing: border-box;
+                }
+                
+                .container {
                     position: relative;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
                 
                 .moon {
@@ -82,7 +99,27 @@ const NotFound = () => {
                     content: '';
                     border-radius: 100%;
                     box-shadow: 0px 0px 30px -4px rgba(0, 0, 0, 0.5);
+                    z-index: 1;
                 }
+                
+                @media (max-width: 768px) {
+                    .moon {
+                        top: -15vh;
+                        left: -40vw;
+                        width: 100vw;
+                        height: 100vw;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .moon {
+                        top: -20vh;
+                        left: -50vw;
+                        width: 120vw;
+                        height: 120vw;
+                    }
+                }
+                
                 .moon__crater {
                     position: absolute;
                     content: '';
@@ -104,6 +141,14 @@ const NotFound = () => {
                     opacity: 0.4;
                     animation: shimmer 1.5s infinite alternate;
                 }
+                
+                @media (max-width: 768px) {
+                    .star {
+                        width: 3px;
+                        height: 3px;
+                    }
+                }
+                
                 @keyframes shimmer {
                     from { opacity: 0; }
                     to { opacity: 0.7; }
@@ -121,11 +166,82 @@ const NotFound = () => {
                     transform: translateY(-50%);
                     font-family: "Sora", sans-serif;
                     color: #e3e3e3;
-                    z-index: 10;
+                    z-index: 100;
+                    text-align: left;
+                    max-width: 500px;
                 }
-                .error__title { font-size: 10em; }
-                .error__subtitle { font-size: 2em; }
-                .error__description { opacity: 1; }
+                
+                @media (max-width: 1024px) {
+                    .error {
+                        left: 5%;
+                        max-width: 400px;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .notfound-container {
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        padding-top: 2rem;
+                    }
+                    
+                    .error {
+                        position: static;
+                        transform: none;
+                        text-align: center;
+                        padding: 20px;
+                        max-width: 100%;
+                        left: auto;
+                        top: auto;
+                        order: 1;
+                    }
+                }
+                
+                .error__title { 
+                    font-size: 10em; 
+                    line-height: 0.8;
+                    margin-bottom: 0.2em;
+                }
+                
+                @media (max-width: 1024px) {
+                    .error__title { font-size: 8em; }
+                }
+                
+                @media (max-width: 768px) {
+                    .error__title { font-size: 6em; }
+                }
+                
+                @media (max-width: 480px) {
+                    .error__title { font-size: 4em; }
+                }
+                
+                .error__subtitle { 
+                    font-size: 2em; 
+                    margin-bottom: 0.5em;
+                }
+                
+                @media (max-width: 1024px) {
+                    .error__subtitle { font-size: 1.8em; }
+                }
+                
+                @media (max-width: 768px) {
+                    .error__subtitle { font-size: 1.5em; }
+                }
+                
+                @media (max-width: 480px) {
+                    .error__subtitle { font-size: 1.2em; }
+                }
+                
+                .error__description { 
+                    opacity: 1; 
+                    font-size: 1.1em;
+                    margin-bottom: 2em;
+                }
+                
+                @media (max-width: 768px) {
+                    .error__description { font-size: 1em; }
+                }
+                
                 .error__button {
                     min-width: 7em;
                     margin-top: 3em;
@@ -143,6 +259,24 @@ const NotFound = () => {
                     text-decoration: none;
                     display: inline-block;
                 }
+                
+                @media (max-width: 768px) {
+                    .error__button {
+                        margin-top: 1.5em;
+                        padding: 0.8em 2.5em;
+                        font-size: 1em;
+                        min-width: 8em;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .error__button {
+                        padding: 0.6em 2em;
+                        font-size: 0.9em;
+                        min-width: 7em;
+                    }
+                }
+                
                 .error__button:hover { color: #ffffff; border-color: #ffffff; }
                 .error__button--active {
                     background-color: #e67e22;
@@ -174,6 +308,44 @@ const NotFound = () => {
                     top: 50%;
                     transform: translate(-50%, -50%) rotate(20deg) scale(1.2);
                     animation: float 4s ease-in-out infinite;
+                    z-index: 50;
+                }
+                
+                @media (max-width: 1024px) {
+                    .shiba {
+                        width: 180px;
+                        height: 250px;
+                        left: 75%;
+                        scale: 1;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .shiba {
+                        width: 150px;
+                        height: 200px;
+                        left: 50%;
+                        top: 60%;
+                        scale: 0.8;
+                        order: 2;
+                        position: relative;
+                        transform: translateX(-50%) rotate(20deg) scale(0.8);
+                        margin-top: 2rem;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .shiba {
+                        width: 120px;
+                        height: 160px;
+                        left: 50%;
+                        top: 65%;
+                        scale: 0.6;
+                        order: 2;
+                        position: relative;
+                        transform: translateX(-50%) rotate(20deg) scale(0.6);
+                        margin-top: 1rem;
+                    }
                 }
                 
                 .shiba__tail {
@@ -189,7 +361,6 @@ const NotFound = () => {
                     border: 5px solid #f3d4b5;
                     border-left-color: transparent;
                     border-top-color: transparent;
-                    /* ĐÃ SỬA: Bỏ z-index: -1 để đuôi hiện ra */
                 }
 
                 .shiba__backpack { z-index: 1; background-color: #bfbfbf; position: absolute; top: 90px; left: 67px; width: 86px; height: 90px; border-radius: 8px; }
@@ -287,7 +458,7 @@ const NotFound = () => {
                     border-radius: 0 0 50% 50%;
                 }
             `}</style>
-        </>
+        </div>
     );
 };
 
