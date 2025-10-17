@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import api from '../config/axios';
 import Rating from './Rating';
 import ImageUpload from './ImageUpload';
@@ -33,6 +34,11 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // User rating state - use prop if provided, otherwise use local state
   const [userRating, setUserRating] = useState(propUserRating);
   const [isLoadingRating, setIsLoadingRating] = useState(false);
+  
+  // Confirmation popup state
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
 
   // Handle image upload for main comment
   const handleImageUpload = (uploadedImageUrl) => {
@@ -54,6 +60,32 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // Handle image upload start for reply
   const handleReplyImageUploadStart = () => {
     setIsUploadingReplyImage(true);
+  };
+
+  // Show confirmation popup
+  const showConfirmation = (message, action) => {
+    setConfirmMessage(message);
+    setConfirmAction(() => action);
+    setShowConfirmPopup(true);
+  };
+
+  // Handle confirmation
+  const handleConfirm = () => {
+    if (confirmAction) {
+      confirmAction();
+    }
+    setShowConfirmPopup(false);
+    setConfirmAction(null);
+    setConfirmMessage('');
+    setConfirmButtonRef(null);
+  };
+
+  // Handle cancel
+  const handleCancel = () => {
+    setShowConfirmPopup(false);
+    setConfirmAction(null);
+    setConfirmMessage('');
+    setConfirmButtonRef(null);
   };
 
 
@@ -454,9 +486,13 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
   // Handle delete rating
   const handleDeleteRating = async () => {
-    if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
-      return;
-    }
+    showConfirmation('Bạn có chắc chắn muốn xóa đánh giá này?', async () => {
+      await performDeleteRating();
+    });
+  };
+
+  // Perform actual delete rating
+  const performDeleteRating = async () => {
 
     try {
       const token = localStorage.getItem('token');
@@ -551,9 +587,13 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
   // Handle delete comment
   const handleDeleteComment = async (commentId) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa comment này?')) {
-      return;
-    }
+    showConfirmation('Bạn có chắc chắn muốn xóa comment này?', async () => {
+      await performDeleteComment(commentId);
+    });
+  };
+
+  // Perform actual delete comment
+  const performDeleteComment = async (commentId) => {
 
     if (isDeletingComment) return;
 
@@ -847,7 +887,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             <button
               type="submit"
               disabled={!commentText.trim() || isSubmitting}
-              className={`${theme.buttonBg} ${theme.buttonHover} text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base`}
+              className={`${theme.buttonBg} ${theme.buttonHover} !text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2 text-base`}
             >
               {isSubmitting ? (
                 <>
@@ -995,7 +1035,8 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                       {/* Delete Button - positioned at bottom right of comment */}
                       <div className="flex justify-end mt-2">
                         <button
-                          onClick={() => handleDeleteComment(commentId)}
+                          ref={(el) => el && (el._commentId = commentId)}
+                          onClick={(e) => handleDeleteComment(commentId, e.target)}
                           disabled={isDeletingComment}
                           className="text-xs text-red-600 hover:text-red-700 underline transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -1172,6 +1213,35 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
           </div>
         )}
       </div>
+
+      {/* Inline Confirmation Popup */}
+      {showConfirmPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 min-w-[200px] max-w-[300px] mx-4">
+            <div className="flex items-center mb-3">
+              <ExclamationCircleOutlined style={{ color: '#ff4d4f', marginRight: '8px' }} />
+              <span className="font-medium text-gray-900">Xác nhận</span>
+            </div>
+            <p className="text-sm text-gray-700 mb-4">
+              {confirmMessage}
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={handleCancel}
+                className="px-3 py-1 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="px-3 py-1 text-sm text-white bg-red-600 hover:bg-red-700 rounded transition-colors"
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

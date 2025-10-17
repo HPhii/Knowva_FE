@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Tabs,
   Button,
@@ -11,6 +11,8 @@ import {
   message,
   Tooltip,
   Pagination,
+  Modal,
+  Dropdown,
 } from "antd";
 import {
   BookOutlined,
@@ -23,6 +25,9 @@ import {
 } from "@ant-design/icons";
 import api from "../../config/axios";
 import "./MyLibrary.scss";
+import { isLoggedIn } from "../../utils/auth";
+import RequireLoginModal from "../../components/RequireLoginModal";
+import { ToastContainer } from "react-toastify";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -31,10 +36,12 @@ const { Option } = Select;
 const MyLibrary = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showGenerateOption, setShowGenerateOption] = useState(false);
+
+  console.log("generate option: ", showGenerateOption);
 
   // Separate states for different data types
   const [flashcards, setFlashcards] = useState([]);
@@ -47,13 +54,15 @@ const MyLibrary = () => {
   const [testsPage, setTestsPage] = useState(1);
   const [cardsPerPage] = useState(6);
 
-  console.log("Day la flashcards: ", flashcards);
 
   // Fetch flashcards data
   const fetchFlashcards = async () => {
     try {
       const response = await api.get("/flashcard-sets/my-flashcard-sets");
-      setFlashcards(response.data || []);
+      const sorted = response.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setFlashcards(sorted || []);
     } catch (error) {
       console.error("Error fetching flashcards:", error);
       message.error("Không thể tải dữ liệu flashcard. Vui lòng thử lại.");
@@ -64,8 +73,16 @@ const MyLibrary = () => {
   const fetchQuizzes = async () => {
     try {
       const response = await api.get("/quiz-sets/my-quiz-sets");
-      console.log("Day la response cua quizzes: ", response.data);
-      setQuizzes(response.data || []);
+      const quizData = response.data || [];
+      
+      // Sort quizzes by creation date (newest first)
+      const sortedQuizzes = quizData.sort((a, b) => {
+        const dateA = new Date(a.createdAt || a.created_at || 0);
+        const dateB = new Date(b.createdAt || b.created_at || 0);
+        return dateB - dateA; // Newest first
+      });
+      
+      setQuizzes(sortedQuizzes);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
       message.error("Không thể tải dữ liệu quiz. Vui lòng thử lại.");
@@ -85,24 +102,21 @@ const MyLibrary = () => {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      setShowLoginModal(true);
+      return;
+    }
     fetchAllData();
   }, []);
 
-  const handleSearch = (value) => {
-    setSearchText(value);
-  };
-
-  const handleFilterChange = (value) => {
-    setFilterType(value);
-  };
-
-  const handleSortChange = (value) => {
-    setSortBy(value);
-  };
-
-  const getProgressPercentage = (studied, total) => {
-    return Math.round((studied / total) * 100);
-  };
+  // Handle success message from navigation state
+  useEffect(() => {
+    if (location.state?.showSuccessMessage) {
+      message.success(location.state.message);
+      // Clear the state to prevent showing the message again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   // Pagination helper functions
   const getCurrentPageItems = (items, currentPage) => {
@@ -125,31 +139,58 @@ const MyLibrary = () => {
     }
   };
 
-  // Function to format time ago
-  const getTimeAgo = (dateString) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now - date) / 1000);
-
-    if (diffInSeconds < 60) {
-      return `${diffInSeconds} seconds ago`;
-    } else if (diffInSeconds < 3600) {
-      const minutes = Math.floor(diffInSeconds / 60);
-      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 86400) {
-      const hours = Math.floor(diffInSeconds / 3600);
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 2592000) {
-      const days = Math.floor(diffInSeconds / 86400);
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    } else if (diffInSeconds < 31536000) {
-      const months = Math.floor(diffInSeconds / 2592000);
-      return `${months} month${months > 1 ? "s" : ""} ago`;
-    } else {
-      const years = Math.floor(diffInSeconds / 31536000);
-      return `${years} year${years > 1 ? "s" : ""} ago`;
-    }
+  const toggleGenerateOption = () => {
+    setShowGenerateOption((prev) => !prev);
   };
+
+  const flashcardItems = [
+    {
+      key: "ai",
+      label: (
+        <div
+          onClick={() => navigate("/flashcards")} // 👈 đổi đường dẫn theo route của bạn
+        >
+          Create with AI
+        </div>
+      ),
+    },
+    {
+      key: "scratch",
+      label: (
+        <div
+          onClick={() => navigate("/create-flashcard")} // 👈 đổi đường dẫn theo route của bạn
+        >
+          Create from Scratch
+        </div>
+      ),
+    },
+  ];
+
+  // Function to format time ago
+  // const getTimeAgo = (dateString) => {
+  //   const now = new Date();
+  //   const date = new Date(dateString);
+  //   const diffInSeconds = Math.floor((now - date) / 1000);
+
+  //   if (diffInSeconds < 60) {
+  //     return `${diffInSeconds} seconds ago`;
+  //   } else if (diffInSeconds < 3600) {
+  //     const minutes = Math.floor(diffInSeconds / 60);
+  //     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 86400) {
+  //     const hours = Math.floor(diffInSeconds / 3600);
+  //     return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 2592000) {
+  //     const days = Math.floor(diffInSeconds / 86400);
+  //     return `${days} day${days > 1 ? "s" : ""} ago`;
+  //   } else if (diffInSeconds < 31536000) {
+  //     const months = Math.floor(diffInSeconds / 2592000);
+  //     return `${months} month${months > 1 ? "s" : ""} ago`;
+  //   } else {
+  //     const years = Math.floor(diffInSeconds / 31536000);
+  //     return `${years} year${years > 1 ? "s" : ""} ago`;
+  //   }
+  // };
 
   const renderCard = (item, type) => {
     // For flashcards, show simplified information
@@ -170,18 +211,23 @@ const MyLibrary = () => {
                   {item?.flashcards?.length || 0}{" "}
                   {t("myLibrary.cards", "Cards")}
                 </span>
-                <span className="text-gray-500 mx-2">•</span>
-                <span>{getTimeAgo(item.createdAt || item.created_at)}</span>
+                {/* <span className="text-gray-500 mx-2">•</span> */}
+                {/* <span>{getTimeAgo(item.createdAt || item.created_at)}</span> */}
               </div>
             </div>
           </div>
-
-          <div className="flex justify-end cursor-pointer text-white rounded-md">
+          <div className="flex justify-end gap-2 text-white rounded-md">
             <div
-              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px]"
+              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
               onClick={() => navigate(`/flashcard/${item.id}`)}
             >
               {t("myLibrary.study", "Study")}
+            </div>
+            <div
+              className="flex items-center justify-center bg-[#FFA500] hover:bg-[#FF8C00] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
+              onClick={() => navigate(`/edit-flashcard/${item.id}`)}
+            >
+              {t("myLibrary.edit", "Edit")}
             </div>
           </div>
         </div>
@@ -203,19 +249,18 @@ const MyLibrary = () => {
             <div className="flex text-sm font-medium text-gray-500">
               <span className="flex items-center">
                 {t("myLibrary.questions", "Questions")}:{" "}
-                {item.totalQuestions || item.questionCount}
+                {item.maxQuestions || item.totalQuestions || item.questionCount}
               </span>
-              <span className="text-gray-500 mx-2">•</span>
-              <span>{getTimeAgo(item.createdAt || item.created_at)}</span>
+              {/* <span className="text-gray-500 mx-2">•</span> */}
+              {/* <span>{getTimeAgo(item.createdAt || item.created_at)}</span> */}
             </div>
           </div>
         </div>
-
         {/* button  */}
         <div className="flex justify-end cursor-pointer text-white rounded-md">
           <div
             className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px]"
-            onClick={() => navigate(`/flashcard/${item.id}`)}
+            onClick={() => navigate(`/quiz/${item.id}`, { state: { from: 'myLibrary' } })}
           >
             {t("myLibrary.study", "Study")}
           </div>
@@ -223,6 +268,38 @@ const MyLibrary = () => {
       </div>
     );
   };
+
+  // Create dropdown items for quiz creation
+  const createQuizItems = [
+    {
+      key: "ai",
+      label: (
+        <div
+          onClick={() => navigate("/quiz")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          {t("myLibrary.createWithAI", "Tạo với AI")}
+        </div>
+      ),
+    },
+    {
+      key: "scratch",
+      label: (
+        <div
+          onClick={() => navigate("/quiz/create")}
+          className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          {t("myLibrary.createFromScratch", "Tạo từ đầu")}
+        </div>
+      ),
+    },
+  ];
 
   const renderTabContent = (type) => {
     let items = [];
@@ -253,14 +330,24 @@ const MyLibrary = () => {
           description={t("myLibrary.noItemsFound", "No items found")}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         >
-          <Button type="primary" icon={<PlusOutlined />}>
-            {t("myLibrary.createNew", "Create New")}{" "}
-            {type === "flashcards"
-              ? t("myLibrary.flashcardSet", "Flashcard Set")
-              : type === "quizzes"
-              ? t("myLibrary.quiz", "Quiz")
-              : t("myLibrary.test", "Test")}
-          </Button>
+          {type === "quizzes" ? (
+            <Dropdown
+              menu={{ items: createQuizItems }}
+              placement="bottomLeft"
+              trigger={["click"]}
+            >
+              <Button icon={<PlusOutlined />}>
+                {t("myLibrary.createNewQuiz", "Tạo Quiz mới")}
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button type="primary" icon={<PlusOutlined />}>
+              {t("myLibrary.createNew", "Create New")}{" "}
+              {type === "flashcards"
+                ? t("myLibrary.flashcardSet", "Flashcard Set")
+                : t("myLibrary.test", "Test")}
+            </Button>
+          )}
         </Empty>
       );
     }
@@ -299,6 +386,18 @@ const MyLibrary = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <RequireLoginModal
+          open={showLoginModal}
+          onOk={() => navigate("/login")}
+          onCancel={() => navigate("/")}
+        />
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("myLibrary.title", "Thư viện của tôi")}
+          </h1>
+        </div>
+
         {/* Tabs */}
         <div>
           <Tabs defaultActiveKey="flashcards" size="large">
@@ -311,6 +410,22 @@ const MyLibrary = () => {
               }
               key="flashcards"
             >
+              <div className="flex justify-baseline mb-5">
+                {/* <div className="cursor bg-[#CA56D2] text-white px-3 py-2 rounded-xl">
+                  Create New
+                </div> */}
+                {/* <div className="relative">
+                  <Button onClick={toggleGenerateOption}>Create New</Button>
+                  {showGenerateOption && <div>cc</div>}
+                </div> */}
+                <Dropdown
+                  menu={{ items: flashcardItems }}
+                  placement="bottomLeft"
+                  trigger={["click"]}
+                >
+                  <Button icon={<PlusOutlined />}>Create New</Button>
+                </Dropdown>
+              </div>
               {renderTabContent("flashcards")}
             </TabPane>
             <TabPane
@@ -321,21 +436,25 @@ const MyLibrary = () => {
               }
               key="quizzes"
             >
-              {renderTabContent("quizzes")}
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  {t("myLibrary.tests", "Tests")} ({tests.length})
-                </span>
-              }
-              key="tests"
-            >
-              {renderTabContent("tests")}
+              <div>
+                <div className="mb-4">
+                  <Dropdown
+                    menu={{ items: createQuizItems }}
+                    placement="bottomLeft"
+                    trigger={["click"]}
+                  >
+                    <Button icon={<PlusOutlined />}>
+                      {t("myLibrary.createNewQuiz", "Tạo Quiz mới")}
+                    </Button>
+                  </Dropdown>
+                </div>
+                {renderTabContent("quizzes")}
+              </div>
             </TabPane>
           </Tabs>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

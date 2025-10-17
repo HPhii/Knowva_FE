@@ -4,6 +4,7 @@
     "myLibrary": "Thư viện của tôi",
     "quizzes": "Câu hỏi",
     "flashcards": "Thẻ ghi nhớ",
+    "generate": "Tạo nội dung",
     "tests": "Bài kiểm tra",
     "blog": "Blog",
     "explore": "Khám phá",
@@ -12,6 +13,46 @@
     "logout": "Đăng xuất",
     "userDetails": "Thông tin người dùng",
     "verifyEmail": "Xác thực Email"
+  },
+  "notifications": {
+    "title": "Tất cả thông báo",
+    "loading": "Đang tải...",
+    "noNotifications": "Không có thông báo nào",
+    "noNotificationsDesc": "Bạn sẽ nhận được thông báo mới ở đây",
+    "filters": {
+      "title": "Bộ lọc",
+      "type": "Loại thông báo",
+      "status": "Trạng thái",
+      "startDate": "Từ ngày",
+      "endDate": "Đến ngày",
+      "clearFilters": "Xóa bộ lọc",
+      "allTypes": "Tất cả loại",
+      "allStatus": "Tất cả",
+      "unread": "Chưa đọc",
+      "read": "Đã đọc"
+    },
+    "types": {
+      "QUIZ_INVITE": "Mời làm quiz",
+      "FLASHCARD_INVITE": "Mời học flashcard",
+      "SYSTEM_ALERT": "Cảnh báo hệ thống",
+      "REMINDER": "Nhắc nhở",
+      "BUG_REPORT": "Báo lỗi"
+    },
+    "pagination": {
+      "showing": "Hiển thị",
+      "of": "trong",
+      "notifications": "thông báo",
+      "page": "Trang",
+      "previous": "Trước",
+      "next": "Sau"
+    },
+    "time": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "phút trước",
+      "hoursAgo": "giờ trước",
+      "daysAgo": "ngày trước",
+      "monthsAgo": "tháng trước"
+    }
   },
   "upload": {
     "createStudyMaterials": "Tạo tài liệu học tập từ bài giảng của bạn",
@@ -57,8 +98,10 @@
     "success": "Đăng ký thành công! Vui lòng đăng nhập.",
     "illustrationAlt": "Minh họa đăng ký"
   },
+  "becomeVip": "Trở thành VIP",
   "error": {
     "emailVerificationRequired": "Bạn cần xác thực tài khoản để thực hiện hành động này.",
+    "vipRequired": "Chỉ thành viên VIP mới có thể sử dụng tính năng này.",
     "failedToFetch": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng hoặc thử lại sau.",
     "incorrectEmailOrPassword": "Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.",
     "userNotFound": "Không tìm thấy tài khoản. Vui lòng kiểm tra email.",
@@ -112,19 +155,19 @@
     "teamSubtitle": "Những cá nhân đam mê đứng sau KnowVa, những người tận tâm chuyển đổi giáo dục thông qua công nghệ.",
     "team": {
       "sarah": {
-        "name": "Sarah Johnson",
-        "role": "CEO & Người sáng lập",
-        "bio": "Cựu nhà giáo dục với hơn 10 năm kinh nghiệm trong EdTech"
+        "name": "Lê Cao Kha",
+        "role": "Front end Developer",
+        "bio": "Lau nhà lúc 10 giờ tối"
       },
       "michael": {
-        "name": "Michael Chen",
-        "role": "CTO",
-        "bio": "Chuyên gia AI/ML tập trung vào công nghệ giáo dục"
+        "name": "Trịnh Hiểu Phi",
+        "role": "Backend Developer",
+        "bio": "Nấu ăn lúc 3 giờ sáng"
       },
       "emily": {
-        "name": "Emily Rodriguez",
-        "role": "Trưởng phòng Sản phẩm",
-        "bio": "Chiến lược gia sản phẩm đam mê trải nghiệm người dùng"
+        "name": "Nguyễn Hữu An",
+        "role": "Front end Developer",
+        "bio": "Đi gym lúc 2 giờ sáng"
       }
     },
     "storyTitle": "Câu chuyện của chúng tôi",
@@ -258,16 +301,19 @@
     "subject": "Tiêu đề",
     "message": "Tin nhắn",
     "sendMessage": "Gửi Tin Nhắn",
+    "sending": "Đang gửi...",
+    "successMessage": "Tin nhắn đã được gửi thành công! Chúng tôi sẽ phản hồi bạn sớm nhất.",
+    "errorMessage": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
     "infoTitle": "Thông Tin Liên Hệ",
     "faqTitle": "Câu Hỏi Nhanh?",
     "address": "Địa chỉ",
     "phone": "Điện thoại",
     "contactEmail": "contact@knowva.com",
-    "supportEmail": "support@knowva.com",
-    "addressLine1": "123 Innovation Drive",
-    "addressLine2": "San Francisco, CA 94105",
-    "addressLine3": "United States",
-    "phoneNumber": "+1 (555) 123-4567",
+    "supportEmail": "knowva18k@gmail.com",
+    "addressLine1": "7 Đ. D1, Long Thạnh Mỹ",
+    "addressLine2": "Thủ Đức, Hồ Chí Minh 70000",
+    "addressLine3": "Việt Nam",
+    "phoneNumber": "+84 937 874 259",
     "phoneHours": "Thứ 2-Thứ 6 9AM-6PM PST",
     "faqLinks": {
       "getStarted": "Làm thế nào để bắt đầu với KnowVa?",
@@ -417,8 +463,8 @@
     "changesTermsText": "Chúng tôi có quyền, theo quyết định riêng của mình, sửa đổi hoặc thay thế các Điều khoản này bất cứ lúc nào. Nếu việc sửa đổi là quan trọng, chúng tôi sẽ cố gắng cung cấp thông báo ít nhất 30 ngày trước khi bất kỳ điều khoản mới nào có hiệu lực.",
     "contactInfoTitle": "10. Thông Tin Liên Hệ",
     "contactInfoText": "Nếu bạn có bất kỳ câu hỏi nào về Điều khoản & Điều kiện này, vui lòng liên hệ với chúng tôi tại:",
-    "contactEmail": "Email: legal@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "privacy": {
     "title": "Chính Sách Bảo Mật",
@@ -471,8 +517,8 @@
     "changesPolicyText": "Chúng tôi có thể cập nhật Chính sách Bảo mật theo thời gian. Chúng tôi sẽ thông báo bằng cách đăng chính sách mới trên trang này và cập nhật ngày 'Cập nhật lần cuối'.",
     "contactUsTitle": "10. Liên Hệ Chúng Tôi",
     "contactUsText": "Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này, vui lòng liên hệ với chúng tôi tại:",
-    "contactEmail": "Email: privacy@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "documentation": {
     "title": "Tài Liệu",
@@ -604,14 +650,69 @@
     "updatesDescription": "Chúng tôi có thể cập nhật Chính sách Cookie này theo thời gian để phản ánh những thay đổi trong thực tiễn của chúng tôi hoặc vì các lý do vận hành, pháp lý hoặc quy định khác. Chúng tôi sẽ thông báo cho bạn về bất kỳ thay đổi quan trọng nào bằng cách đăng chính sách cập nhật trên trang web của chúng tôi.",
     "contactUs": "Liên Hệ Chúng Tôi",
     "contactDescription": "Nếu bạn có bất kỳ câu hỏi nào về việc sử dụng cookie của chúng tôi hoặc Chính sách Cookie này, vui lòng liên hệ với chúng tôi:",
-    "contactEmail": "Email: privacy@knowva.com",
-    "contactAddress": "Địa chỉ: 123 Innovation Drive, San Francisco, CA 94105"
+    "contactEmail": "Email: knowva18k@gmail.com",
+    "contactAddress": "Địa chỉ: 7 Đ. D1, Long Thạnh Mỹ, Thủ Đức, Hồ Chí Minh 700000, Việt Nam"
   },
   "userDetails": "Chi tiết người dùng",
   "loadingUserInfo": "Đang tải thông tin người dùng...",
   "tryAgain": "Thử lại",
   "noUserData": "Không có dữ liệu người dùng.",
   "loadUserError": "Không thể tải thông tin người dùng. Vui lòng thử lại.",
+  "Overview": "Tổng quan",
+  "Quizzes": "Câu hỏi",
+  "Flashcards": "Thẻ ghi nhớ",
+  "Blogs": "Blog",
+  "Transactions": "Giao dịch",
+  "User": "Người dùng",
+  "Tabs": "Thẻ",
+  "userDetailsPage": {
+    "quickActions": "Thao tác nhanh",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "viewDetailedActivities": "Xem hoạt động chi tiết",
+    "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+    "userNotFound": "Không tìm thấy người dùng này.",
+    "vipUser": "VIP User",
+    "freeUser": "Người dùng miễn phí",
+    "loadUserError": "Không thể tải thông tin người dùng",
+    "quizSet": {
+      "noPublicQuizzes": "Chưa có câu hỏi công khai",
+      "noPublicQuizzesDesc": "Người dùng này chưa có câu hỏi nào được công khai.",
+      "tryAgain": "Thử lại",
+      "createNewQuiz": "Tạo Quiz mới",
+      "createWithAI": "Tạo với AI",
+      "createFromScratch": "Tạo từ đầu",
+      "cannotLoadQuizSets": "Không thể tải danh sách câu hỏi"
+    },
+    "flashcardSet": {
+      "noPublicFlashcards": "Chưa có thẻ ghi nhớ công khai",
+      "noPublicFlashcardsDesc": "Người dùng này chưa có thẻ ghi nhớ nào được công khai.",
+      "tryAgain": "Thử lại",
+      "createNewFlashcard": "Tạo Thẻ Ghi Nhớ Mới",
+      "cannotLoadFlashcardSets": "Không thể tải danh sách thẻ ghi nhớ"
+    },
+    "blogSet": {
+      "myBlogs": "Blog của tôi",
+      "totalBlogs": "Tổng cộng {{count}} bài viết",
+      "writeNewBlog": "Viết blog mới",
+      "allStatus": "Tất cả",
+      "draftStatus": "Bản nháp",
+      "pendingStatus": "Chờ duyệt",
+      "publishedStatus": "Đã xuất bản",
+      "rejectedStatus": "Từ chối",
+      "editBlog": "Chỉnh sửa",
+      "quickEdit": "Sửa nhanh",
+      "cannotLoadBlogs": "Không thể tải danh sách blog",
+      "tryAgain": "Thử lại"
+    }
+  },
+  "auth": {
+    "requireLoginTitle": "Yêu cầu đăng nhập",
+    "requireLoginDescription": "Bạn cần đăng nhập để xem thư viện của mình.",
+    "login": "Đăng nhập"
+  },
+  "common": {
+    "cancel": "Hủy"
+  },
   "user": "Người dùng",
   "email": "Email",
   "vipDaysLeft": "Số ngày VIP còn lại",
@@ -938,7 +1039,11 @@
     "brandDesc": "Khơi dậy việc học thú vị với các bài kiểm tra tương tác, thẻ ghi nhớ và đề ôn tập toàn diện.",
     "exploreMore": "Khám phá thêm",
     "sendFeedback": "Gửi Feedback",
+    "reportBug": "Báo cáo lỗi",
+    "reportBugDesc": "Tìm thấy lỗi? Hãy giúp chúng tôi cải thiện ứng dụng",
+    "helpSupport": "Hỗ trợ & Trợ giúp",
     "customers": "Khách hàng",
+    "contact": "Liên hệ",
     "pricing": "Bảng giá",
     "support": "Hỗ trợ",
     "documentation": "Tài liệu",
@@ -950,10 +1055,11 @@
     "terms": "Điều khoản & Điều kiện",
     "privacy": "Chính sách bảo mật",
     "cookies": "Chính sách Cookie",
-    "copyright": "© 2024 KnowVa. Đã đăng ký bản quyền.",
+    "copyright": "© 2025 KnowVa.",
     "twitter": "Twitter",
     "facebook": "Facebook",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+    "location": "Vị trí"
   },
   "postBlog": {
     "title": "Tạo bài viết blog mới",
@@ -1058,6 +1164,9 @@
     "cards": "Thẻ",
     "questions": "Câu hỏi",
     "studied": "Đã học",
+    "createNewQuiz": "Tạo Quiz mới",
+    "createWithAI": "Tạo với AI",
+    "createFromScratch": "Tạo từ đầu",
     "score": "Điểm",
     "created": "Tạo lúc",
     "lastStudied": "Lần cuối học",
@@ -1237,6 +1346,35 @@
     "cancel": "Hủy",
     "submit": "Gửi Feedback"
   },
+  "bugReport": {
+    "title": "Báo cáo lỗi",
+    "titleLabel": "Tiêu đề",
+    "titlePlaceholder": "Mô tả ngắn gọn về lỗi...",
+    "titleRequired": "Vui lòng nhập tiêu đề!",
+    "descriptionLabel": "Mô tả chi tiết",
+    "descriptionPlaceholder": "Mô tả chi tiết về lỗi, các bước để tái tạo lỗi, và kết quả mong đợi...",
+    "descriptionRequired": "Vui lòng nhập mô tả chi tiết!",
+    "categoryLabel": "Danh mục",
+    "priorityLabel": "Mức độ ưu tiên",
+    "categories": {
+      "UI": "UI/UX Issues",
+      "FUNCTIONALITY": "Functionality",
+      "PERFORMANCE": "Performance",
+      "PAYMENT": "Payment",
+      "SECURITY": "Security",
+      "OTHER": "Other"
+    },
+    "priorities": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "successMessage": "Báo cáo lỗi đã được gửi thành công!",
+    "errorMessage": "Không thể gửi báo cáo lỗi. Vui lòng thử lại.",
+    "cancel": "Hủy",
+    "submit": "Gửi báo cáo"
+  },
   "__comment_explore": "=== Explore Page Translations ===",
   "explore": {
     "title": "Khám phá nội dung học tập",
@@ -1250,6 +1388,31 @@
     "clearAll": "Xóa tất cả",
     "clearAllFilters": "Xóa tất cả bộ lọc",
     "allCategories": "Tất cả danh mục",
+    "categories": {
+      "all": "Tất cả",
+      "mathematics": "Toán học",
+      "literature": "Văn học", 
+      "physics": "Vật lý",
+      "chemistry": "Hóa học",
+      "biology": "Sinh học",
+      "computerScience": "Khoa học máy tính",
+      "history": "Lịch sử",
+      "geography": "Địa lý",
+      "language": "Ngôn ngữ",
+      "business": "Kinh doanh",
+      "economics": "Kinh tế",
+      "psychology": "Tâm lý học",
+      "medicine": "Y học",
+      "law": "Luật",
+      "engineering": "Kỹ thuật",
+      "arts": "Nghệ thuật",
+      "music": "Âm nhạc",
+      "other": "Khác",
+      "more": "Thêm",
+      "less": "Ít hơn",
+      "quiz": "Câu hỏi",
+      "flashcard": "Thẻ ghi nhớ"
+    },
     "sortNewest": "Mới nhất",
     "sortOldest": "Cũ nhất",
     "sortMostPlayed": "Chơi nhiều nhất",
@@ -1312,7 +1475,7 @@
       "RATE_CONTENT": "Đánh giá nội dung",
       "COMMENT_ON_CONTENT": "Bình luận"
     }
-},
+  },
   "globalSearch": {
     "quiz": "Câu hỏi",
     "flashcard": "Thẻ ghi nhớ",
@@ -1322,10 +1485,247 @@
     "searching": "Đang tìm...",
     "noResults": "Không tìm thấy kết quả."
   },
+
   "notFound": {
     "title": "404",
     "subtitle": "Hmmm... Có vẻ lạc đường rồi!",
     "description": "Có vẻ như một trong những lập trình viên của chúng tôi đã ngủ gật mất rồi.",
     "goHome": "Quay Về Trang Chủ"
+  },
+  "notification": {
+    "title": "Thông báo",
+    "subtitle": "Quản lý và xem tất cả thông báo của bạn",
+    "searchPlaceholder": "Tìm kiếm thông báo...",
+    "filterByType": "Loại thông báo",
+    "filterByStatus": "Trạng thái",
+    "all": "Tất cả",
+    "unread": "Chưa đọc",
+    "read": "Đã đọc",
+    "markAllRead": "Đánh dấu tất cả đã đọc",
+    "markAsRead": "Đánh dấu đã đọc",
+    "noNotifications": "Không có thông báo nào",
+    "types": {
+      "REMINDER": "Nhắc nhở",
+      "QUIZ_RESULT": "Kết quả quiz",
+      "FLASHCARD_REMINDER": "Nhắc nhở flashcard",
+      "SYSTEM": "Thông báo hệ thống",
+      "ACHIEVEMENT": "Thành tích",
+      "COURSE_UPDATE": "Cập nhật khóa học"
+    },
+    "timeAgo": {
+      "justNow": "Vừa xong",
+      "minutesAgo": "{{count}} phút trước",
+      "hoursAgo": "{{count}} giờ trước",
+      "daysAgo": "{{count}} ngày trước"
+    },
+    "pagination": {
+      "showing": "Hiển thị {{start}}-{{end}} của {{total}} thông báo"
+    }
+  },
+  "studyFlashcard": {
+    "restart": "Bắt đầu lại",
+    "loading": "Đang tải...",
+    "notFound": "Không tìm thấy bộ flashcard",
+    "backToLibrary": "Quay lại thư viện",
+    "tabs": {
+      "flashcards": "Thẻ ghi nhớ",
+      "examMode": "Chế độ thi",
+      "spacedRepetition": "Lặp lại ngắt quãng"
+    },
+    "flashcard": {
+      "question": "Câu hỏi",
+      "answer": "Trả lời",
+      "clickToReveal": "Nhấn để xem đáp án",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "cardCounter": "Thẻ {{current}} / {{total}}",
+      "progress": "Tiến độ: {{percentage}}%",
+      "allCardsList": "Danh sách tất cả thẻ ({{count}} thẻ)"
+    },
+    "examMode": {
+      "title": "Chế độ thi",
+      "description": "Kiểm tra kiến thức của bạn với các câu hỏi trắc nghiệm"
+    },
+    "spacedRepetition": {
+      "title": "Lặp lại ngắt quãng",
+      "description": "Chế độ này giúp bạn ghi nhớ thông tin bằng cách ôn tập thẻ ghi nhớ ở các khoảng thời gian tối ưu",
+      "setup": {
+        "title": "Thiết lập lặp lại ngắt quãng",
+        "description": "Chọn số lượng thẻ mới bạn muốn học mỗi ngày",
+        "cardsPerDay": "Thẻ mỗi ngày",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "newDay": {
+        "title": "Ngày mới",
+        "newCards": "Bạn có {{count}} thẻ mới để học",
+        "reviewCards": "Bạn có {{count}} thẻ đã biết để ôn tập",
+        "start": "Bắt đầu",
+        "cancel": "Hủy"
+      },
+      "session": {
+        "loading": "Đang tải phiên học...",
+        "noCards": "Không có thẻ nào để học",
+        "completed": "Hoàn thành!",
+        "congratulations": "🎉 Chúc mừng! Bạn đã hoàn thành tất cả thẻ học hôm nay!",
+        "performance": "Hiệu suất hôm nay",
+        "retentionRate": "Tỷ lệ ghi nhớ",
+        "totalAttempts": "Tổng số lần thử",
+        "know": "Biết",
+        "dontKnow": "Chưa biết"
+      },
+      "rating": {
+        "title": "Đánh giá mức độ ghi nhớ",
+        "description": "Bạn nhớ thông tin này như thế nào?",
+        "levels": {
+          "1": "Hoàn toàn quên",
+          "2": "Khó nhớ",
+          "3": "Khó nhớ một chút",
+          "4": "Dễ nhớ",
+          "5": "Rất dễ nhớ"
+        }
+      }
+    },
+    "errors": {
+      "loadError": "Không thể tải bộ flashcard. Vui lòng thử lại.",
+      "performanceError": "Không thể tải thống kê hiệu suất. Vui lòng thử lại.",
+      "modeDataError": "Không thể tải dữ liệu chế độ học. Vui lòng thử lại.",
+      "noFlashcards": "Không có flashcard nào để học trong phiên này. Bạn có thể thử lại sau hoặc kiểm tra lại bộ flashcard.",
+      "saveError": "Không thể lưu cài đặt. Vui lòng thử lại.",
+      "reviewError": "Không thể lưu đánh giá. Vui lòng thử lại."
+    }
+  },
+  "createQuiz": {
+    "title": "Tạo Quiz mới",
+    "back": "Quay lại",
+    "save": "Tạo Quiz",
+    "success": "Tạo quiz thành công!",
+    "error": "Tạo quiz thất bại",
+    "basicInfo": "Thông tin cơ bản",
+    "titleLabel": "Tiêu đề",
+    "titleRequired": "Vui lòng nhập tiêu đề",
+    "titlePlaceholder": "Nhập tiêu đề quiz",
+    "timeLimit": "Thời gian (phút)",
+    "timeRequired": "Vui lòng nhập thời gian",
+    "description": "Mô tả",
+    "descriptionRequired": "Vui lòng nhập mô tả",
+    "descriptionPlaceholder": "Nhập mô tả quiz",
+    "questionType": "Loại câu hỏi",
+    "questionTypeRequired": "Vui lòng chọn loại câu hỏi",
+    "questionTypePlaceholder": "Chọn loại câu hỏi",
+    "multipleChoice": "Trắc nghiệm",
+    "trueFalse": "Đúng/Sai",
+    "visibility": "Quyền hiển thị",
+    "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+    "visibilityPlaceholder": "Chọn quyền hiển thị",
+    "public": "Công khai",
+    "private": "Riêng tư",
+    "hidden": "Ẩn",
+    "category": "Danh mục",
+    "categoryRequired": "Vui lòng chọn danh mục",
+    "categoryPlaceholder": "Chọn danh mục",
+    "math": "Toán học",
+    "science": "Khoa học",
+    "history": "Lịch sử",
+    "geography": "Địa lý",
+    "literature": "Văn học",
+    "language": "Ngôn ngữ",
+    "technology": "Công nghệ",
+    "sports": "Thể thao",
+    "art": "Nghệ thuật",
+    "other": "Khác",
+    "maxQuestions": "Số câu hỏi tối đa",
+    "maxQuestionsRequired": "Vui lòng nhập số câu hỏi tối đa",
+    "language": "Ngôn ngữ",
+    "languageRequired": "Vui lòng chọn ngôn ngữ",
+    "languagePlaceholder": "Chọn ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "questions": "Câu hỏi",
+    "addQuestion": "Thêm câu hỏi",
+    "questionNumber": "Câu hỏi",
+    "delete": "Xóa",
+    "questionContent": "Nội dung câu hỏi",
+    "questionContentRequired": "Vui lòng nhập nội dung câu hỏi",
+    "questionContentPlaceholder": "Nhập nội dung câu hỏi",
+    "questionTimeLimit": "Thời gian (giây)",
+    "questionTimeRequired": "Vui lòng nhập thời gian",
+    "answers": "Đáp án",
+    "answerHint": "Có thể chọn nhiều câu trả lời đúng cho mỗi câu hỏi",
+    "addAnswer": "Thêm đáp án",
+    "answer": "Đáp án",
+    "answerRequired": "Vui lòng nhập đáp án",
+    "correct": "Đúng",
+    "incorrect": "Sai",
+    "noQuestionsError": "Vui lòng thêm ít nhất một câu hỏi",
+    "noCorrectAnswerError": "Mỗi câu hỏi phải có ít nhất một đáp án đúng"
+  },
+  "editQuiz": {
+    "loading": "Đang tải...",
+    "back": "Quay lại",
+    "editQuiz": "Sửa Quiz",
+    "saveChanges": "Lưu thay đổi",
+    "basicInfo": "Thông tin cơ bản",
+    "title": "Tiêu đề",
+    "titlePlaceholder": "Nhập tiêu đề quiz",
+    "titleRequired": "Vui lòng nhập tiêu đề",
+    "timeLimit": "Thời gian (phút)",
+    "timeLimitPlaceholder": "30",
+    "timeLimitRequired": "Vui lòng nhập thời gian",
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Nhập mô tả quiz",
+    "descriptionRequired": "Vui lòng nhập mô tả",
+    "questionType": "Loại câu hỏi",
+    "questionTypePlaceholder": "Chọn loại câu hỏi",
+    "questionTypeRequired": "Vui lòng chọn loại câu hỏi",
+    "multipleChoice": "Trắc nghiệm",
+    "trueFalse": "Đúng/Sai",
+    "visibility": "Quyền hiển thị",
+    "visibilityPlaceholder": "Chọn quyền hiển thị",
+    "visibilityRequired": "Vui lòng chọn quyền hiển thị",
+    "public": "Công khai",
+    "private": "Riêng tư",
+    "hidden": "Ẩn",
+    "category": "Danh mục",
+    "categoryPlaceholder": "Chọn danh mục",
+    "categoryRequired": "Vui lòng chọn danh mục",
+    "science": "Khoa học",
+    "history": "Lịch sử",
+    "geography": "Địa lý",
+    "literature": "Văn học",
+    "math": "Toán học",
+    "language": "Ngôn ngữ",
+    "technology": "Công nghệ",
+    "sports": "Thể thao",
+    "art": "Nghệ thuật",
+    "other": "Khác",
+    "maxQuestions": "Số câu hỏi tối đa",
+    "maxQuestionsPlaceholder": "5",
+    "maxQuestionsRequired": "Vui lòng nhập số câu hỏi tối đa",
+    "languageLabel": "Ngôn ngữ",
+    "languagePlaceholder": "Chọn ngôn ngữ",
+    "languageRequired": "Vui lòng chọn ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "questions": "Câu hỏi",
+    "addQuestion": "Thêm câu hỏi",
+    "questionNumber": "Câu hỏi",
+    "delete": "Xóa",
+    "questionContent": "Nội dung câu hỏi",
+    "questionContentPlaceholder": "Nhập nội dung câu hỏi",
+    "questionContentRequired": "Vui lòng nhập nội dung câu hỏi",
+    "questionTimeLimit": "Thời gian (giây)",
+    "questionTimeLimitPlaceholder": "30",
+    "questionTimeLimitRequired": "Vui lòng nhập thời gian",
+    "answers": "Đáp án",
+    "multipleCorrectAnswers": "💡 Có thể chọn nhiều câu trả lời đúng cho mỗi câu hỏi",
+    "addAnswer": "Thêm đáp án",
+    "answerPlaceholder": "Đáp án",
+    "answerRequired": "Vui lòng nhập đáp án",
+    "correct": "Đúng",
+    "incorrect": "Sai",
+    "loadError": "Không thể tải thông tin quiz",
+    "updateSuccess": "Cập nhật quiz thành công!",
+    "updateError": "Cập nhật quiz thất bại"
   }
 }

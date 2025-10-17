@@ -132,7 +132,7 @@ const Statistics = () => {
     if (isDataEmpty(data)) {
       return (
         <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No data available" />
         </div>
       );
     }
@@ -169,7 +169,7 @@ const Statistics = () => {
     if (!data || data.length === 0) {
       return (
         <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có dữ liệu" />
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No data available" />
         </div>
       );
     }
@@ -181,8 +181,8 @@ const Statistics = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip formatter={(value) => value.toLocaleString()} />
-          <Bar dataKey="total" fill="#1890ff" name="Tổng" />
-          <Bar dataKey="thisWeek" fill="#52c41a" name="Tuần này" />
+          <Bar dataKey="total" fill="#1890ff" name="Total" />
+          <Bar dataKey="thisWeek" fill="#52c41a" name="This Week" />
         </BarChart>
       </ResponsiveContainer>
     );
@@ -206,10 +206,10 @@ const Statistics = () => {
       {/* Header */}
       <div style={{ marginBottom: '32px' }}>
         <Title level={2} style={{ margin: 0, color: '#262626', fontSize: '28px' }}>
-          📊 Thống kê hệ thống
+          📊 System Statistics
         </Title>
         <Text type="secondary" style={{ fontSize: '16px' }}>
-          Tổng quan chi tiết về hoạt động và dữ liệu của hệ thống
+          Detailed overview of system activity and data
         </Text>
       </div>
 
@@ -217,13 +217,13 @@ const Statistics = () => {
       {overviewStats && !isDataEmpty(overviewStats) && (
         <div style={{ marginBottom: '32px' }}>
           <Title level={3} style={{ marginBottom: '16px', color: '#262626' }}>
-            📈 Tổng quan hệ thống
+            📈 System Overview
           </Title>
           <Row gutter={[16, 16]}>
             <Col xs={12} sm={8} md={4}>
               <Card size="small" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #1890ff, #40a9ff)' }}>
                 <Statistic
-                  title="Tổng người dùng"
+                  title="Total Users"
                   value={overviewStats.totalUsers}
                   valueStyle={{ color: 'white', fontSize: '20px' }}
                   prefix={<UserOutlined style={{ color: 'white' }} />}
@@ -233,7 +233,7 @@ const Statistics = () => {
             <Col xs={12} sm={8} md={4}>
               <Card size="small" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #52c41a, #73d13d)' }}>
                 <Statistic
-                  title="Bộ thẻ học"
+                  title="Flashcard Sets"
                   value={overviewStats.totalFlashcardSets}
                   valueStyle={{ color: 'white', fontSize: '20px' }}
                   prefix={<BookOutlined style={{ color: 'white' }} />}
@@ -243,7 +243,7 @@ const Statistics = () => {
             <Col xs={12} sm={8} md={4}>
               <Card size="small" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #faad14, #ffc53d)' }}>
                 <Statistic
-                  title="Bộ câu hỏi"
+                  title="Quiz Sets"
                   value={overviewStats.totalQuizSets}
                   valueStyle={{ color: 'white', fontSize: '20px' }}
                   prefix={<FileTextOutlined style={{ color: 'white' }} />}
@@ -253,7 +253,7 @@ const Statistics = () => {
             <Col xs={12} sm={8} md={6}>
               <Card size="small" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #722ed1, #9254de)' }}>
                 <Statistic
-                  title="Lần học thẻ"
+                  title="Flashcard Attempts"
                   value={overviewStats.totalFlashcardAttempts}
                   valueStyle={{ color: 'white', fontSize: '20px' }}
                   prefix={<TrophyOutlined style={{ color: 'white' }} />}
@@ -263,7 +263,7 @@ const Statistics = () => {
             <Col xs={12} sm={8} md={6}>
               <Card size="small" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #f5222d, #ff4d4f)' }}>
                 <Statistic
-                  title="Lần làm bài"
+                  title="Quiz Attempts"
                   value={overviewStats.totalQuizAttempts}
                   valueStyle={{ color: 'white', fontSize: '20px' }}
                   prefix={<BarChartOutlined style={{ color: 'white' }} />}
@@ -278,7 +278,7 @@ const Statistics = () => {
       {userStats && !isDataEmpty(userStats) && (
         <div style={{ marginBottom: '32px' }}>
           <Title level={3} style={{ marginBottom: '16px', color: '#262626' }}>
-            👥 Thống kê người dùng
+            👥 User Statistics
           </Title>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={8}>
@@ -296,7 +296,7 @@ const Statistics = () => {
                   <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>
                     {userStats.totalUsers?.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '16px', opacity: 0.9 }}>Tổng người dùng</div>
+                  <div style={{ fontSize: '16px', opacity: 0.9 }}>Total Users</div>
                   {renderMiniTrend(userStats.totalUsers, userStats.totalUsers - userStats.newUsersLast7Days)}
                 </div>
               </Card>
@@ -316,7 +316,7 @@ const Statistics = () => {
                   <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>
                     {userStats.newUsersLast7Days?.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '16px', opacity: 0.9 }}>Người dùng mới tuần này</div>
+                  <div style={{ fontSize: '16px', opacity: 0.9 }}>New Users This Week</div>
                   {renderMiniTrend(userStats.newUsersLast7Days, 0)}
                 </div>
               </Card>
@@ -336,7 +336,7 @@ const Statistics = () => {
                   <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>
                     {userStats.activeUsersLast7Days?.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '16px', opacity: 0.9 }}>Người dùng hoạt động tuần này</div>
+                  <div style={{ fontSize: '16px', opacity: 0.9 }}>Active Users This Week</div>
                   {renderMiniTrend(userStats.activeUsersLast7Days, 0)}
                 </div>
               </Card>
@@ -349,22 +349,22 @@ const Statistics = () => {
       {overviewStats && !isDataEmpty(overviewStats) && (
         <div style={{ marginBottom: '32px' }}>
           <Title level={3} style={{ marginBottom: '16px', color: '#262626' }}>
-            📊 So sánh dữ liệu
+            📊 Data Comparison
           </Title>
           <Row gutter={[24, 24]}>
             <Col xs={24} lg={12}>
-              <Card title="Thẻ học vs Câu hỏi" style={{ borderRadius: '12px' }}>
+              <Card title="Flashcards vs Quizzes" style={{ borderRadius: '12px' }}>
                 {renderDonutChart([
-                  { name: 'Thẻ học', value: overviewStats.totalFlashcardSets },
-                  { name: 'Câu hỏi', value: overviewStats.totalQuizSets }
+                  { name: 'Flashcards', value: overviewStats.totalFlashcardSets },
+                  { name: 'Quizzes', value: overviewStats.totalQuizSets }
                 ], COLORS.flashcard)}
               </Card>
             </Col>
             <Col xs={24} lg={12}>
-              <Card title="Lần học vs Lần làm bài" style={{ borderRadius: '12px' }}>
+              <Card title="Study vs Quiz Attempts" style={{ borderRadius: '12px' }}>
                 {renderDonutChart([
-                  { name: 'Lần học thẻ', value: overviewStats.totalFlashcardAttempts },
-                  { name: 'Lần làm bài', value: overviewStats.totalQuizAttempts }
+                  { name: 'Flashcard Attempts', value: overviewStats.totalFlashcardAttempts },
+                  { name: 'Quiz Attempts', value: overviewStats.totalQuizAttempts }
                 ], COLORS.quiz)}
               </Card>
             </Col>
@@ -376,18 +376,18 @@ const Statistics = () => {
       {contentStats && !isDataEmpty(contentStats) && (
         <div>
           <Title level={3} style={{ marginBottom: '16px', color: '#262626' }}>
-            📚 Thống kê nội dung
+            📚 Content Statistics
           </Title>
           <Row gutter={[24, 24]}>
             <Col xs={24} lg={12}>
-              <Card title="📖 Thẻ học" style={{ borderRadius: '12px' }}>
+              <Card title="📖 Flashcards" style={{ borderRadius: '12px' }}>
                 <Row gutter={[16, 16]}>
                   <Col span={12}>
                     <div style={{ textAlign: 'center', padding: '16px' }}>
                       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#722ed1' }}>
                         {contentStats.totalFlashcardSets?.toLocaleString()}
                       </div>
-                      <div style={{ color: '#8c8c8c' }}>Tổng bộ thẻ</div>
+                      <div style={{ color: '#8c8c8c' }}>Total Sets</div>
                     </div>
                   </Col>
                   <Col span={12}>
@@ -395,21 +395,21 @@ const Statistics = () => {
                       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#52c41a' }}>
                         {contentStats.newFlashcardSetsLast7Days?.toLocaleString()}
                       </div>
-                      <div style={{ color: '#8c8c8c' }}>Mới tuần này</div>
+                      <div style={{ color: '#8c8c8c' }}>New This Week</div>
                     </div>
                   </Col>
                 </Row>
               </Card>
             </Col>
             <Col xs={24} lg={12}>
-              <Card title="📝 Câu hỏi" style={{ borderRadius: '12px' }}>
+              <Card title="📝 Quizzes" style={{ borderRadius: '12px' }}>
                 <Row gutter={[16, 16]}>
                   <Col span={12}>
                     <div style={{ textAlign: 'center', padding: '16px' }}>
                       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f5222d' }}>
                         {contentStats.totalQuizSets?.toLocaleString()}
                       </div>
-                      <div style={{ color: '#8c8c8c' }}>Tổng bộ câu hỏi</div>
+                      <div style={{ color: '#8c8c8c' }}>Total Sets</div>
                     </div>
                   </Col>
                   <Col span={12}>
@@ -417,7 +417,7 @@ const Statistics = () => {
                       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#52c41a' }}>
                         {contentStats.newQuizSetsLast7Days?.toLocaleString()}
                       </div>
-                      <div style={{ color: '#8c8c8c' }}>Mới tuần này</div>
+                      <div style={{ color: '#8c8c8c' }}>New This Week</div>
                     </div>
                   </Col>
                 </Row>
@@ -428,15 +428,15 @@ const Statistics = () => {
           {/* Growth Chart */}
           <Row style={{ marginTop: '24px' }}>
             <Col span={24}>
-              <Card title="📈 Tăng trưởng tuần này vs Tổng" style={{ borderRadius: '12px' }}>
+              <Card title="📈 This Week Growth vs Total" style={{ borderRadius: '12px' }}>
                 {renderBarChart([
                   { 
-                    name: 'Thẻ học', 
+                    name: 'Flashcards', 
                     total: contentStats.totalFlashcardSets, 
                     thisWeek: contentStats.newFlashcardSetsLast7Days 
                   },
                   { 
-                    name: 'Câu hỏi', 
+                    name: 'Quizzes', 
                     total: contentStats.totalQuizSets, 
                     thisWeek: contentStats.newQuizSetsLast7Days 
                   }

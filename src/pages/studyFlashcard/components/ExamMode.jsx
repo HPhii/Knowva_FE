@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Card, message } from "antd";
 import api from "../../../config/axios";
 
-const examMode = ({ flashcardSet }) => {
+const ExamMode = ({ flashcardSet }) => {
   // console.log("flashcardSet: ", flashcardSet);
-  const sourceCards = Array.isArray(flashcardSet?.flashcards)
-    ? flashcardSet.flashcards
-    : [];
 
   const [cardsState, setCardsState] = useState([]);
 
@@ -15,7 +12,14 @@ const examMode = ({ flashcardSet }) => {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    setCardsState(sourceCards.map((c) => ({ ...c })));
+    const sourceCards = Array.isArray(flashcardSet?.flashcards)
+      ? flashcardSet.flashcards
+      : [];
+    // Sort cards by order ascending before setting state
+    const sortedCards = [...sourceCards].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0)
+    );
+    setCardsState(sortedCards.map((c) => ({ ...c })));
     setCurrentIndex(0);
     setUserAnswer("");
   }, [flashcardSet]);
@@ -63,7 +67,6 @@ const examMode = ({ flashcardSet }) => {
         return next;
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
       message.error("Gửi câu trả lời thất bại");
     } finally {
@@ -117,26 +120,28 @@ const examMode = ({ flashcardSet }) => {
                         </div>
                       </div>
                     )}
-                  {currentResult.whatWasIncorrect && (
-                    <div className="mb-2 bg-[#FFEDED] rounded-xl p-4">
-                      <div className="text-[#D74646] font-bold">
-                        What was incorrect
+                  {currentResult.whatWasIncorrect &&
+                    currentResult.whatWasIncorrect !== "null" && (
+                      <div className="mb-2 bg-[#FFEDED] rounded-xl p-4">
+                        <div className="text-[#D74646] font-bold">
+                          What was incorrect
+                        </div>
+                        <div className="text-[#D74646]">
+                          {currentResult.whatWasIncorrect}
+                        </div>
                       </div>
-                      <div className="text-[#D74646]">
-                        {currentResult.whatWasIncorrect}
+                    )}
+                  {currentResult.whatCouldHaveIncluded &&
+                    currentResult.whatCouldHaveIncluded !== "null" && (
+                      <div className="mb-2 bg-[#F3EFFF] rounded-xl p-4">
+                        <div className="text-[#5839D3] font-bold">
+                          What could have included{" "}
+                        </div>
+                        <div className="text-[#5839D3]">
+                          {currentResult.whatCouldHaveIncluded}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {currentResult.whatCouldHaveIncluded && (
-                    <div className="mb-2 bg-[#F3EFFF] rounded-xl p-4">
-                      <div className="text-[#5839D3] font-bold">
-                        What could have included{" "}
-                      </div>
-                      <div className="text-[#5839D3]">
-                        {currentResult.whatCouldHaveIncluded}
-                      </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               )}
               <div className="flex justify-center mt-4">
@@ -218,4 +223,4 @@ const examMode = ({ flashcardSet }) => {
   );
 };
 
-export default examMode;
+export default ExamMode;

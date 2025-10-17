@@ -32,17 +32,12 @@ const Rating = ({ entityId, entityType = 'blogpost', variant = 'blog', userRatin
 
   const theme = themes[variant];
 
-  // Debug log for rating state
-  console.log('⭐ Rating component state:', { rating, hoverRating, initialUserRating });
 
   // Update rating when userRating prop changes
   React.useEffect(() => {
-    console.log('🔄 Rating component - userRating prop changed:', initialUserRating);
     if (initialUserRating?.rating) {
-      console.log('⭐ Setting rating to:', initialUserRating.rating);
       setRating(initialUserRating.rating);
     } else {
-      console.log('❌ No rating in userRating prop, setting to 0');
       setRating(0);
     }
   }, [initialUserRating]);

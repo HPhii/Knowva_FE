@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import ReactGA from "react-ga4";
 import loginIllustration from "../../assets/images/login.png";
 import api from "../../config/axios";
 import {
@@ -37,7 +38,13 @@ const Register = () => {
     const { username, email, password } = formData;
     const payload = { username, email, password };
     try {
-      const response = await api.post("/register", payload);
+      await api.post("/register", payload);
+      // Track registration event
+      ReactGA.event({
+        category: "User",
+        action: "User Registered",
+        label: "Email Registration",
+      });
       alert(t("register.success"));
       navigate("/login");
     } catch (err) {
@@ -55,7 +62,12 @@ const Register = () => {
       });
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
-        console.log("Google login data saved successfully");
+        // Track Google registration/login event
+        ReactGA.event({
+          category: "User",
+          action: "User Registered",
+          label: "Google Registration",
+        });
       }
       navigate("/");
     } catch (err) {

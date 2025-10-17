@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Form, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Form } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga4";
 import api from "../../config/axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 // Import components
@@ -10,6 +12,10 @@ import InputFrame from "./components/InputFrame";
 import BottomSection from "./components/BottomSection";
 import QuizModal from "./components/QuizModal";
 import GeneratedQuiz from "./components/GeneratedQuiz";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
+import RequireVipModal from "../../components/RequireVipModal";
+import tabBarIcon from "../../assets/images/tabBarIcon.png";
+import RequireLoginModal from "../../components/RequireLoginModal";
 
 const Quiz = () => {
   const { t } = useTranslation();
@@ -25,59 +31,110 @@ const Quiz = () => {
   const [editingQuiz, setEditingQuiz] = useState(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [form] = Form.useForm();
-  const navigate = useNavigate();
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [showVipModal, setShowVipModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
-  console.log("generatedQuiz: ", generatedQuiz);
+  // Kiểm tra login + trạng thái xác thực email khi component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user && user.isVerified === false) setShowVerifyModal(true);
+  }, []);
 
   const handleTabClick = (tabKey) => {
-    setActiveTab(tabKey);
-    // reset inputs when switching
-    if (tabKey === "Text") {
-      setSelectedFile(null);
-      setSelectedImages([]);
-      setTextareaContent("");
-    } else if (tabKey === "Document") {
-      setTextareaContent("");
-      setSelectedFile(null);
-      setSelectedImages([]);
-    } else if (tabKey === "Image") {
-      setTextareaContent("");
-      setSelectedFile(null);
-      setSelectedImages([]);
+    try {
+      setActiveTab(tabKey);
+      // reset inputs when switching
+      if (tabKey === "Text") {
+        setSelectedFile(null);
+        setSelectedImages([]);
+        setTextareaContent("");
+      } else if (tabKey === "Document") {
+        setTextareaContent("");
+        setSelectedFile(null);
+        setSelectedImages([]);
+      } else if (tabKey === "Image") {
+        setTextareaContent("");
+        setSelectedFile(null);
+        setSelectedImages([]);
+      }
+
+      // Clear generated quiz and editing states when switching tabs
+      setGeneratedQuiz(null);
+      setIsEditing(false);
+      setEditingQuiz(null);
+
+      // Reset form
+      form.resetFields();
+
+      // Reset file input by changing key
+      setFileInputKey((prev) => prev + 1);
+    } catch {
+      toast.error(
+        t("quiz.errors.switchTab", "Có lỗi khi chuyển tab. Vui lòng thử lại.")
+      );
     }
-
-    // Clear generated quiz and editing states when switching tabs
-    setGeneratedQuiz(null);
-    setIsEditing(false);
-    setEditingQuiz(null);
-
-    // Reset form
-    form.resetFields();
-
-    // Reset file input by changing key
-    setFileInputKey((prev) => prev + 1);
   };
 
   const handleTextareaChange = (e) => {
-    setTextareaContent(e.target.value);
+    try {
+      setTextareaContent(e.target.value);
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.textareaChange",
+          "Có lỗi khi nhập nội dung. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
-    setSelectedFile(file);
+    try {
+      const file =
+        e.target.files && e.target.files[0] ? e.target.files[0] : null;
+      setSelectedFile(file);
+    } catch {
+      toast.error(
+        t("quiz.errors.fileChange", "Có lỗi khi chọn file. Vui lòng thử lại.")
+      );
+    }
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    try {
+      const files = Array.from(e.target.files || []);
+      const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
-    // Giới hạn tối đa 5 hình ảnh
-    const limitedImages = imageFiles.slice(0, 5);
-    setSelectedImages(limitedImages);
+      // Giới hạn tối đa 5 hình ảnh
+      const limitedImages = imageFiles.slice(0, 5);
+      setSelectedImages(limitedImages);
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.imageChange",
+          "Có lỗi khi chọn hình ảnh. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const removeImage = (index) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+    try {
+      setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.removeImage",
+          "Có lỗi khi xóa hình ảnh. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const characterCount = textareaContent.length;
@@ -93,26 +150,50 @@ const Quiz = () => {
       : false;
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    try {
+      setIsModalOpen(true);
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.openModal",
+          "Không thể mở cửa sổ tạo quiz. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    try {
+      setIsModalOpen(false);
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.cancelModal",
+          "Không thể đóng cửa sổ tạo quiz. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleSaveQuiz = async () => {
     if (!generatedQuiz) {
-      message.warning(t("quiz.generatedQuiz.messages.noQuizToSave"));
+      toast.warning(t("quiz.generatedQuiz.messages.noQuizToSave"));
       return;
     }
 
     try {
       setIsSaving(true);
 
-      const res = await api.post("/quiz-sets/save", generatedQuiz);
+      await api.post("/quiz-sets/save", generatedQuiz);
 
-      console.log("Save quiz response: ", res);
-      message.success(t("quiz.generatedQuiz.messages.saveSuccess"));
+      toast.success(t("quiz.generatedQuiz.messages.saveSuccess"));
+
+      // Track quiz creation event
+      ReactGA.event({
+        category: "Content Creation",
+        action: "Created a new Quiz Set",
+        label: generatedQuiz.sourceType || "Unknown Source",
+      });
 
       // Reset generated quiz sau khi lưu thành công
       setGeneratedQuiz(null);
@@ -124,161 +205,194 @@ const Quiz = () => {
       setSelectedImages([]);
     } catch (err) {
       console.error("Save quiz error: ", err);
-      message.error(t("quiz.generatedQuiz.messages.saveError"));
+      toast.error(t("quiz.generatedQuiz.messages.saveError"));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleEditQuiz = () => {
-    setIsEditing(true);
-    setEditingQuiz({ ...generatedQuiz });
+    try {
+      setIsEditing(true);
+      setEditingQuiz({ ...generatedQuiz });
+    } catch {
+      toast.error(
+        t("quiz.errors.editQuiz", "Không thể chỉnh sửa quiz. Vui lòng thử lại.")
+      );
+    }
   };
 
   const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditingQuiz(null);
+    try {
+      setIsEditing(false);
+      setEditingQuiz(null);
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.cancelEdit",
+          "Không thể hủy chỉnh sửa quiz. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleSaveEdit = () => {
-    setGeneratedQuiz({ ...editingQuiz });
-    setIsEditing(false);
-    setEditingQuiz(null);
-    message.success(t("quiz.generatedQuiz.messages.updateSuccess"));
+    try {
+      setGeneratedQuiz({ ...editingQuiz });
+      setIsEditing(false);
+      setEditingQuiz(null);
+      toast.success(t("quiz.generatedQuiz.messages.updateSuccess"));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.saveEdit",
+          "Không thể lưu chỉnh sửa quiz. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleUpdateField = (field, value) => {
-    setEditingQuiz((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    try {
+      setEditingQuiz((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.updateField",
+          "Không thể cập nhật trường dữ liệu. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleUpdateQuestion = (questionIndex, field, value) => {
-    setEditingQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((q, index) =>
-        index === questionIndex ? { ...q, [field]: value } : q
-      ),
-    }));
+    try {
+      setEditingQuiz((prev) => ({
+        ...prev,
+        questions: prev.questions.map((q, index) =>
+          index === questionIndex ? { ...q, [field]: value } : q
+        ),
+      }));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.updateQuestion",
+          "Không thể cập nhật câu hỏi. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleUpdateAnswer = (questionIndex, answerIndex, field, value) => {
-    setEditingQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions.map((q, qIndex) =>
-        qIndex === questionIndex
-          ? {
-              ...q,
-              answers: q.answers.map((a, aIndex) =>
-                aIndex === answerIndex ? { ...a, [field]: value } : a
-              ),
-            }
-          : q
-      ),
-    }));
+    try {
+      setEditingQuiz((prev) => ({
+        ...prev,
+        questions: prev.questions.map((q, qIndex) =>
+          qIndex === questionIndex
+            ? {
+                ...q,
+                answers: q.answers.map((a, aIndex) =>
+                  aIndex === answerIndex ? { ...a, [field]: value } : a
+                ),
+              }
+            : q
+        ),
+      }));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.updateAnswer",
+          "Không thể cập nhật đáp án. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleAddQuestion = (insertIndex) => {
-    const newQuestion = {
-      questionText: "",
-      answers: [
-        { answerText: "", isCorrect: true },
-        { answerText: "", isCorrect: false },
-        { answerText: "", isCorrect: false },
-        { answerText: "", isCorrect: false },
-      ],
-      order: insertIndex + 1,
-      timeLimit: 30,
-      imageUrl: null,
-      questionHtml: null,
-    };
+    try {
+      const newQuestion = {
+        questionText: "",
+        answers: [
+          { answerText: "", isCorrect: true },
+          { answerText: "", isCorrect: false },
+          { answerText: "", isCorrect: false },
+          { answerText: "", isCorrect: false },
+        ],
+        order: insertIndex + 1,
+        timeLimit: 30,
+        imageUrl: null,
+        questionHtml: null,
+      };
 
-    setEditingQuiz((prev) => ({
-      ...prev,
-      questions: [
-        ...prev.questions.slice(0, insertIndex),
-        newQuestion,
-        ...prev.questions.slice(insertIndex).map((q, index) => ({
-          ...q,
-          order: insertIndex + index + 2,
-        })),
-      ],
-      maxQuestions: prev.questions.length + 1,
-    }));
+      setEditingQuiz((prev) => ({
+        ...prev,
+        questions: [
+          ...prev.questions.slice(0, insertIndex),
+          newQuestion,
+          ...prev.questions.slice(insertIndex).map((q, index) => ({
+            ...q,
+            order: insertIndex + index + 2,
+          })),
+        ],
+        maxQuestions: prev.questions.length + 1,
+      }));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.addQuestion",
+          "Không thể thêm câu hỏi mới. Vui lòng thử lại."
+        )
+      );
+    }
   };
 
   const handleDeleteQuestion = (questionIndex) => {
-    setEditingQuiz((prev) => ({
-      ...prev,
-      questions: prev.questions
-        .filter((_, index) => index !== questionIndex)
-        .map((q, index) => ({
-          ...q,
-          order: index + 1,
-        })),
-      maxQuestions: prev.questions.length - 1,
-    }));
-  };
-
-  const logFormData = async (formData) => {
-    console.group("FormData Content");
-    for (let [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        // Trường hợp là file
-        console.log(`${key}: File`, {
-          name: value.name,
-          type: value.type,
-          size: value.size,
-          lastModified: value.lastModified,
-        });
-      } else if (value instanceof Blob) {
-        // Trường hợp là blob (quizSet, text...)
-        console.log(`${key}: Blob`, {
-          type: value.type,
-          size: value.size,
-        });
-
-        // Đọc nội dung blob
-        const text = await value.text();
-        try {
-          if (value.type === "application/json") {
-            console.log(`${key} (parsed JSON):`, JSON.parse(text));
-          } else {
-            console.log(`${key} (raw text):`, text);
-          }
-        } catch (e) {
-          console.log(`${key} (raw text):`, text);
-        }
-      } else {
-        console.log(`${key}:`, value);
-      }
+    try {
+      setEditingQuiz((prev) => ({
+        ...prev,
+        questions: prev.questions
+          .filter((_, index) => index !== questionIndex)
+          .map((q, index) => ({
+            ...q,
+            order: index + 1,
+          })),
+        maxQuestions: prev.questions.length - 1,
+      }));
+    } catch {
+      toast.error(
+        t(
+          "quiz.errors.deleteQuestion",
+          "Không thể xóa câu hỏi. Vui lòng thử lại."
+        )
+      );
     }
-    console.groupEnd();
   };
 
   const handleGenerate = async (values) => {
     try {
       if (activeTab === "Text") {
         if (!textareaContent?.trim()) {
-          message.warning(t("quiz.generatedQuiz.messages.textRequired"));
+          toast.warning(t("quiz.generatedQuiz.messages.textRequired"));
           return;
         }
       } else if (activeTab === "Document") {
         if (!selectedFile) {
-          message.warning(t("quiz.generatedQuiz.messages.fileRequired"));
+          toast.warning(t("quiz.generatedQuiz.messages.fileRequired"));
           return;
         }
         const isPdf =
           selectedFile.type === "application/pdf" ||
           /\.pdf$/i.test(selectedFile.name || "");
         if (!isPdf) {
-          message.warning(t("quiz.generatedQuiz.messages.pdfOnly"));
+          toast.warning(t("quiz.generatedQuiz.messages.pdfOnly"));
           return;
         }
       } else if (activeTab === "Image") {
         if (selectedImages.length === 0) {
-          message.warning("Vui lòng chọn ít nhất một hình ảnh");
+          toast.warning("Vui lòng chọn ít nhất một hình ảnh");
           return;
         }
       }
@@ -305,11 +419,6 @@ const Quiz = () => {
         timeLimit: values.timeLimit,
       };
 
-      // Log quizSet
-      console.log("=== QUIZ SET ===");
-      console.log(JSON.stringify(quizSet, null, 2));
-      console.log("=== END QUIZ SET ===");
-
       const formData = new FormData();
       formData.append(
         "quizSet",
@@ -319,18 +428,15 @@ const Quiz = () => {
       if (activeTab === "Document") {
         formData.append("files", selectedFile);
       } else if (activeTab === "Image") {
-        selectedImages.forEach((image, index) => {
+        selectedImages.forEach((image) => {
           formData.append("files", image);
         });
       } else {
         formData.append("text", textareaContent);
       }
 
-      await logFormData(formData);
-
       const res = await api.post("/quiz-sets/generate", formData); // không set headers
 
-      console.log("res: ", res);
 
       // Lưu quiz đã tạo vào state
       const newQuiz = {
@@ -345,12 +451,26 @@ const Quiz = () => {
       setIsEditing(true);
       setEditingQuiz({ ...newQuiz });
 
-      message.success(t("quiz.generatedQuiz.messages.generateSuccess"));
+      toast.success(t("quiz.generatedQuiz.messages.generateSuccess"));
       setIsModalOpen(false);
       form.resetFields();
     } catch (err) {
-      console.error(err);
-      message.error(t("quiz.generatedQuiz.messages.generateError"));
+
+      // Kiểm tra nếu lỗi là do chưa xác thực email
+      if (
+        err.response?.data === "Email verification required for this action."
+      ) {
+        setIsModalOpen(false);
+        setShowVerifyModal(true);
+      } else if (
+        err.response?.data ===
+        "Only VIP users can upload files for quiz set generation."
+      ) {
+        setIsModalOpen(false);
+        setShowVipModal(true);
+      } else {
+        toast.error(t("quiz.generatedQuiz.messages.generateError"));
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -362,7 +482,6 @@ const Quiz = () => {
         <div className="max-w-4xl mx-auto">
           {/* Tab Bar */}
           <TabBar activeTab={activeTab} onTabClick={handleTabClick} />
-
           {/* Input Frame */}
           <InputFrame
             activeTab={activeTab}
@@ -419,6 +538,27 @@ const Quiz = () => {
         form={form}
         isGenerating={isGenerating}
       />
+
+      {/* Require Login Modal */}
+      <RequireLoginModal
+        open={showLoginModal}
+        onOk={() => (window.location.href = "/login")}
+        onCancel={() => (window.location.href = "/")}
+      />
+
+      {/* Email Verification Modal */}
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => setShowVerifyModal(false)}
+      />
+
+      {/* VIP Modal */}
+      <RequireVipModal
+        open={showVipModal}
+        onCancel={() => setShowVipModal(false)}
+      />
+
+      <ToastContainer />
     </>
   );
 };

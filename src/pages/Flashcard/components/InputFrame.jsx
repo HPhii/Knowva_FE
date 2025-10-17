@@ -21,16 +21,6 @@ const InputFrame = ({
     <div className="bg-[#f5f7ff] rounded-2xl p-6 mb-6">
       {activeTab === "Text" && (
         <div>
-          <div className="mb-3">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Nhập nội dung để tạo flashcard
-            </h3>
-            <p className="text-sm text-gray-600">
-              Dán nội dung ghi chú, tài liệu hoặc văn bản của bạn vào ô bên
-              dưới. Hệ thống sẽ tự động tạo các câu hỏi và câu trả lời từ nội
-              dung này.
-            </p>
-          </div>
           <textarea
             value={textareaContent}
             onChange={onTextareaChange}

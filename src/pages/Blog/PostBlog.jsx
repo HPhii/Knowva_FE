@@ -9,8 +9,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import api from '../../config/axios';
 import { getCategoriesForSelect } from '../../utils/blogCategories';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
-import { message } from 'antd';
+import { UploadOutlined, UserOutlined, EyeOutlined } from '@ant-design/icons';
+import { message, Modal } from 'antd';
 
 const PostBlog = () => {
     const { t } = useTranslation();
@@ -26,6 +26,7 @@ const PostBlog = () => {
     });
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
     const fileInputRef = useRef();
     // Get categories from utility file
     const categories = getCategoriesForSelect(t);
@@ -218,13 +219,14 @@ const PostBlog = () => {
                                             <img 
                                                 src={formData.imageUrl} 
                                                 alt="Preview" 
-                                                className="max-w-xs max-h-48 rounded-lg shadow-sm mx-auto"
+                                                className="max-w-xs max-h-48 rounded-lg shadow-sm mx-auto cursor-pointer hover:opacity-90 transition-opacity"
                                                 onError={(e) => e.target.style.display='none'}
+                                                onDoubleClick={() => setShowImageModal(true)}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
-                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                                                className="absolute -top-2 -right-2 bg-red-500 !text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
                                             >
                                                 ×
                                             </button>
@@ -271,11 +273,11 @@ const PostBlog = () => {
                                         }
                                     }}
                                     disabled={uploading}
-                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="mt-4 px-4 py-2 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {uploading ? (
                                         <span className="flex items-center">
-                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
                                             {t('postBlog.form.uploading') || 'Đang tải lên...'}
                                         </span>
                                     ) : (
@@ -316,7 +318,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleBold().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
                                            title="Bold"
                                        >
                                            <strong>B</strong>
@@ -324,7 +326,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleItalic().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
                                            title="Italic"
                                        >
                                            <em>I</em>
@@ -332,7 +334,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleStrike().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('strike') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('strike') ? 'bg-gray-200' : ''}`}
                                            title="Strike"
                                        >
                                            <s>S</s>
@@ -344,7 +346,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
                                            title="Heading 1"
                                        >
                                            H1
@@ -352,7 +354,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
                                            title="Heading 2"
                                        >
                                            H2
@@ -360,7 +362,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
                                            title="Heading 3"
                                        >
                                            H3
@@ -372,7 +374,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive({ textAlign: 'left' }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'left' }) ? 'bg-gray-200' : ''}`}
                                            title="Align Left"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -382,7 +384,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive({ textAlign: 'center' }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'center' }) ? 'bg-gray-200' : ''}`}
                                            title="Align Center"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -392,7 +394,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive({ textAlign: 'right' }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'right' }) ? 'bg-gray-200' : ''}`}
                                            title="Align Right"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -402,7 +404,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-gray-200' : ''}`}
                                            title="Justify"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -416,7 +418,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleBulletList().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
                                            title="Bullet List"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -426,7 +428,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
                                            title="Numbered List"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -440,7 +442,7 @@ const PostBlog = () => {
                                        <button
                                            type="button"
                                            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                                           className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('blockquote') ? 'bg-gray-200' : ''}`}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('blockquote') ? 'bg-gray-200' : ''}`}
                                            title="Quote"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -455,7 +457,7 @@ const PostBlog = () => {
                                            type="button"
                                            onClick={() => editor.chain().focus().undo().run()}
                                            disabled={!editor.can().undo()}
-                                           className="p-2 rounded hover:bg-gray-100 disabled:opacity-50"
+                                           className="p-2 rounded hover:bg-gray-100 text-gray-700 disabled:opacity-50"
                                            title="Undo"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -466,7 +468,7 @@ const PostBlog = () => {
                                            type="button"
                                            onClick={() => editor.chain().focus().redo().run()}
                                            disabled={!editor.can().redo()}
-                                           className="p-2 rounded hover:bg-gray-100 disabled:opacity-50"
+                                           className="p-2 rounded hover:bg-gray-100 text-gray-700 disabled:opacity-50"
                                            title="Redo"
                                        >
                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -484,7 +486,7 @@ const PostBlog = () => {
                                 type="button"
                                 onClick={() => handleSubmit('DRAFT')}
                                 disabled={loading}
-                                className="flex-1 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
+                                className="flex-1 px-6 py-3 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 disabled:opacity-50"
                             >
                                 {loading ? t('postBlog.form.saving') : t('postBlog.form.saveDraft')}
                             </button>
@@ -492,7 +494,7 @@ const PostBlog = () => {
                                 type="button"
                                 onClick={() => handleSubmit('PENDING_APPROVAL')}
                                 disabled={loading}
-                                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                className="flex-1 px-6 py-3 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                             >
                                 {loading ? t('postBlog.form.submitting') : t('postBlog.form.submitForApproval')}
                             </button>
@@ -500,6 +502,36 @@ const PostBlog = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Image Preview Modal */}
+            <Modal
+                title={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <EyeOutlined style={{ color: '#1890ff' }} />
+                        <span>Xem ảnh</span>
+                    </div>
+                }
+                open={showImageModal}
+                onCancel={() => setShowImageModal(false)}
+                footer={null}
+                width="auto"
+                centered
+                style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+            >
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                    <img 
+                        src={formData.imageUrl} 
+                        alt="Preview" 
+                        style={{ 
+                            maxWidth: '100%', 
+                            maxHeight: '70vh', 
+                            objectFit: 'contain',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                        }}
+                    />
+                </div>
+            </Modal>
         </div>
     );
 };

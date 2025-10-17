@@ -251,7 +251,7 @@ const GeneratedFlashcard = ({
                       <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out">
                         <button
                           onClick={() => onAddCard(index)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                          className="bg-blue-600 hover:bg-blue-700 !text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
                           title="Thêm thẻ mới"
                         >
                           <span className="text-lg font-bold transition-transform duration-200 group-hover:rotate-90">
@@ -339,7 +339,7 @@ const GeneratedFlashcard = ({
                       onClick={() =>
                         onAddCard(editingFlashcard?.cards?.length || 0)
                       }
-                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                      className="bg-blue-600 hover:bg-blue-700 !text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
                       title="Thêm thẻ mới"
                     >
                       <span className="text-xl font-bold">+</span>

@@ -16,6 +16,7 @@ import Contact from "../pages/Contact/Contact";
 import Blog from "../pages/Blog/Blog";
 import PostBlog from "../pages/Blog/PostBlog";
 import BlogDetail from "../pages/Blog/BlogDetail";
+import EditBlog from "../pages/Blog/EditBlog";
 import Terms from "../pages/Terms/Terms";
 import Privacy from "../pages/Privacy/Privacy";
 import Documentation from "../pages/Documentation/Documentation";
@@ -29,22 +30,29 @@ import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import PaymentCancel from "../pages/Payment/PaymentCancel";
 import QuizDetail from "../pages/Quiz/QuizDetail";
 import EditQuiz from "../pages/Quiz/EditQuiz";
+import CreateQuiz from "../pages/Quiz/CreateQuiz";
 import NotFound from "../pages/NotFound/NotFound";
 
 import MyLibrary from "../pages/MyLibrary/MyLibrary";
 import StudyFlashcard from "../pages/studyFlashcard/studyFlashcard";
+import EditFlashcard from "../pages/Flashcard/components/EditFlashcard";
+import Notification from "../pages/Notification/Notification";
+import SearchResult from "../pages/SearchResult/SearchResult";
+import ScratchFlashcard from "../pages/ScratchFlashcard/ScratchFlashcard";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <Explore /> },
+      { path: "create-flashcard", element: <ScratchFlashcard /> },
       { path: "my-library", element: <MyLibrary /> },
+      { path: "edit-flashcard/:id", element: <EditFlashcard /> },
       { path: "flashcard/:id", element: <StudyFlashcard /> },
       { path: "user", element: <UserDetails /> },
-      { path: "explore", element: <Explore /> },
       { path: "quizzes", element: <Quiz /> },
+      { path: "quiz/create", element: <CreateQuiz /> },
       { path: "quiz/:id", element: <QuizDetail /> },
       { path: "quiz/:id/edit", element: <EditQuiz /> },
       { path: "flashcards", element: <Flashcard /> },
@@ -55,6 +63,7 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "blog", element: <Blog /> },
       { path: "blog/create", element: <PostBlog /> },
+      { path: "blog/edit/:id", element: <EditBlog /> },
       { path: "blog/:slug", element: <BlogDetail /> },
       { path: "terms", element: <Terms /> },
       { path: "privacy", element: <Privacy /> },
@@ -62,6 +71,9 @@ const router = createBrowserRouter([
       { path: "cookies", element: <Cookies /> },
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancelled", element: <PaymentCancel /> },
+      { path: "notification", element: <Notification /> },
+      { path: "search", element: <SearchResult /> },
+      { path: "users/:id", element: <UserDetails /> },
       //
       { path: "user/edit", element: <EditProfile /> },
       { path: "*", element: <NotFound /> },

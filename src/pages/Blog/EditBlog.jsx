@@ -1,0 +1,569 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
+import api from '../../config/axios';
+import { getCategoriesForSelect } from '../../utils/blogCategories';
+import { UploadOutlined, SaveOutlined, EyeOutlined } from '@ant-design/icons';
+import { message, Modal } from 'antd';
+
+const EditBlog = () => {
+    const { t } = useTranslation();
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        title: '',
+        excerpt: '',
+        content: '',
+        categoryId: '',
+        imageUrl: '',
+        status: 'DRAFT'
+    });
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const fileInputRef = useRef();
+    
+    // Get categories from utility file
+    const categories = getCategoriesForSelect(t);
+
+    // Initialize editor
+    const editor = useEditor({
+        extensions: [ 
+            StarterKit, 
+            Link, 
+            Image, 
+            TextAlign.configure({ types: ['heading', 'paragraph'] }), 
+            Placeholder.configure({ placeholder: 'Viết nội dung blog...' })
+        ],
+        content: formData.content,
+        onUpdate: ({ editor }) => {
+            setFormData(prev => ({ ...prev, content: editor.getHTML() }));
+        },
+    });
+
+    // Update editor content when formData.content changes
+    if (editor && formData.content !== editor.getHTML()) {
+        editor.commands.setContent(formData.content);
+    }
+
+    // Fetch blog data
+    useEffect(() => {
+        const fetchBlog = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await api.get(`/blog/posts/${id}`);
+                const blogData = response.data;
+                
+                setFormData({
+                    title: blogData.title || '',
+                    excerpt: blogData.excerpt || '',
+                    content: blogData.content || '',
+                    categoryId: blogData.categoryId || blogData.category?.id || '',
+                    imageUrl: blogData.imageUrl || '',
+                    status: blogData.status || 'DRAFT'
+                });
+            } catch (err) {
+                console.error('Error fetching blog:', err);
+                setError('Không thể tải thông tin blog. Vui lòng thử lại.');
+                message.error('Không thể tải thông tin blog');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchBlog();
+        }
+    }, [id]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleImageUpload = async (file) => {
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        if (!isJpgOrPng) {
+            message.error("Chỉ được upload file JPG/PNG!");
+            return false;
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error("Kích thước ảnh phải nhỏ hơn 2MB!");
+            return false;
+        }
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "SDN_Blog");
+            formData.append("cloud_name", "dejilsup7");
+
+            const response = await fetch(
+                "https://api.cloudinary.com/v1_1/dejilsup7/image/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Upload failed");
+            }
+
+            const result = await response.json();
+            setFormData(prev => ({ ...prev, imageUrl: result.secure_url }));
+            message.success("Upload ảnh thành công!");
+        } catch (err) {
+            console.error("Upload error:", err);
+            message.error("Upload ảnh thất bại");
+        } finally {
+            setUploading(false);
+        }
+        return false;
+    };
+
+    const handleSave = async (status = 'DRAFT') => {
+        if (!formData.title || !formData.excerpt || !formData.content || !formData.categoryId) {
+            message.error('Vui lòng điền đầy đủ thông tin bắt buộc');
+            return;
+        }
+
+        setSaving(true);
+        try {
+            // Ensure all required fields are present and properly formatted
+            const submitData = {
+                title: formData.title?.trim() || '',
+                excerpt: formData.excerpt?.trim() || '',
+                content: formData.content || '',
+                categoryId: parseInt(formData.categoryId, 10) || 1,
+                imageUrl: formData.imageUrl || '',
+                status: status || 'DRAFT'
+            };
+            
+            const response = await api.put(`/blog/posts/${id}`, submitData);
+            message.success(status === 'DRAFT' ? 'Lưu bản nháp thành công!' : 'Cập nhật blog thành công!');
+            
+            if (status === 'PUBLISHED') {
+                // Navigate back to blog list or user's blog tab
+                navigate('/user/profile?tab=blogs');
+            }
+        } catch (error) {
+            if (error.response?.status === 404) {
+                message.error('Không tìm thấy blog này. Có thể blog đã bị xóa.');
+            } else if (error.response?.status === 403) {
+                message.error('Bạn không có quyền chỉnh sửa blog này.');
+            } else if (error.response?.status === 400) {
+                const errorMsg = error.response?.data?.message || 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.';
+                message.error(errorMsg);
+            } else if (error.response?.status === 401) {
+                message.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            } else {
+                message.error('Không thể cập nhật blog. Vui lòng thử lại.');
+            }
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handlePreview = () => {
+        // Navigate to blog detail for preview
+        navigate(`/blog/${formData.slug || id}`);
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Đang tải thông tin blog...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Có lỗi xảy ra</h3>
+                    <p className="text-gray-600 mb-4">{error}</p>
+                    <button
+                        onClick={() => navigate('/user/profile?tab=blogs')}
+                        className="px-4 py-2 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Quay lại
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50 py-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-8">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Chỉnh sửa blog</h1>
+                            <p className="text-gray-600">Cập nhật thông tin và nội dung blog của bạn</p>
+                        </div>
+                        <button
+                            onClick={() => navigate('/user/profile?tab=blogs')}
+                            className="px-4 py-2 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            Quay lại
+                        </button>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        
+                        {/* Title */}
+                        <div className="mb-6">
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                                Tiêu đề blog *
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Nhập tiêu đề blog..."
+                                required
+                            />
+                        </div>
+
+                        {/* Excerpt */}
+                        <div className="mb-6">
+                            <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
+                                Mô tả ngắn *
+                            </label>
+                            <textarea
+                                id="excerpt"
+                                name="excerpt"
+                                value={formData.excerpt}
+                                onChange={handleInputChange}
+                                rows="3"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                                placeholder="Mô tả ngắn gọn về nội dung blog..."
+                                required
+                            />
+                        </div>
+
+                        {/* Category */}
+                        <div className="mb-6">
+                            <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-2">
+                                Danh mục *
+                            </label>
+                            <select
+                                id="categoryId"
+                                name="categoryId"
+                                value={formData.categoryId}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                required
+                            >
+                                <option value="">Chọn danh mục</option>
+                                {categories.map(category => (
+                                    <option key={category.id} value={category.id}>
+                                        {t(category.nameKey)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        {/* Image Upload */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Ảnh đại diện
+                            </label>
+                            
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                                {formData.imageUrl ? (
+                                    <div className="space-y-4">
+                                        <div className="relative inline-block">
+                                            <img 
+                                                src={formData.imageUrl} 
+                                                alt="Preview" 
+                                                className="max-w-xs max-h-48 rounded-lg shadow-sm mx-auto cursor-pointer hover:opacity-90 transition-opacity"
+                                                onError={(e) => e.target.style.display='none'}
+                                                onDoubleClick={() => setShowImageModal(true)}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
+                                                className="absolute -top-2 -right-2 bg-red-500 !text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                        <p className="text-sm text-gray-500">
+                                            Ảnh đã được tải lên
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                                            <UploadOutlined className="text-2xl text-gray-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-600 mb-2">
+                                                Kéo thả ảnh vào đây hoặc click để chọn
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                                JPG, PNG tối đa 2MB
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileInputRef}
+                                    style={{ display: "none" }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            await handleImageUpload(file);
+                                            e.target.value = "";
+                                        }
+                                    }}
+                                />
+                                
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (fileInputRef.current) {
+                                            fileInputRef.current.click();
+                                        }
+                                    }}
+                                    disabled={uploading}
+                                    className="mt-4 px-4 py-2 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {uploading ? (
+                                        <span className="flex items-center">
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
+                                            Đang tải lên...
+                                        </span>
+                                    ) : (
+                                        'Chọn ảnh'
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content Editor */}
+                        <div className="mb-8">
+                           <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Nội dung blog *
+                           </label>
+                           <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+                               {/* Toolbar */}
+                               {editor && (
+                                   <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1">
+                                       {/* Bold, Italic, Strike */}
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleBold().run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
+                                           title="Bold"
+                                       >
+                                           <strong>B</strong>
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleItalic().run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
+                                           title="Italic"
+                                       >
+                                           <em>I</em>
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleStrike().run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('strike') ? 'bg-gray-200' : ''}`}
+                                           title="Strike"
+                                       >
+                                           <s>S</s>
+                                       </button>
+                                       
+                                       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                                       
+                                       {/* Headings */}
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
+                                           title="Heading 1"
+                                       >
+                                           H1
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
+                                           title="Heading 2"
+                                       >
+                                           H2
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
+                                           title="Heading 3"
+                                       >
+                                           H3
+                                       </button>
+                                       
+                                       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                                       
+                                       {/* Lists */}
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleBulletList().run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
+                                           title="Bullet List"
+                                       >
+                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                               <path fillRule="evenodd" d="M3 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zM7 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7z" clipRule="evenodd" />
+                                           </svg>
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                                           className={`p-2 rounded hover:bg-gray-100 text-gray-700 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
+                                           title="Numbered List"
+                                       >
+                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                               <path fillRule="evenodd" d="M3 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zm0 4a1 1 0 000 2h.01a1 1 0 100-2H3zM7 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7zm0 4a1 1 0 000 2h10a1 1 0 100-2H7z" clipRule="evenodd" />
+                                           </svg>
+                                       </button>
+                                       
+                                       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+                                       
+                                       {/* Undo/Redo */}
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().undo().run()}
+                                           disabled={!editor.can().undo()}
+                                           className="p-2 rounded hover:bg-gray-100 text-gray-700 disabled:opacity-50"
+                                           title="Undo"
+                                       >
+                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                               <path fillRule="evenodd" d="M3 10a1 1 0 011-1h8.586l-2.293-2.293a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                           </svg>
+                                       </button>
+                                       <button
+                                           type="button"
+                                           onClick={() => editor.chain().focus().redo().run()}
+                                           disabled={!editor.can().redo()}
+                                           className="p-2 rounded hover:bg-gray-100 text-gray-700 disabled:opacity-50"
+                                           title="Redo"
+                                       >
+                                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                               <path fillRule="evenodd" d="M17 10a1 1 0 01-1 1H7.414l2.293 2.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H16a1 1 0 011 1z" clipRule="evenodd" />
+                                           </svg>
+                                       </button>
+                                   </div>
+                               )}
+                               <EditorContent editor={editor} className="min-h-[400px] p-4 prose max-w-none focus:outline-none" />
+                           </div>
+                        </div>
+
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                             <button
+                                type="button"
+                                onClick={() => handleSave('DRAFT')}
+                                className="flex-1 px-6 py-3 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 flex items-center justify-center"
+                            >
+                                {saving ? (
+                                    <span className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
+                                        Đang lưu...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center">
+                                        <SaveOutlined className="w-4 h-4 mr-2" />
+                                        Lưu bản nháp
+                                    </span>
+                                )}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleSave('PUBLISHED')}
+                                className="flex-1 px-6 py-3 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 flex items-center justify-center"
+                            >
+                                {saving ? (
+                                    <span className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
+                                        Đang cập nhật...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center">
+                                        <EyeOutlined className="w-4 h-4 mr-2" />
+                                        Cập nhật và xuất bản
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {/* Image Preview Modal */}
+            <Modal
+                title={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <EyeOutlined style={{ color: '#1890ff' }} />
+                        <span>Xem ảnh</span>
+                    </div>
+                }
+                open={showImageModal}
+                onCancel={() => setShowImageModal(false)}
+                footer={null}
+                width="auto"
+                centered
+                style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+            >
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                    <img 
+                        src={formData.imageUrl} 
+                        alt="Preview" 
+                        style={{ 
+                            maxWidth: '100%', 
+                            maxHeight: '70vh', 
+                            objectFit: 'contain',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                        }}
+                    />
+                </div>
+            </Modal>
+        </div>
+    );
+};
+
+export default EditBlog;

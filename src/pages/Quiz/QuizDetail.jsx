@@ -1,29 +1,112 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import ReactGA from "react-ga4";
 import api from "../../config/axios";
 import QuizAttempt from "./QuizAttempt";
 import CommentSection from "../../components/CommentSection";
+import InviteModal from "../../components/InviteModal";
+import { getLoginData } from "../../utils/auth";
 
 const QuizDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
+  const location = useLocation();
+
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAttempting, setIsAttempting] = useState(false);
   const [attemptId, setAttemptId] = useState(null);
-  
+
   // Comments state
   const [comments, setComments] = useState([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
 
+  // User state
+  const [currentUser, setCurrentUser] = useState(null);
+  const [canEdit, setCanEdit] = useState(false);
+
+  // Invite modal state
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
+  // Copy link state
+  const [copyMessage, setCopyMessage] = useState("");
+  
+  // Share dropdown state
+  const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
+
   useEffect(() => {
     fetchQuizDetail();
     fetchComments();
+    checkUserPermissions();
   }, [id]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isShareDropdownOpen && !event.target.closest('.share-dropdown')) {
+        setIsShareDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isShareDropdownOpen]);
+
+  // Check user permissions for editing
+  const checkUserPermissions = () => {
+    try {
+      const loginData = getLoginData();
+
+      if (loginData) {
+        // Try multiple ways to get userId
+        const userId =
+          loginData.userId ||
+          loginData.user?.id ||
+          loginData.user?.userId ||
+          loginData.id;
+
+        if (userId) {
+          setCurrentUser({
+            ...loginData,
+            userId: userId,
+            id: userId,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error getting user data:", error);
+    }
+  };
+
+  // Check if current user can edit this quiz
+  useEffect(() => {
+    if (quiz && currentUser) {
+      const quizUserId = quiz.userId || quiz.authorId || quiz.createdBy;
+      const currentUserId = currentUser.userId || currentUser.id;
+
+      // Convert both to strings for comparison to handle number/string mismatches
+      const quizUserIdStr = String(quizUserId || "");
+      const currentUserIdStr = String(currentUserId || "");
+
+      console.log("Checking edit permissions:", {
+        quiz: quiz,
+        currentUser: currentUser,
+        quizUserId,
+        currentUserId,
+        quizUserIdStr,
+        currentUserIdStr,
+        canEdit: quizUserIdStr === currentUserIdStr,
+        strictEqual: quizUserId === currentUserId,
+      });
+
+      setCanEdit(quizUserIdStr === currentUserIdStr && quizUserIdStr !== "");
+    }
+  }, [quiz, currentUser]);
 
   const fetchQuizDetail = async () => {
     try {
@@ -33,7 +116,9 @@ const QuizDetail = () => {
       setQuiz(response.data);
     } catch (err) {
       console.error("Error fetching quiz detail:", err);
-      setError(err.response?.data?.message || "Không thể tải thông tin chi tiết quiz");
+      setError(
+        err.response?.data?.message || "Không thể tải thông tin chi tiết quiz"
+      );
     } finally {
       setLoading(false);
     }
@@ -42,15 +127,21 @@ const QuizDetail = () => {
   const startQuizAttempt = async () => {
     try {
       const response = await api.get(`/quiz-attempts/${quiz.id}/start`);
-      console.log('Start quiz response:', response.data);
-      
+
       // Lấy id từ response.attempt.id thay vì quiz.id
       const attemptId = response.data?.attempt?.id;
       if (attemptId) {
         setAttemptId(attemptId);
         setIsAttempting(true);
+
+        // Track quiz start event
+        ReactGA.event({
+          category: "Engagement",
+          action: "Started a Quiz",
+          label: quiz.title || "Unknown Quiz",
+        });
       } else {
-        console.error('No attempt ID found in response:', response.data);
+        console.error("No attempt ID found in response:", response.data);
         setError("Không thể lấy ID của lần thử quiz");
       }
     } catch (err) {
@@ -69,7 +160,7 @@ const QuizDetail = () => {
     try {
       setIsLoadingComments(true);
       const response = await api.get(`/interactions/quizset/${id}/comments`);
-      
+
       // Ensure we always set an array
       const commentsData = response.data;
       if (Array.isArray(commentsData)) {
@@ -77,7 +168,6 @@ const QuizDetail = () => {
       } else if (commentsData && Array.isArray(commentsData.comments)) {
         setComments(commentsData.comments);
       } else {
-        console.log('API response format:', commentsData);
         setComments([]);
       }
     } catch (err) {
@@ -92,16 +182,16 @@ const QuizDetail = () => {
   const handleAddComment = (newComment) => {
     if (newComment.parentId) {
       // This is a reply - find parent and add to replies
-      setComments(prevComments => 
-        prevComments.map(comment => 
-          comment.id === newComment.parentId 
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === newComment.parentId
             ? { ...comment, replies: [...(comment.replies || []), newComment] }
             : comment
         )
       );
     } else {
       // This is a new parent comment
-      setComments(prevComments => [newComment, ...prevComments]);
+      setComments((prevComments) => [newComment, ...prevComments]);
     }
   };
 
@@ -110,6 +200,59 @@ const QuizDetail = () => {
     fetchComments();
   };
 
+  // Handle invite success
+  const handleInviteSuccess = () => {
+    // You can add any additional logic here after successful invitation
+  };
+
+  // Handle back navigation based on referrer
+  const handleBackNavigation = () => {
+    const state = location.state;
+    
+    // Check if there's state with referrer information
+    if (state?.from === 'myLibrary') {
+      navigate('/my-library');
+    } else if (state?.from === 'userDetail') {
+      // Check if we have userId and tab info
+      if (state?.userId && state?.tab) {
+        navigate(`/user/profile/${state.userId}?tab=${state.tab}`);
+      } else if (state?.userId) {
+        navigate(`/user/profile/${state.userId}`);
+      } else {
+        navigate('/user/profile');
+      }
+    } else {
+      // Default behavior - go back to previous page
+      navigate(-1);
+    }
+  };
+
+  // Handle copy link
+  const handleCopyLink = async () => {
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://knowva.me";
+      let link = `${baseUrl}/quiz/${id}`;
+
+      // Check visibility and add token if needed
+      if (quiz.visibility === "HIDDEN" && quiz.accessToken) {
+        link += `?token=${quiz.accessToken}`;
+      } else if (quiz.visibility === "PRIVATE") {
+        setCopyMessage(
+          "Set này là riêng tư, hãy dùng chức năng 'Mời' để chia sẻ."
+        );
+        return;
+      }
+
+      await navigator.clipboard.writeText(link);
+      setCopyMessage("Đã sao chép link quiz vào clipboard!");
+      setTimeout(() => setCopyMessage(""), 3000);
+      setIsShareDropdownOpen(false); // Close dropdown after copying
+    } catch (error) {
+      console.error("Error copying link:", error);
+      setCopyMessage("Không thể sao chép link. Vui lòng thử lại!");
+      setTimeout(() => setCopyMessage(""), 3000);
+    }
+  };
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
@@ -137,11 +280,23 @@ const QuizDetail = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-4">
         <div className="mx-auto w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
-          <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          <svg
+            className="w-10 h-10 text-red-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+            />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-3">Đã xảy ra lỗi</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-3">
+          Đã xảy ra lỗi
+        </h3>
         <p className="text-gray-600 mb-6">{error}</p>
         <div className="space-y-3">
           <button
@@ -151,7 +306,7 @@ const QuizDetail = () => {
             {t("quiz.detail.actions.tryAgain", "Thử lại")}
           </button>
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleBackNavigation}
             className="w-full bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
           >
             {t("quiz.detail.actions.back", "Quay lại")}
@@ -193,39 +348,114 @@ const QuizDetail = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
+
           <div className="flex items-center justify-between">
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleBackNavigation}
               className="flex items-center text-gray-600 hover:text-gray-900 transition-colors group"
             >
               <div className="bg-gray-100 rounded-full p-2 mr-3 group-hover:bg-gray-200 transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </div>
               <span className="font-medium">Quay lại</span>
             </button>
-            
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={startQuizAttempt}
-                className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors group"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Bắt đầu làm quiz
-              </button>
-              
-              <button
-                onClick={() => navigate(`/quiz/${id}/edit`)}
-                className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors group"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Sửa Quiz
-              </button>
+
+            {/* Secondary Actions - Share button */}
+            <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
+              {/* Share Dropdown */}
+              <div className="relative group share-dropdown">
+                <button
+                  onClick={() => setIsShareDropdownOpen(!isShareDropdownOpen)}
+                  className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                  title="Chia sẻ"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                    />
+                  </svg>
+                </button>
+
+                {/* Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                  Chia sẻ
+                </div>
+
+                {/* Share Dropdown Menu */}
+                {isShareDropdownOpen && (
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-20">
+                    <button
+                      onClick={handleCopyLink}
+                      disabled={quiz.visibility === "PRIVATE"}
+                      className={`w-full px-4 py-3 text-left text-sm transition-colors duration-200 flex items-center ${
+                        quiz.visibility === "PRIVATE"
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4 mr-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Copy Link
+                    </button>
+
+                    {canEdit && (
+                      <button
+                        onClick={() => {
+                          setIsInviteModalOpen(true);
+                          setIsShareDropdownOpen(false);
+                        }}
+                        className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                          />
+                        </svg>
+                        Mời người dùng
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -238,8 +468,18 @@ const QuizDetail = () => {
               <div className="flex-1">
                 <div className="flex items-center mb-4">
                   <div className="bg-blue-100 rounded-full p-4 mr-4">
-                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    <svg
+                      className="w-8 h-8 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
                     </svg>
                   </div>
                   <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -250,20 +490,69 @@ const QuizDetail = () => {
                   {quiz.description || "Không có mô tả"}
                 </p>
               </div>
-              
+
               {/* Right side - Quiz Stats */}
-              <div className="flex flex-wrap gap-4">
-                <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-200">
-                  <div className="text-2xl font-bold text-blue-600">{quiz.maxQuestions ?? quiz.questionCount ?? 0}</div>
-                  <div className="text-sm text-blue-500">{t("quiz.detail.questions", "Câu hỏi")}</div>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-wrap gap-4">
+                  <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-200">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {quiz.maxQuestions ?? quiz.questionCount ?? 0}
+                    </div>
+                    <div className="text-sm text-blue-500">
+                      {t("quiz.detail.questions", "Câu hỏi")}
+                    </div>
+                  </div>
+                  <div className="bg-green-50 rounded-xl px-4 py-3 border border-green-200">
+                    <div className="text-2xl font-bold text-green-600">
+                      {quiz.timeLimit || 30}
+                    </div>
+                    <div className="text-sm text-green-500">Phút</div>
+                  </div>
+                  <div className="bg-purple-50 rounded-xl px-4 py-3 border border-purple-200">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {quiz.questionType === "MULTIPLE_CHOICE" ? "MC" : "TF"}
+                    </div>
+                    <div className="text-sm text-purple-500">Loại</div>
+                  </div>
                 </div>
-                <div className="bg-green-50 rounded-xl px-4 py-3 border border-green-200">
-                  <div className="text-2xl font-bold text-green-600">{quiz.timeLimit || 30}</div>
-                  <div className="text-sm text-green-500">Phút</div>
-                </div>
-                <div className="bg-purple-50 rounded-xl px-4 py-3 border border-purple-200">
-                  <div className="text-2xl font-bold text-purple-600">{quiz.questionType === 'MULTIPLE_CHOICE' ? 'MC' : 'TF'}</div>
-                  <div className="text-sm text-purple-500">Loại</div>
+
+                {/* Start Quiz Button */}
+                <div className="flex justify-center lg:justify-start">
+                  <button
+                    onClick={startQuizAttempt}
+                    className="flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 !text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 group"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Bắt đầu làm quiz
+                  </button>
+                  
+                  {/* Edit Button */}
+                  <button
+                    onClick={canEdit ? () => navigate(`/quiz/${id}/edit`) : undefined}
+                    disabled={!canEdit}
+                    className={`flex items-center justify-center w-12 py-4 rounded-xl transition-all duration-200 -ml-2 ${
+                      canEdit 
+                        ? "bg-orange-100 hover:bg-orange-200 text-orange-600 hover:text-orange-700 cursor-pointer shadow-md hover:shadow-lg" 
+                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    }`}
+                    title={canEdit ? "Sửa Quiz" : "Chỉ tác giả mới có thể sửa"}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -278,7 +567,10 @@ const QuizDetail = () => {
             </h2>
             <div className="grid gap-6">
               {quiz.questions.map((question, index) => (
-                <div key={question.id || index} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300">
+                <div
+                  key={question.id || index}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300"
+                >
                   {/* Question Header */}
                   <div className="flex items-start mb-6">
                     <div className="bg-blue-600 text-white font-bold text-xl rounded-full w-12 h-12 flex items-center justify-center mr-4 flex-shrink-0">
@@ -289,8 +581,18 @@ const QuizDetail = () => {
                         {question.questionText || `Câu hỏi ${index + 1}`}
                       </h3>
                       <div className="flex items-center text-gray-500 text-sm">
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                         {question.timeLimit || 30} giây
                       </div>
@@ -302,33 +604,46 @@ const QuizDetail = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {question.answers.map((answer, answerIndex) => {
                         return (
-                          <div 
+                          <div
                             key={answer.id || answerIndex}
                             className={`${
-                              answer.isCorrect 
-                                ? 'bg-green-50 border-green-300 text-green-800 ring-2 ring-green-400 ring-opacity-50' 
-                                : 'bg-white border-gray-200 text-gray-800'
+                              answer.isCorrect
+                                ? "bg-green-50 border-green-300 text-green-800 ring-2 ring-green-400 ring-opacity-50"
+                                : "bg-white border-gray-200 text-gray-800"
                             } rounded-xl p-4 border-2 relative group hover:shadow-md transition-all duration-200`}
                           >
                             {answer.isCorrect && (
                               <div className="absolute top-2 right-2">
                                 <div className="bg-green-500 rounded-full p-1">
-                                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  <svg
+                                    className="w-4 h-4 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={3}
+                                      d="M5 13l4 4L19 7"
+                                    />
                                   </svg>
                                 </div>
                               </div>
                             )}
                             <div className="flex items-center">
-                              <div className={`${
-                                answer.isCorrect 
-                                  ? 'bg-green-100 border-green-300 text-green-800' 
-                                  : 'bg-gray-100 border-gray-300 text-gray-600'
-                              } rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-sm border-2`}>
+                              <div
+                                className={`${
+                                  answer.isCorrect
+                                    ? "bg-green-100 border-green-300 text-green-800"
+                                    : "bg-gray-100 border-gray-300 text-gray-600"
+                                } rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-sm border-2`}
+                              >
                                 {String.fromCharCode(65 + answerIndex)}
                               </div>
                               <span className="font-medium text-sm leading-relaxed">
-                                {answer.answerText || `Lựa chọn ${answerIndex + 1}`}
+                                {answer.answerText ||
+                                  `Lựa chọn ${answerIndex + 1}`}
                               </span>
                             </div>
                           </div>
@@ -354,9 +669,48 @@ const QuizDetail = () => {
             onRefreshComments={handleRefreshComments}
           />
         </div>
-
       </div>
 
+      {/* Invite Modal */}
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        entityId={id}
+        entityType="quiz"
+        onInviteSuccess={handleInviteSuccess}
+      />
+
+      {/* Toast Notification */}
+      {copyMessage && (
+        <div className="fixed top-4 right-4 z-50 transform transition-all duration-300 ease-in-out animate-pulse">
+          <div
+            className={`px-4 py-2 rounded-lg shadow-lg text-sm font-medium max-w-xs ${
+              copyMessage.includes("riêng tư")
+                ? "bg-yellow-500 text-white"
+                : copyMessage.includes("Không thể")
+                ? "bg-red-500 text-white"
+                : "bg-green-500 text-white"
+            }`}
+          >
+            <div className="flex items-center">
+              {copyMessage.includes("riêng tư") ? (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : copyMessage.includes("Không thể") ? (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
+              <span>{copyMessage}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

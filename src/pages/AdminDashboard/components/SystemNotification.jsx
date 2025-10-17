@@ -58,18 +58,18 @@ const SystemNotification = () => {
 
   // Notification type options
   const notificationTypes = [
-    { value: 'QUIZ_INVITE', label: 'Mời làm Quiz' },
-    { value: 'FLASHCARD_INVITE', label: 'Mời học Flashcard' },
-    { value: 'SYSTEM_ALERT', label: 'Cảnh báo hệ thống' },
-    { value: 'REMINDER', label: 'Nhắc nhở' },
-    { value: 'BUG_REPORT', label: 'Báo cáo lỗi' }
+    { value: 'QUIZ_INVITE', label: 'Quiz Invite' },
+    { value: 'FLASHCARD_INVITE', label: 'Flashcard Study Invite' },
+    { value: 'SYSTEM_ALERT', label: 'System Alert' },
+    { value: 'REMINDER', label: 'Reminder' },
+    { value: 'BUG_REPORT', label: 'Bug Report' }
   ];
 
   // Read status options
   const readStatusOptions = [
-    { value: '', label: 'Tất cả' },
-    { value: true, label: 'Đã đọc' },
-    { value: false, label: 'Chưa đọc' }
+    { value: '', label: 'All' },
+    { value: true, label: 'Read' },
+    { value: false, label: 'Unread' }
   ];
 
   // Fetch notifications when component mounts or filters change
@@ -183,7 +183,7 @@ const SystemNotification = () => {
       });
       
       // ❌ Error message
-      message.error('Không thể tải thông báo');
+      message.error('Failed to load notifications');
       
       // 🔄 Reset state on error
       setNotifications([]);
@@ -344,7 +344,7 @@ const SystemNotification = () => {
       console.log('✅ API response:', response);
       
       // ✅ Success message
-      message.success('Gửi thông báo thành công');
+      message.success('Notification sent successfully');
       
       // 🔄 Reset form and close drawer
       form.resetFields();
@@ -361,7 +361,7 @@ const SystemNotification = () => {
       });
       
       // ❌ Error message
-      message.error(`Gửi thông báo thất bại: ${error.response?.data?.message || error.message}`);
+      message.error(`Failed to send notification: ${error.response?.data?.message || error.message}`);
     } finally {
       setCreateLoading(false);
     }
@@ -427,7 +427,7 @@ const SystemNotification = () => {
       width: 120,
       render: (read) => (
         <Tag color={read ? 'green' : 'red'}>
-          {read ? 'Đã đọc' : 'Chưa đọc'}
+          {read ? 'Read' : 'Unread'}
         </Tag>
       ),
     },
@@ -453,9 +453,9 @@ const SystemNotification = () => {
         marginBottom: '24px'
       }}>
         <div>
-          <h2 style={{ margin: 0, color: '#262626' }}>Danh sách thông báo</h2>
+          <h2 style={{ margin: 0, color: '#262626' }}>Notification List</h2>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>
-            Quản lý và xem tất cả thông báo trong hệ thống
+            Manage and view all system notifications
           </p>
         </div>
         <Space>
@@ -465,7 +465,7 @@ const SystemNotification = () => {
             onClick={handleCreateButtonClick}
             size="large"
           >
-            Tạo thông báo
+            Create Notification
           </Button>
           <Button 
             icon={<ReloadOutlined />}
@@ -487,9 +487,9 @@ const SystemNotification = () => {
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={12} md={6}>
             <div>
-              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Loại thông báo</Text>
+              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Notification Type</Text>
               <Select
-                placeholder="Chọn loại"
+                placeholder="Select type"
                 style={{ width: '100%' }}
                 value={filters.type}
                 onChange={(value) => handleFilterChange('type', value)}
@@ -505,9 +505,9 @@ const SystemNotification = () => {
           </Col>
           <Col xs={24} sm={12} md={6}>
             <div>
-              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Trạng thái đọc</Text>
+              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Read Status</Text>
               <Select
-                placeholder="Chọn trạng thái"
+                placeholder="Select status"
                 style={{ width: '100%' }}
                 value={filters.read}
                 onChange={(value) => handleFilterChange('read', value)}
@@ -523,12 +523,12 @@ const SystemNotification = () => {
           </Col>
           <Col xs={24} sm={12} md={8}>
             <div>
-              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Khoảng thời gian</Text>
+              <Text strong style={{ display: 'block', marginBottom: '4px' }}>Date Range</Text>
               <RangePicker
                 style={{ width: '100%' }}
                 showTime
                 format="DD/MM/YYYY HH:mm:ss"
-                placeholder={['Từ ngày', 'Đến ngày']}
+                placeholder={['From Date', 'To Date']}
                 onChange={handleDateRangeChange}
               />
             </div>
@@ -543,7 +543,7 @@ const SystemNotification = () => {
                 loading={loading}
                 style={{ width: '100%' }}
               >
-                Lọc
+                Filter
               </Button>
             </div>
           </Col>
@@ -576,7 +576,7 @@ const SystemNotification = () => {
         locale={{
           emptyText: (
             <Empty
-              description="Không có thông báo nào"
+              description="No notifications found"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
           )
@@ -585,7 +585,7 @@ const SystemNotification = () => {
 
       {/* Create Notification Drawer */}
       <Drawer
-        title="Tạo thông báo mới"
+        title="Create New Notification"
         width={500}
         open={createDrawerVisible}
         onClose={() => setCreateDrawerVisible(false)}
@@ -603,13 +603,13 @@ const SystemNotification = () => {
           {/* Notification Type */}
           <Form.Item
             name="type"
-            label="Loại thông báo"
+            label="Notification Type"
             rules={[
-              { required: true, message: 'Vui lòng chọn loại thông báo' }
+              { required: true, message: 'Please select notification type' }
             ]}
           >
             <Select
-              placeholder="Chọn loại thông báo"
+              placeholder="Select notification type"
               style={{ width: '100%' }}
             >
               {notificationTypes.map(type => (
@@ -623,15 +623,15 @@ const SystemNotification = () => {
           {/* Message Content */}
           <Form.Item
             name="message"
-            label="Nội dung thông báo"
+            label="Notification Content"
             rules={[
-              { required: true, message: 'Vui lòng nhập nội dung thông báo' },
-              { min: 10, message: 'Nội dung thông báo phải có ít nhất 10 ký tự' },
-              { max: 500, message: 'Nội dung thông báo không được vượt quá 500 ký tự' }
+              { required: true, message: 'Please enter notification content' },
+              { min: 10, message: 'Notification content must be at least 10 characters' },
+              { max: 500, message: 'Notification content cannot exceed 500 characters' }
             ]}
           >
             <TextArea
-              placeholder="Nhập nội dung thông báo..."
+              placeholder="Enter notification content..."
               rows={6}
               showCount
               maxLength={500}
@@ -642,7 +642,7 @@ const SystemNotification = () => {
           {/* Set ID (optional) */}
           <Form.Item
             name="setId"
-            label="ID Quiz/Flashcard (tùy chọn)"
+            label="Quiz/Flashcard ID (optional)"
             rules={[
               {
                 validator: (_, value) => {
@@ -651,7 +651,7 @@ const SystemNotification = () => {
                   }
                   const num = Number(value);
                   if (isNaN(num) || !Number.isInteger(num) || num < 1) {
-                    return Promise.reject(new Error('ID phải là số nguyên dương'));
+                    return Promise.reject(new Error('ID must be a positive integer'));
                   }
                   return Promise.resolve();
                 }
@@ -660,7 +660,7 @@ const SystemNotification = () => {
           >
             <Input
               type="number"
-              placeholder="Nhập ID Quiz hoặc Flashcard (không bắt buộc)..."
+              placeholder="Enter Quiz or Flashcard ID (optional)..."
               min={1}
               style={{ width: '100%' }}
             />
@@ -673,7 +673,7 @@ const SystemNotification = () => {
                 onClick={() => setCreateDrawerVisible(false)}
                 size="large"
               >
-                Hủy
+                Cancel
               </Button>
               <Button 
                 type="primary" 
@@ -684,7 +684,7 @@ const SystemNotification = () => {
                 size="large"
                 style={{ minWidth: '160px' }}
               >
-                Gửi thông báo
+                Send Notification
               </Button>
             </Space>
           </Form.Item>
