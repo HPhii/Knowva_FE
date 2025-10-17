@@ -79,6 +79,12 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("./assets/images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 /* Đảm bảo tất cả text elements sử dụng Quicksand */
@@ -106,12 +112,13 @@ a {
   font-family: "Quicksand", sans-serif;
 }
 
-input:not(#global-search-input), textarea {
-    color: #333;
+input:not(#global-search-input),
+textarea {
+  color: #333;
 }
 
 #global-search-input {
-    color: white;
+  color: white;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -200,4 +207,33 @@ input:not(#global-search-input), textarea {
 
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Background utilities */
+.bg-main {
+  background-image: url("./assets/images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.bg-main-scroll {
+  background-image: url("./assets/images/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+}
+
+.bg-no-repeat {
+  background-repeat: no-repeat;
+}
+
+.bg-cover {
+  background-size: cover;
+}
+
+.bg-center {
+  background-position: center;
 }

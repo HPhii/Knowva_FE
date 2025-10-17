@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"; // Import
+import ReactGA from "react-ga4";
 import loginIllustration from "../../assets/images/login.png";
 import api from "../../config/axios";
 import { saveLoginData } from "../../utils/auth";
@@ -31,17 +32,25 @@ const Login = () => {
     try {
       const response = await api.post("/login", payload);
 
-      if (response.data.status && response.data.status !== 'ACTIVE') {
-        setError("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.");
+      if (response.data.status && response.data.status !== "ACTIVE") {
+        setError(
+          "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ."
+        );
         return;
       }
-      
+
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Login data saved successfully");
+        // Track login event
+        ReactGA.event({
+          category: "User",
+          action: "User Logged In",
+          label: "Email Login",
+        });
       }
 
-      if (response.data.role === 'ADMIN') {
+      if (response.data.role === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/");
@@ -60,17 +69,25 @@ const Login = () => {
         token: credentialResponse.credential,
       });
 
-      if (response.data.status && response.data.status !== 'ACTIVE') {
-        setError("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.");
+      if (response.data.status && response.data.status !== "ACTIVE") {
+        setError(
+          "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ."
+        );
         return;
       }
-      
+
       const savedSuccessfully = saveLoginData(response.data);
       if (savedSuccessfully) {
         console.log("Google login data saved successfully");
+        // Track Google login event
+        ReactGA.event({
+          category: "User",
+          action: "User Logged In",
+          label: "Google Login",
+        });
       }
 
-      if (response.data.role === 'ADMIN') {
+      if (response.data.role === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/");

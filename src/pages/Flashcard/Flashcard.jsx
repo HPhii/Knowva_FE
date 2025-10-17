@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from "antd";
 import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga4";
 import api from "../../config/axios";
 // import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,8 @@ import InputFrame from "./components/InputFrame";
 import BottomSection from "./components/BottomSection";
 import FlashcardModal from "./components/FlashcardModal";
 import GeneratedFlashcard from "./components/GeneratedFlashcard";
+import RequireEmailVerificationModal from "../../components/RequireEmailVerificationModal";
+import RequireVipModal from "../../components/RequireVipModal";
 
 const Flashcard = () => {
   const { t } = useTranslation();
@@ -26,11 +29,21 @@ const Flashcard = () => {
   const [editingFlashcard, setEditingFlashcard] = useState(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [form] = Form.useForm();
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [showVipModal, setShowVipModal] = useState(false);
   // const navigate = useNavigate();
 
   console.log("activeTab: ", activeTab);
   console.log("selectedFile: ", selectedFile);
   console.log("generatedFlashcard: ", generatedFlashcard);
+
+  // Kiểm tra trạng thái xác thực email khi component mount
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user && user.isVerified === false) {
+      setShowVerifyModal(true);
+    }
+  }, []);
 
   const handleTabClick = (tabKey) => {
     try {
@@ -196,6 +209,13 @@ const Flashcard = () => {
 
       console.log("Save flashcard response: ", res);
       toast.success(t("flashcard.generatedFlashcard.messages.saveSuccess"));
+
+      // Track flashcard creation event
+      ReactGA.event({
+        category: "Content Creation",
+        action: "Created a new Flashcard Set",
+        label: generatedFlashcard.sourceType || "Unknown Source",
+      });
 
       // Reset generated flashcard sau khi lưu thành công
       setGeneratedFlashcard(null);
@@ -483,8 +503,23 @@ const Flashcard = () => {
       setIsModalOpen(false);
       form.resetFields();
     } catch (err) {
-      console.error(err);
-      toast.error(t("flashcard.generatedFlashcard.messages.generateError"));
+      console.log("Generate flashcard error: ", err);
+
+      // Kiểm tra nếu lỗi là do chưa xác thực email
+      if (
+        err.response?.data === "Email verification required for this action."
+      ) {
+        setIsModalOpen(false);
+        setShowVerifyModal(true);
+      } else if (
+        err.response?.data ===
+        "Only VIP users can upload files for quiz set generation."
+      ) {
+        setIsModalOpen(false);
+        setShowVipModal(true);
+      } else {
+        toast.error(t("flashcard.generatedFlashcard.messages.generateError"));
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -552,6 +587,19 @@ const Flashcard = () => {
         form={form}
         isGenerating={isGenerating}
       />
+
+      {/* Email Verification Modal */}
+      <RequireEmailVerificationModal
+        open={showVerifyModal}
+        onCancel={() => setShowVerifyModal(false)}
+      />
+
+      {/* VIP Modal */}
+      <RequireVipModal
+        open={showVipModal}
+        onCancel={() => setShowVipModal(false)}
+      />
+
       <ToastContainer />
     </>
   );
