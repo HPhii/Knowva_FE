@@ -21,8 +21,7 @@ const handleBefore = (config) => {
   return config;
 };
 
-const handleError = (error) => {
-};
+const handleError = (error) => {};
 
 api.interceptors.request.use(handleBefore, handleError);
 

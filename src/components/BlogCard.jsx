@@ -1,9 +1,9 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
-import { useTranslation } from 'react-i18next';
-import { getCategoryNameSmart } from '../utils/blogCategories';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
+import { getCategoryNameSmart } from "../utils/blogCategories";
 
 const BlogCard = ({ blog }) => {
   const navigate = useNavigate();
@@ -14,9 +14,9 @@ const BlogCard = ({ blog }) => {
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
-      return format(date, 'dd/MM/yyyy', { locale: vi });
+      return format(date, "dd/MM/yyyy", { locale: vi });
     } catch (error) {
-      return 'N/A';
+      return "N/A";
     }
   };
 
@@ -25,18 +25,20 @@ const BlogCard = ({ blog }) => {
   };
 
   return (
-    <article 
+    <article
       className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100 h-[400px] flex flex-col"
       onClick={handleCardClick}
     >
       {/* Featured Image */}
       <div className="relative overflow-hidden flex-shrink-0">
         <img
-          src={blog.imageUrl || 'https://via.placeholder.com/400x250?text=No+Image'}
+          src={
+            blog.imageUrl || "https://via.placeholder.com/400x250?text=No+Image"
+          }
           alt={blog.title}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
           onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/400x250?text=No+Image';
+            e.target.src = "https://via.placeholder.com/400x250?text=No+Image";
           }}
         />
         {/* Gradient overlay for better text readability */}
@@ -60,7 +62,7 @@ const BlogCard = ({ blog }) => {
           <div className="flex items-center space-x-2">
             <span className="font-medium text-gray-700">{blog.authorName}</span>
           </div>
-          
+
           {/* Published Date */}
           <time dateTime={blog.publishedAt} className="text-gray-500">
             {formatDate(blog.publishedAt)}
@@ -72,4 +74,3 @@ const BlogCard = ({ blog }) => {
 };
 
 export default BlogCard;
-

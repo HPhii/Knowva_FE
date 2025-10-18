@@ -28,7 +28,6 @@ const About = () => {
     },
   ];
 
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -141,7 +140,6 @@ const About = () => {
           </div>
         </div>
       </div>
-
 
       {/* Team Section */}
       <div className="py-16 bg-gray-50">

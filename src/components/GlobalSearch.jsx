@@ -46,14 +46,24 @@ const GlobalSearch = () => {
         });
         if (searchType === "quiz") {
           const quizSets = data.quizSets || [];
-          setResults(quizSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC"));
+          setResults(
+            quizSets.filter(
+              (item) => (item.visibility || item.visibilityStatus) === "PUBLIC"
+            )
+          );
         } else if (searchType === "flashcard") {
           const flashcardSets = data.flashcardSets || [];
-          setResults(flashcardSets.filter(item => (item.visibility || item.visibilityStatus) === "PUBLIC"));
+          setResults(
+            flashcardSets.filter(
+              (item) => (item.visibility || item.visibilityStatus) === "PUBLIC"
+            )
+          );
         } else if (searchType === "user") {
           const accounts = data.accounts || [];
           // Filter out ADMIN users from search results
-          const filteredAccounts = accounts.filter(user => user.role !== 'ADMIN');
+          const filteredAccounts = accounts.filter(
+            (user) => user.role !== "ADMIN"
+          );
           setResults(filteredAccounts);
         }
       } catch (error) {
@@ -81,19 +91,21 @@ const GlobalSearch = () => {
 
   const handleResultClick = (item) => {
     setIsFocused(false);
-    
+
     if (searchType === "quiz") {
       navigate(`/quiz/${item.id}`);
     } else if (searchType === "flashcard") {
       navigate(`/study-flashcard/${item.id}`);
     } else if (searchType === "user") {
-      navigate(`/user/${item.accountId}`);
+      navigate(`/users/${item.accountId}`);
     }
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}&type=${searchType}`);
+      navigate(
+        `/search?q=${encodeURIComponent(searchTerm.trim())}&type=${searchType}`
+      );
       setIsFocused(false);
     }
   };
