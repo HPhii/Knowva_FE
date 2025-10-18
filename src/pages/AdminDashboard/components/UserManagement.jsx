@@ -59,7 +59,7 @@ const UserManagement = () => {
     fullName: ''
   });
   const [sortBy, setSortBy] = useState('id');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortDirection, setSortDirection] = useState('ASC');
 
   // Fetch users when component mounts or filters change
   useEffect(() => {
@@ -89,8 +89,10 @@ const UserManagement = () => {
       });
 
       // 🔗 API Call: GET /users with query parameters
+      console.log('📡 Fetching users with params:', params);
       const response = await api.get('/users', { params });
       console.log('📊 User API Response:', response.data);
+      console.log('📊 Requested page:', params.page + 1, 'Page size:', params.size);
       
       // 📊 Process API response with fallback handling
       let userData, total, pages, current;
@@ -132,10 +134,24 @@ const UserManagement = () => {
       console.log('📊 Processed user data:', { users: userData?.length, total, pages, current });
       
       // 💾 Update state with fetched data (fallback values for safety)
+      console.log('📊 Setting state:', { 
+        users: userData?.length, 
+        totalElements: total, 
+        totalPages: pages, 
+        currentPage: current 
+      });
+      
       setUsers(userData || []);
       setTotalElements(total || 0);
       setTotalPages(pages || 0);
-      setCurrentPage(current || 1);
+      
+      // Only update currentPage if it's different from what we requested
+      // This prevents infinite loops when API returns different page numbers
+      const apiCurrentPage = (current || 0) + 1; // Convert 0-based to 1-based
+      if (apiCurrentPage !== currentPage) {
+        console.log('📄 API returned different page:', apiCurrentPage, 'vs requested:', currentPage);
+        setCurrentPage(apiCurrentPage);
+      }
     } catch (error) {
       console.error('❌ Failed to fetch users:', error);
       message.error('Failed to fetch users');
@@ -288,19 +304,25 @@ const UserManagement = () => {
 
   // Handle table changes (pagination, sorting, filtering)
   const handleTableChange = (pagination, tableFilters, sorter) => {
+    console.log('🔄 Table change event:', { pagination, tableFilters, sorter });
+    console.log('🔄 Current state:', { currentPage, pageSize });
+    
     // Handle pagination
     if (pagination.current !== currentPage) {
+      console.log('📄 Page changed from', currentPage, 'to', pagination.current);
       setCurrentPage(pagination.current);
     }
     if (pagination.pageSize !== pageSize) {
+      console.log('📄 Page size changed from', pageSize, 'to', pagination.pageSize);
       setPageSize(pagination.pageSize);
       setCurrentPage(1); // Reset to first page when page size changes
     }
 
     // Handle sorting
     if (sorter && sorter.field) {
+      console.log('🔄 Sort changed:', sorter.field, sorter.order);
       setSortBy(sorter.field);
-      setSortDirection(sorter.order === 'ascend' ? 'asc' : 'desc');
+      setSortDirection(sorter.order === 'ascend' ? 'ASC' : 'DESC');
     }
 
     // Handle filtering
@@ -312,8 +334,16 @@ const UserManagement = () => {
         newFilters[key] = '';
       }
     });
-    setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
+    
+    // Only update filters if they actually changed to prevent unnecessary re-renders
+    const filtersChanged = JSON.stringify(newFilters) !== JSON.stringify(filters);
+    if (filtersChanged) {
+      console.log('🔍 Filters changed:', newFilters);
+      setFilters(newFilters);
+      setCurrentPage(1); // Reset to first page when filters change
+    }
+    
+    // The useEffect will automatically trigger fetchUsers when state changes
   };
 
 
@@ -465,6 +495,14 @@ const UserManagement = () => {
         >
           Add User
         </Button>
+      </div>
+
+      {/* Debug Info */}
+      <div style={{ marginBottom: '16px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
+        <strong>Debug Info:</strong> Page {currentPage} of {totalPages || 1} | 
+        Total: {totalElements} users | 
+        Showing {users.length} users | 
+        Page Size: {pageSize}
       </div>
 
       {/* Users Table */}

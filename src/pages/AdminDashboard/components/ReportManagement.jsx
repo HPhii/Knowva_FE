@@ -62,7 +62,7 @@ const ReportManagement = () => {
     total: 0,
   });
   const [sortBy, setSortBy] = useState('createdAt');
-  const [sortDirection, setSortDirection] = useState('desc');
+  const [sortDirection, setSortDirection] = useState('DESC');
 
   // Fetch reports when component mounts or filters change
   useEffect(() => {
@@ -201,7 +201,7 @@ const ReportManagement = () => {
     // Handle sorting
     if (sorter && sorter.field) {
       setSortBy(sorter.field);
-      setSortDirection(sorter.order === 'ascend' ? 'asc' : 'desc');
+      setSortDirection(sorter.order === 'ascend' ? 'ASC' : 'DESC');
     }
     
     // The useEffect will automatically trigger fetchReports when pagination changes

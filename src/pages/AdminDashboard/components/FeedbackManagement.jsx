@@ -37,7 +37,7 @@ const FeedbackManagement = () => {
     message: ''
   });
   const [sortBy, setSortBy] = useState('id');
-  const [sortDirection, setSortDirection] = useState('desc');
+  const [sortDirection, setSortDirection] = useState('DESC');
 
   // Fetch feedbacks when component mounts or filters change
   useEffect(() => {
@@ -67,6 +67,7 @@ const FeedbackManagement = () => {
       });
 
       console.log('📡 Fetching feedbacks with params:', params);
+      console.log('📊 Requested page:', params.page + 1, 'Page size:', params.size);
 
       // 🔗 API Call: GET /feedback/all
       const response = await api.get('/feedback/all', { params });
@@ -77,10 +78,23 @@ const FeedbackManagement = () => {
       const { feedbacks: feedbackData, totalElements: total, totalPages: pages, currentPage: current } = response.data;
       
       // 💾 Update state with fetched data (fallback values for safety)
+      console.log('📊 Setting feedback state:', { 
+        feedbacks: feedbackData?.length, 
+        totalElements: total, 
+        totalPages: pages, 
+        currentPage: current 
+      });
+      
       setFeedbacks(feedbackData || []);
       setTotalElements(total || 0);
       setTotalPages(pages || 0);
-      setCurrentPage(current || 1);
+      
+      // Only update currentPage if it's different from what we requested
+      const apiCurrentPage = current || 1;
+      if (apiCurrentPage !== currentPage) {
+        console.log('📄 API returned different page:', apiCurrentPage, 'vs requested:', currentPage);
+        setCurrentPage(apiCurrentPage);
+      }
 
     } catch (error) {
       console.error('❌ Failed to fetch feedbacks:', error);
@@ -104,19 +118,25 @@ const FeedbackManagement = () => {
 
   // Handle table changes (pagination, sorting, filtering)
   const handleTableChange = (pagination, tableFilters, sorter) => {
+    console.log('🔄 Feedback table change event:', { pagination, tableFilters, sorter });
+    console.log('🔄 Current state:', { currentPage, pageSize });
+    
     // Handle pagination
     if (pagination.current !== currentPage) {
+      console.log('📄 Page changed from', currentPage, 'to', pagination.current);
       setCurrentPage(pagination.current);
     }
     if (pagination.pageSize !== pageSize) {
+      console.log('📄 Page size changed from', pageSize, 'to', pagination.pageSize);
       setPageSize(pagination.pageSize);
       setCurrentPage(1); // Reset to first page when page size changes
     }
 
     // Handle sorting
     if (sorter && sorter.field) {
+      console.log('🔄 Sort changed:', sorter.field, sorter.order);
       setSortBy(sorter.field);
-      setSortDirection(sorter.order === 'ascend' ? 'asc' : 'desc');
+      setSortDirection(sorter.order === 'ascend' ? 'ASC' : 'DESC');
     }
 
     // Handle filtering
@@ -128,8 +148,16 @@ const FeedbackManagement = () => {
         newFilters[key] = '';
       }
     });
-    setFilters(newFilters);
-    setCurrentPage(1); // Reset to first page when filters change
+    
+    // Only update filters if they actually changed to prevent unnecessary re-renders
+    const filtersChanged = JSON.stringify(newFilters) !== JSON.stringify(filters);
+    if (filtersChanged) {
+      console.log('🔍 Filters changed:', newFilters);
+      setFilters(newFilters);
+      setCurrentPage(1); // Reset to first page when filters change
+    }
+    
+    // The useEffect will automatically trigger fetchFeedbacks when state changes
   };
 
   /**
@@ -286,6 +314,14 @@ const FeedbackManagement = () => {
             Refresh
           </Button>
         </Space>
+      </div>
+
+      {/* Debug Info */}
+      <div style={{ marginBottom: '16px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
+        <strong>Debug Info:</strong> Page {currentPage} | 
+        Total: {totalElements} feedbacks | 
+        Showing {feedbacks.length} feedbacks | 
+        Page Size: {pageSize}
       </div>
 
       {/* Feedback Table */}

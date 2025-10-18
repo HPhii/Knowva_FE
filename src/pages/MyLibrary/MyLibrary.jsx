@@ -275,7 +275,7 @@ const MyLibrary = () => {
       key: "ai",
       label: (
         <div
-          onClick={() => navigate("/quiz")}
+          onClick={() => navigate("/quizzes")}
           className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
         >
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -30,21 +30,41 @@ const BugReportModal = ({ visible, onCancel }) => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await api.post("/bug-reports", {
+      console.log('📡 Submitting bug report with multipart/form-data format...');
+      const report ={
         title: values.title.trim(),
         description: values.description.trim(),
         category: values.category,
         priority: values.priority,
-      });
+      }
+      // Create FormData object
+      const formData = new FormData();
+      formData.append('report', new Blob([JSON.stringify(report)], { type: "application/json" }));
+      
+      const response = await api.post("/bug-reports", formData)
 
+      console.log('📊 Bug report API response:', response.data);
       message.success(t("bugReport.successMessage"));
 
       // Reset form and close modal
       form.resetFields();
       onCancel();
     } catch (err) {
-      console.error("Error submitting bug report:", err);
-      message.error(err.response?.data?.message || t("bugReport.errorMessage"));
+      console.error("❌ Error submitting bug report:", err);
+      console.error("❌ Error details:", {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+        headers: err.response?.headers
+      });
+      
+      if (err.response?.status === 400) {
+        message.error(err.response?.data?.message || "Invalid request data");
+      } else if (err.response?.status === 500) {
+        message.error("Server error. Please try again later.");
+      } else {
+        message.error(err.response?.data?.message || t("bugReport.errorMessage"));
+      }
     } finally {
       setLoading(false);
     }

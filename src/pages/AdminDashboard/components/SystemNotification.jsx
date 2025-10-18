@@ -39,7 +39,7 @@ const SystemNotification = () => {
   const [totalElements, setTotalElements] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(10);
   
   // Filter and sort state
   const [filters, setFilters] = useState({
@@ -565,7 +565,7 @@ const SystemNotification = () => {
           showQuickJumper: true,
           showTotal: (total, range) => 
             `${range[0]}-${range[1]} of ${total} notifications`,
-          pageSizeOptions: ['8', '16', '32', '64'],
+          pageSizeOptions: ['10', '20', '50', '100'],
         }}
         scroll={{ x: 800 }}
         style={{
