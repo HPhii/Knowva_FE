@@ -402,51 +402,119 @@ const BlogSet = () => {
             ))}
           </div>
 
-          {/* Pagination */}
+          {/* Tab-style Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 border-b border-gray-200">
+                {/* Previous Arrow */}
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  title="Trang trước"
                 >
-                  Trước
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
                 </button>
-                
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-                  
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium ${
-                        currentPage === pageNum
-                          ? "bg-blue-600 text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-                
+
+                {/* Page Tabs */}
+                <div className="flex items-center">
+                  {(() => {
+                    const pages = [];
+                    const maxVisible = 7;
+                    let startPage, endPage;
+
+                    if (totalPages <= maxVisible) {
+                      startPage = 1;
+                      endPage = totalPages;
+                    } else {
+                      if (currentPage <= 4) {
+                        startPage = 1;
+                        endPage = maxVisible;
+                      } else if (currentPage >= totalPages - 3) {
+                        startPage = totalPages - maxVisible + 1;
+                        endPage = totalPages;
+                      } else {
+                        startPage = currentPage - 3;
+                        endPage = currentPage + 3;
+                      }
+                    }
+
+                    // Add first page and ellipsis if needed
+                    if (startPage > 1) {
+                      pages.push(
+                        <button
+                          key={1}
+                          onClick={() => handlePageChange(1)}
+                          className="px-6 py-3 text-base font-medium text-gray-600 hover:text-gray-900 transition-colors relative"
+                        >
+                          {1}
+                        </button>
+                      );
+                      if (startPage > 2) {
+                        pages.push(
+                          <span key="ellipsis1" className="px-3 text-gray-400 text-lg">
+                            ...
+                          </span>
+                        );
+                      }
+                    }
+
+                    // Add visible pages
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => handlePageChange(i)}
+                          className={`px-6 py-3 text-base font-medium transition-colors relative ${
+                            currentPage === i
+                              ? "text-blue-600"
+                              : "text-gray-600 hover:text-gray-900"
+                          }`}
+                        >
+                          {i}
+                          {currentPage === i && (
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-600"></div>
+                          )}
+                        </button>
+                      );
+                    }
+
+                    // Add last page and ellipsis if needed
+                    if (endPage < totalPages) {
+                      if (endPage < totalPages - 1) {
+                        pages.push(
+                          <span key="ellipsis2" className="px-3 text-gray-400 text-lg">
+                            ...
+                          </span>
+                        );
+                      }
+                      pages.push(
+                        <button
+                          key={totalPages}
+                          onClick={() => handlePageChange(totalPages)}
+                          className="px-6 py-3 text-base font-medium text-gray-600 hover:text-gray-900 transition-colors relative"
+                        >
+                          {totalPages}
+                        </button>
+                      );
+                    }
+
+                    return pages;
+                  })()}
+                </div>
+
+                {/* Next Arrow */}
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  title="Trang sau"
                 >
-                  Sau
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </button>
               </div>
             </div>

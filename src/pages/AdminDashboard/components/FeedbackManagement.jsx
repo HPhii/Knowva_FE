@@ -8,14 +8,12 @@ import {
   Tag,
   Avatar,
   Space,
-  Button,
-  Input
+  Button
 } from 'antd';
 import { 
   MessageOutlined,
   UserOutlined,
   CalendarOutlined,
-  SearchOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
 import api from '../../../config/axios';
@@ -32,20 +30,17 @@ const FeedbackManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
-  // Filter and sort state
-  const [filters, setFilters] = useState({
-    message: ''
-  });
+  // Sort state
   const [sortBy, setSortBy] = useState('id');
   const [sortDirection, setSortDirection] = useState('DESC');
 
-  // Fetch feedbacks when component mounts or filters change
+  // Fetch feedbacks when component mounts or sort changes
   useEffect(() => {
     fetchFeedbacks();
-  }, [currentPage, pageSize, sortBy, sortDirection, filters]);
+  }, [currentPage, pageSize, sortBy, sortDirection]);
 
   /**
-   * 📋 Fetch feedbacks from API with pagination, sorting, and filtering
+   * 📋 Fetch feedbacks from API with pagination and sorting
    */
   const fetchFeedbacks = async () => {
     setLoading(true);
@@ -55,16 +50,8 @@ const FeedbackManagement = () => {
         page: currentPage - 1, // API expects 0-based page
         size: pageSize,
         sortBy,
-        sortDirection,
-        ...filters
+        sortDirection
       };
-
-      // 🧹 Remove empty filter values
-      Object.keys(params).forEach(key => {
-        if (params[key] === '' || params[key] === null || params[key] === undefined) {
-          delete params[key];
-        }
-      });
 
       console.log('📡 Fetching feedbacks with params:', params);
       console.log('📊 Requested page:', params.page + 1, 'Page size:', params.size);
@@ -73,9 +60,50 @@ const FeedbackManagement = () => {
       const response = await api.get('/feedback/all', { params });
       
       console.log('✅ API response:', response.data);
+      console.log('📊 API response structure:', {
+        hasFeedbacks: !!response.data.feedbacks,
+        hasTotalElements: !!response.data.totalElements,
+        hasTotalPages: !!response.data.totalPages,
+        hasCurrentPage: !!response.data.currentPage,
+        feedbacksLength: response.data.feedbacks?.length,
+        totalElements: response.data.totalElements,
+        totalPages: response.data.totalPages,
+        currentPage: response.data.currentPage
+      });
 
-      // 📊 Extract feedback data from API response
-      const { feedbacks: feedbackData, totalElements: total, totalPages: pages, currentPage: current } = response.data;
+      // 📊 Extract feedback data from API response with fallback handling
+      let feedbackData, total, pages, current;
+      
+      if (response.data) {
+        // Handle different API response formats
+        if (response.data.feedbacks) {
+          // Format: { feedbacks: [...], totalElements: 100, totalPages: 10, currentPage: 0 }
+          ({ feedbacks: feedbackData, totalElements: total, totalPages: pages, currentPage: current } = response.data);
+        } else if (response.data.content) {
+          // Format: { content: [...], totalElements: 100, totalPages: 10, number: 0 }
+          feedbackData = response.data.content;
+          total = response.data.totalElements;
+          pages = response.data.totalPages;
+          current = response.data.number;
+        } else if (Array.isArray(response.data)) {
+          // Format: direct array
+          feedbackData = response.data;
+          total = response.data.length;
+          pages = 1;
+          current = 0;
+        } else {
+          // Fallback
+          feedbackData = [];
+          total = 0;
+          pages = 0;
+          current = 0;
+        }
+      } else {
+        feedbackData = [];
+        total = 0;
+        pages = 0;
+        current = 0;
+      }
       
       // 💾 Update state with fetched data (fallback values for safety)
       console.log('📊 Setting feedback state:', { 
@@ -90,7 +118,8 @@ const FeedbackManagement = () => {
       setTotalPages(pages || 0);
       
       // Only update currentPage if it's different from what we requested
-      const apiCurrentPage = current || 1;
+      // Convert 0-based API page to 1-based frontend page
+      const apiCurrentPage = (current || 0) + 1;
       if (apiCurrentPage !== currentPage) {
         console.log('📄 API returned different page:', apiCurrentPage, 'vs requested:', currentPage);
         setCurrentPage(apiCurrentPage);
@@ -116,7 +145,7 @@ const FeedbackManagement = () => {
     }
   };
 
-  // Handle table changes (pagination, sorting, filtering)
+  // Handle table changes (pagination, sorting)
   const handleTableChange = (pagination, tableFilters, sorter) => {
     console.log('🔄 Feedback table change event:', { pagination, tableFilters, sorter });
     console.log('🔄 Current state:', { currentPage, pageSize });
@@ -137,24 +166,6 @@ const FeedbackManagement = () => {
       console.log('🔄 Sort changed:', sorter.field, sorter.order);
       setSortBy(sorter.field);
       setSortDirection(sorter.order === 'ascend' ? 'ASC' : 'DESC');
-    }
-
-    // Handle filtering
-    const newFilters = { ...filters };
-    Object.keys(tableFilters).forEach(key => {
-      if (tableFilters[key] && tableFilters[key].length > 0) {
-        newFilters[key] = tableFilters[key][0];
-      } else {
-        newFilters[key] = '';
-      }
-    });
-    
-    // Only update filters if they actually changed to prevent unnecessary re-renders
-    const filtersChanged = JSON.stringify(newFilters) !== JSON.stringify(filters);
-    if (filtersChanged) {
-      console.log('🔍 Filters changed:', newFilters);
-      setFilters(newFilters);
-      setCurrentPage(1); // Reset to first page when filters change
     }
     
     // The useEffect will automatically trigger fetchFeedbacks when state changes
@@ -277,7 +288,7 @@ const FeedbackManagement = () => {
 
   return (
     <div>
-      {/* Header with Search and Refresh */}
+      {/* Header with Refresh */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -287,42 +298,18 @@ const FeedbackManagement = () => {
         <div>
           <h2 style={{ margin: 0, color: '#262626' }}>Feedback Management</h2>
           <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>
-            Xem và quản lý tất cả feedback từ người dùng
+            View and manage all user feedback
           </p>
         </div>
-        <Space>
-          <Input.Search
-            placeholder="Tìm kiếm theo nội dung..."
-            allowClear
-            style={{ width: 300 }}
-            onSearch={(value) => {
-              setFilters({ message: value });
-              setCurrentPage(1);
-            }}
-            onChange={(e) => {
-              if (e.target.value === '') {
-                setFilters({ message: '' });
-                setCurrentPage(1);
-              }
-            }}
-          />
-          <Button 
-            icon={<ReloadOutlined />}
-            onClick={fetchFeedbacks}
-            loading={loading}
-          >
-            Refresh
-          </Button>
-        </Space>
+        <Button 
+          icon={<ReloadOutlined />}
+          onClick={fetchFeedbacks}
+          loading={loading}
+        >
+          Refresh
+        </Button>
       </div>
 
-      {/* Debug Info */}
-      <div style={{ marginBottom: '16px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
-        <strong>Debug Info:</strong> Page {currentPage} | 
-        Total: {totalElements} feedbacks | 
-        Showing {feedbacks.length} feedbacks | 
-        Page Size: {pageSize}
-      </div>
 
       {/* Feedback Table */}
       <Table

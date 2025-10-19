@@ -640,10 +640,21 @@ const BlogManagement = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'published': return 'success';
-      case 'draft': return 'warning';
-      case 'archived': return 'default';
+      case 'DRAFT': return 'default';
+      case 'PENDING_APPROVAL': return 'processing';
+      case 'PUBLISHED': return 'success';
+      case 'REJECTED': return 'error';
       default: return 'default';
+    }
+  };
+
+  const getStatusDisplayText = (status) => {
+    switch (status) {
+      case 'DRAFT': return 'Draft';
+      case 'PENDING_APPROVAL': return 'Pending Approval';
+      case 'PUBLISHED': return 'Published';
+      case 'REJECTED': return 'Rejected';
+      default: return status;
     }
   };
 
@@ -758,25 +769,19 @@ const BlogManagement = () => {
       ),
     },
     {
-      title: 'Date',
-      dataIndex: 'publishedAt',
-      key: 'publishedAt',
-      sorter: (a, b) => new Date(a.publishedAt) - new Date(b.publishedAt),
-      render: (publishedAt) => formatDate(publishedAt),
-    },
-    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       filters: [
-        { text: 'Published', value: 'published' },
-        { text: 'Draft', value: 'draft' },
-        { text: 'Archived', value: 'archived' },
+        { text: 'Draft', value: 'DRAFT' },
+        { text: 'Pending Approval', value: 'PENDING_APPROVAL' },
+        { text: 'Published', value: 'PUBLISHED' },
+        { text: 'Rejected', value: 'REJECTED' },
       ],
       onFilter: (value, record) => record.status === value,
       render: (status) => (
         <Tag color={getStatusColor(status)}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
+          {getStatusDisplayText(status)}
         </Tag>
       ),
     },
@@ -1204,7 +1209,7 @@ const BlogManagement = () => {
                   color={getStatusColor(blogDetail.status)} 
                   style={{ marginLeft: '8px' }}
                 >
-                  {blogDetail.status.charAt(0).toUpperCase() + blogDetail.status.slice(1)}
+                  {getStatusDisplayText(blogDetail.status)}
                 </Tag>
               </div>
               {blogDetail.categoryName && (

@@ -6,17 +6,13 @@ import {
   Tag,
   Avatar,
   Drawer,
-  Form,
-  Input,
-  Select,
-  message,
   Popconfirm,
   Empty
 } from 'antd';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { 
-  PlusOutlined,
   EyeOutlined,
-  EditOutlined,
   LockOutlined,
   UserOutlined,
   CrownOutlined,
@@ -24,14 +20,10 @@ import {
 } from '@ant-design/icons';
 import api from '../../../config/axios';
 
-const { Option } = Select;
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [form] = Form.useForm();
   
   // View user details state
   const [viewDrawerVisible, setViewDrawerVisible] = useState(false);
@@ -76,15 +68,22 @@ const UserManagement = () => {
       const params = {
         page: currentPage - 1, // API expects 0-based page
         size: pageSize,
-        sortBy,
         sortDirection,
         ...filters
       };
 
-      // 🧹 Remove empty filter values
+      // Add sort field if specified (for sorting, not filtering)
+      if (sortBy) {
+        params[sortBy] = ''; // Add the field name as a parameter for sorting
+      }
+
+      // 🧹 Remove empty filter values (but keep sort field even if empty)
       Object.keys(params).forEach(key => {
         if (params[key] === '' || params[key] === null || params[key] === undefined) {
-          delete params[key];
+          // Don't remove sort field if it's empty (needed for sorting)
+          if (key !== sortBy) {
+            delete params[key];
+          }
         }
       });
 
@@ -154,7 +153,7 @@ const UserManagement = () => {
       }
     } catch (error) {
       console.error('❌ Failed to fetch users:', error);
-      message.error('Failed to fetch users');
+      toast.error('Failed to fetch users');
       
       // 🔄 Reset state on error
       setUsers([]);
@@ -165,11 +164,6 @@ const UserManagement = () => {
     }
   };
 
-  const handleAddUser = () => {
-    setEditingUser(null);
-    form.resetFields();
-    setDrawerVisible(true);
-  };
 
   /**
    * 👁️ Fetch and view detailed user information
@@ -186,22 +180,12 @@ const UserManagement = () => {
       setViewDrawerVisible(true);
     } catch (error) {
       console.error('❌ Failed to fetch user details:', error);
-      message.error('Failed to fetch user details');
+      toast.error('Failed to fetch user details');
     } finally {
       setViewLoading(false);
     }
   };
 
-  const handleEditUser = (user) => {
-    setEditingUser(user);
-    form.setFieldsValue({
-      fullName: user.fullName,
-      phoneNumber: user.phoneNumber,
-      birthdate: user.birthdate,
-      gender: user.gender
-    });
-    setDrawerVisible(true);
-  };
 
   /**
    * 🗑️ Delete/Deactivate user by ID
@@ -213,8 +197,7 @@ const UserManagement = () => {
     try {
       // 🔗 API Call: DELETE /users/{userId}
       const response = await api.delete(`/users/${userId}`);
-      console.log('Delete response:', response);
-      message.success('Xóa user thành công');
+      console.log('✅ Delete user successful:', response.data);
       
       // 🔄 Refresh the user list after successful deletion
       fetchUsers();
@@ -225,7 +208,10 @@ const UserManagement = () => {
         status: error.response?.status,
         data: error.response?.data
       });
-      message.error(`Xóa user thất bại: ${error.response?.data?.message || error.message}`);
+      
+      // 🚨 Error message with more details
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
+      toast.error(`Failed to deactivate user: ${errorMessage}`);
     } finally {
       setDeletingUserId(null);
     }
@@ -239,11 +225,14 @@ const UserManagement = () => {
     setUpgradingUserId(userId);
     try {
       // 🔗 API Call: PATCH /admin/upgrade-to-premium/{userId}
-      await api.patch(`/admin/upgrade-to-premium/${userId}`);
-      message.success('User has been upgraded to Premium successfully');
+      const response = await api.patch(`/admin/upgrade-to-premium/${userId}`);
+      console.log('✅ Upgrade to premium successful:', response.data);
+      
+      // 🎉 Success message
+      toast.success('User has been successfully upgraded to VIP Premium!');
       
       // 🔄 Refresh user details to show updated status
-      if (viewingUser && viewingUser.userId === userId) {
+      if (viewingUser && (viewingUser.userId === userId || viewingUser.id === userId)) {
         await handleViewUser(userId);
       }
       
@@ -251,7 +240,15 @@ const UserManagement = () => {
       fetchUsers();
     } catch (error) {
       console.error('❌ Failed to upgrade user to premium:', error);
-      message.error(`Upgrade failed: ${error.response?.data?.message || error.message}`);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      
+      // 🚨 Error message with more details
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
+      toast.error(`Failed to upgrade user to VIP: ${errorMessage}`);
     } finally {
       setUpgradingUserId(null);
     }
@@ -265,42 +262,27 @@ const UserManagement = () => {
     setForceLogoutUserId(userId);
     try {
       // 🔗 API Call: POST /admin/force-logout/{userId}
-      await api.post(`/admin/force-logout/${userId}`);
-      message.success('User has been logged out successfully');
+      const response = await api.post(`/admin/force-logout/${userId}`);
+      console.log('✅ Force logout successful:', response.data);
+      
+      // 🎉 Success message
+      toast.success('User has been successfully logged out from all devices!');
     } catch (error) {
       console.error('❌ Failed to force logout user:', error);
-      message.error(`Force logout failed: ${error.response?.data?.message || error.message}`);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      
+      // 🚨 Error message with more details
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
+      toast.error(`Failed to force logout user: ${errorMessage}`);
     } finally {
       setForceLogoutUserId(null);
     }
   };
 
-  /**
-   * 💾 Handle user form submission (Create/Update)
-   * @param {Object} values - Form values
-   */
-  const handleSubmit = async (values) => {
-    try {
-      if (editingUser) {
-        // ✏️ Update existing user
-        // 🔗 API Call: PUT /users/{userId}
-        await api.put(`/users/${editingUser.userId}`, values);
-        message.success('User updated successfully');
-      } else {
-        // ➕ Create new user
-        // 🔗 API Call: POST /users
-        await api.post('/users', values);
-        message.success('User added successfully');
-      }
-      setDrawerVisible(false);
-      
-      // 🔄 Refresh the user list after successful operation
-      fetchUsers();
-    } catch (error) {
-      console.error('❌ Failed to save user:', error);
-      message.error('Failed to save user');
-    }
-  };
 
   // Handle table changes (pagination, sorting, filtering)
   const handleTableChange = (pagination, tableFilters, sorter) => {
@@ -321,7 +303,18 @@ const UserManagement = () => {
     // Handle sorting
     if (sorter && sorter.field) {
       console.log('🔄 Sort changed:', sorter.field, sorter.order);
-      setSortBy(sorter.field);
+      // Map frontend field names to API field names
+      const fieldMapping = {
+        'userId': 'userId',
+        'username': 'username', 
+        'email': 'email',
+        'fullName': 'fullName',
+        'phoneNumber': 'phoneNumber',
+        'role': 'role',
+        'status': 'status'
+      };
+      const apiField = fieldMapping[sorter.field] || sorter.field;
+      setSortBy(apiField);
       setSortDirection(sorter.order === 'ascend' ? 'ASC' : 'DESC');
     }
 
@@ -443,13 +436,6 @@ const UserManagement = () => {
             onClick={() => handleViewUser(record.userId)}
             loading={viewLoading}
           />
-          <Button 
-            type="text" 
-            icon={<EditOutlined />}
-            size="small"
-            title="Edit"
-            onClick={() => handleEditUser(record)}
-          />
           <Popconfirm
             title="Bạn có chắc muốn vô hiệu hóa user này không?"
             onConfirm={() => handleDeleteUser(record.userId)}
@@ -474,36 +460,16 @@ const UserManagement = () => {
 
   return (
     <div>
-      {/* Header with Add Button */}
+      {/* Header */}
       <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
         marginBottom: '24px'
       }}>
-        <div>
-          <h2 style={{ margin: 0, color: '#262626' }}>User Management</h2>
-          <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>
-            Manage system users and their permissions
-          </p>
-        </div>
-        <Button 
-          type="primary" 
-          icon={<PlusOutlined />}
-          onClick={handleAddUser}
-          size="large"
-        >
-          Add User
-        </Button>
+        <h2 style={{ margin: 0, color: '#262626' }}>User Management</h2>
+        <p style={{ margin: '4px 0 0 0', color: '#8c8c8c' }}>
+          Manage system users and their permissions
+        </p>
       </div>
 
-      {/* Debug Info */}
-      <div style={{ marginBottom: '16px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
-        <strong>Debug Info:</strong> Page {currentPage} of {totalPages || 1} | 
-        Total: {totalElements} users | 
-        Showing {users.length} users | 
-        Page Size: {pageSize}
-      </div>
 
       {/* Users Table */}
       <Table
@@ -538,64 +504,6 @@ const UserManagement = () => {
         }}
       />
 
-      {/* Add/Edit User Drawer */}
-      <Drawer
-        title={editingUser ? 'Edit User' : 'Add New User'}
-        width={400}
-        open={drawerVisible}
-        onClose={() => setDrawerVisible(false)}
-        footer={null}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-        >
-          <Form.Item
-            name="fullName"
-            label="Full Name"
-            rules={[{ required: true, message: 'Please enter full name' }]}
-          >
-            <Input placeholder="Enter full name" />
-          </Form.Item>
-
-          <Form.Item
-            name="phoneNumber"
-            label="Phone Number"
-          >
-            <Input placeholder="Enter phone number" />
-          </Form.Item>
-
-          <Form.Item
-            name="birthdate"
-            label="Birthdate"
-          >
-            <Input type="date" />
-          </Form.Item>
-
-          <Form.Item
-            name="gender"
-            label="Gender"
-          >
-            <Select placeholder="Select gender" allowClear>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-              <Option value="other">Other</Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item style={{ marginBottom: 0, marginTop: '32px' }}>
-            <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-              <Button onClick={() => setDrawerVisible(false)}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit">
-                {editingUser ? 'Update' : 'Add'} User
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Drawer>
 
       {/* View User Details Drawer */}
       <Drawer
@@ -606,9 +514,9 @@ const UserManagement = () => {
               <Button
                 type="primary"
                 icon={<CrownOutlined />}
-                onClick={() => handleUpgradeToPremium(viewingUser.userId)}
-                loading={upgradingUserId === viewingUser.userId}
-                disabled={upgradingUserId === viewingUser.userId}
+                onClick={() => handleUpgradeToPremium(viewingUser.userId || viewingUser.id)}
+                loading={upgradingUserId === (viewingUser.userId || viewingUser.id)}
+                disabled={upgradingUserId === (viewingUser.userId || viewingUser.id)}
                 style={{ 
                   background: 'linear-gradient(45deg, #ffd700, #ffed4e)',
                   borderColor: '#ffd700',
@@ -628,17 +536,17 @@ const UserManagement = () => {
             {viewingUser && (
               <Popconfirm
                 title="Bạn có chắc muốn đăng xuất bắt buộc user này không?"
-                onConfirm={() => handleForceLogout(viewingUser.userId)}
+                onConfirm={() => handleForceLogout(viewingUser.userId || viewingUser.id)}
                 okText="Có"
                 cancelText="No"
-                disabled={forceLogoutUserId === viewingUser.userId}
+                disabled={forceLogoutUserId === (viewingUser.userId || viewingUser.id)}
               >
                 <Button
                   type="primary"
                   danger
                   icon={<LogoutOutlined />}
-                  loading={forceLogoutUserId === viewingUser.userId}
-                  disabled={forceLogoutUserId === viewingUser.userId}
+                  loading={forceLogoutUserId === (viewingUser.userId || viewingUser.id)}
+                  disabled={forceLogoutUserId === (viewingUser.userId || viewingUser.id)}
                 >
                   Đăng xuất bắt buộc
                 </Button>
@@ -667,7 +575,7 @@ const UserManagement = () => {
                     {viewingUser.fullName || 'N/A'}
                   </div>
                   <div style={{ color: '#8c8c8c' }}>
-                    ID: {viewingUser.userId}
+                    ID: {viewingUser.id}
                   </div>
                 </div>
               </div>
@@ -766,6 +674,20 @@ const UserManagement = () => {
           </div>
         )}
       </Drawer>
+
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

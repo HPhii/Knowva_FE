@@ -87,7 +87,6 @@ const router = createBrowserRouter([
   { path: "forgot-password", element: <ForgotPassword /> },
   { path: "verify-email", element: <VerifyEmail /> },
   { path: "verify-complete", element: <VerifyComplete /> },
-
   { path: "admin", element: <AdminDashboard /> },
   { path: "admin/users", element: <AdminDashboard /> },
   { path: "admin/blogs", element: <AdminDashboard /> },

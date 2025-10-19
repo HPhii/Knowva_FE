@@ -32,6 +32,12 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [adminUser, setAdminUser] = useState({
+    name: 'Admin User',
+    email: 'admin@knowva.com',
+    avatar: null
+  });
+  const [loading, setLoading] = useState(true);
   
   // Get current page from URL path
   const getCurrentPage = () => {
@@ -48,12 +54,31 @@ const AdminDashboard = () => {
   
   const [selectedMenu, setSelectedMenu] = useState(getCurrentPage());
 
-  // 🎭 Mock admin data for demo purposes
-  const adminUser = {
-    name: 'Admin User',
-    email: 'admin@knowva.com',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'
+  /**
+   * 📊 Fetch admin user data from API
+   */
+  const fetchAdminData = async () => {
+    setLoading(true);
+    try {
+      // 🔗 API Call: GET /users/me (admin endpoint)
+      const response = await api.get('/users/me');
+      setAdminUser({
+        name: response.data.fullName || response.data.username || 'Admin User',
+        email: response.data.email || 'admin@knowva.com',
+        avatar: response.data.avatarUrl || null
+      });
+    } catch (err) {
+      console.error('❌ Failed to fetch admin data:', err);
+      // Keep default values on error
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Fetch admin data on component mount
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
 
   // Update selectedMenu when URL changes and handle default redirect
   useEffect(() => {
@@ -339,6 +364,9 @@ const AdminDashboard = () => {
                 src={adminUser.avatar} 
                 icon={<UserOutlined />}
                 size="large"
+                style={{
+                  backgroundColor: adminUser.avatar ? 'transparent' : '#1890ff'
+                }}
               />
               <div>
                 <div style={{ 
@@ -346,7 +374,7 @@ const AdminDashboard = () => {
                   color: '#262626',
                   lineHeight: '1.2'
                 }}>
-                  {adminUser.name}
+                  {loading ? 'Loading...' : adminUser.name}
                 </div>
                 <div style={{ 
                   fontSize: '12px', 
