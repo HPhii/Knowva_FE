@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Table, 
   Button, 
@@ -83,6 +83,16 @@ const BlogManagement = () => {
   // Blog creation form state
   const [createBlogForm] = Form.useForm();
   const [createBlogLoading, setCreateBlogLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const fileInputRef = useRef();
+  
+  // Refs for form fields to enable scrolling to error
+  const titleInputRef = useRef();
+  const excerptInputRef = useRef();
+  const categorySelectRef = useRef();
+  const contentEditorRef = useRef();
   const [blogFormData, setBlogFormData] = useState({
     title: '',
     excerpt: '',
@@ -93,7 +103,7 @@ const BlogManagement = () => {
   });
 
   useEffect(() => {
-    fetchBlogs();
+    fetchBlogs(pagination.current, pagination.pageSize);
     fetchCategories();
   }, [pagination.current, pagination.pageSize]);
 
@@ -217,21 +227,57 @@ const BlogManagement = () => {
     editor.commands.setContent(blogFormData.content);
   }
 
+  // Clear content validation error when user types in editor
+  useEffect(() => {
+    if (editor) {
+      const handleUpdate = () => {
+        if (validationErrors.content && blogFormData.content?.trim()) {
+          setValidationErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors.content;
+            return newErrors;
+          });
+        }
+      };
+      editor.on('update', handleUpdate);
+      return () => {
+        editor.off('update', handleUpdate);
+      };
+    }
+  }, [editor, validationErrors.content, blogFormData.content]);
+
   const handleCreateBlog = () => {
     setEditingBlog(null);
     resetBlogForm();
     setDrawerVisible(true);
   };
 
-  const handleEditBlog = (blog) => {
-    setEditingBlog(blog);
-    form.setFieldsValue({
-      title: blog.title,
-      author: blog.author,
-      status: blog.status,
-      excerpt: blog.excerpt
-    });
-    setDrawerVisible(true);
+  const handleEditBlog = async (blog) => {
+    try {
+      setLoading(true);
+      // Fetch full blog details
+      const response = await api.get(`/blog/posts/${blog.id}`);
+      const blogData = response.data.post || response.data;
+      
+      setEditingBlog(blogData);
+      
+      // Set form data for editing
+      setBlogFormData({
+        title: blogData.title || '',
+        excerpt: blogData.excerpt || '',
+        content: blogData.content || '',
+        categoryId: blogData.categoryId || blogData.category?.id || '',
+        imageUrl: blogData.imageUrl || '',
+        status: blogData.status || 'DRAFT'
+      });
+      
+      setDrawerVisible(true);
+    } catch (error) {
+      console.error('Error fetching blog for edit:', error);
+      message.error('Không thể tải thông tin blog');
+    } finally {
+      setLoading(false);
+    }
   };
 
   /**
@@ -262,7 +308,7 @@ const BlogManagement = () => {
       current: paginationInfo.current,
       pageSize: paginationInfo.pageSize
     }));
-    fetchBlogs(paginationInfo.current, paginationInfo.pageSize);
+    // useEffect will automatically fetch blogs when pagination changes
   };
 
   /**
@@ -401,7 +447,24 @@ const BlogManagement = () => {
    * @param {string} status - Blog status (DRAFT or PENDING_APPROVAL)
    */
   const handleCreateBlogSubmit = async (status) => {
-    if (!blogFormData.title || !blogFormData.excerpt || !blogFormData.content || !blogFormData.categoryId) {
+    // Validate required fields
+    const errors = {};
+    if (!blogFormData.title?.trim()) {
+      errors.title = 'Vui lòng nhập tiêu đề bài viết';
+    }
+    if (!blogFormData.excerpt?.trim()) {
+      errors.excerpt = 'Vui lòng nhập tóm tắt bài viết';
+    }
+    if (!blogFormData.content?.trim()) {
+      errors.content = 'Vui lòng nhập nội dung bài viết';
+    }
+    if (!blogFormData.categoryId) {
+      errors.categoryId = 'Vui lòng chọn danh mục';
+    }
+
+    setValidationErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
       message.error('Vui lòng điền đầy đủ các trường bắt buộc');
       return;
     }
@@ -445,9 +508,84 @@ const BlogManagement = () => {
       imageUrl: '',
       status: 'DRAFT'
     });
+    setValidationErrors({});
     createBlogForm.resetFields();
     if (editor) {
       editor.commands.setContent('');
+    }
+  };
+
+  /**
+   * 📝 Update existing blog
+   * @param {string} status - Blog status
+   */
+  const handleUpdateBlog = async (status) => {
+    // Validate required fields
+    const errors = {};
+    if (!blogFormData.title?.trim()) {
+      errors.title = 'Vui lòng nhập tiêu đề bài viết';
+    }
+    if (!blogFormData.excerpt?.trim()) {
+      errors.excerpt = 'Vui lòng nhập tóm tắt bài viết';
+    }
+    if (!blogFormData.content?.trim()) {
+      errors.content = 'Vui lòng nhập nội dung bài viết';
+    }
+    if (!blogFormData.categoryId) {
+      errors.categoryId = 'Vui lòng chọn danh mục';
+    }
+
+    setValidationErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      message.error('Vui lòng điền đầy đủ các trường bắt buộc');
+      
+      // Scroll to first error field
+      setTimeout(() => {
+        if (errors.title && titleInputRef.current) {
+          titleInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          titleInputRef.current.focus();
+        } else if (errors.excerpt && excerptInputRef.current) {
+          excerptInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          excerptInputRef.current.focus();
+        } else if (errors.categoryId && categorySelectRef.current) {
+          categorySelectRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (errors.content && contentEditorRef.current) {
+          contentEditorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
+      return;
+    }
+
+    setCreateBlogLoading(true);
+    try {
+      const submitData = {
+        title: blogFormData.title?.trim() || '',
+        excerpt: blogFormData.excerpt?.trim() || '',
+        content: blogFormData.content || '',
+        categoryId: parseInt(blogFormData.categoryId, 10),
+        imageUrl: blogFormData.imageUrl || '',
+        status: status || 'DRAFT'
+      };
+
+      // 🔗 API Call: PUT /blog/posts/{id}
+      await api.put(`/blog/posts/${editingBlog.id}`, submitData);
+      
+      message.success('Cập nhật blog thành công');
+      
+      // 🧹 Reset form and close drawer
+      resetBlogForm();
+      setDrawerVisible(false);
+      setEditingBlog(null);
+      
+      // 🔄 Reload blog list
+      fetchBlogs(pagination.current, pagination.pageSize);
+    } catch (error) {
+      console.error('❌ Error updating blog:', error);
+      message.error('Cập nhật blog thất bại');
+    } finally {
+      setCreateBlogLoading(false);
     }
   };
 
@@ -458,6 +596,61 @@ const BlogManagement = () => {
   const handleBlogInputChange = (e) => {
     const { name, value } = e.target;
     setBlogFormData(prev => ({ ...prev, [name]: value }));
+    // Clear validation error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  /**
+   * 📤 Handle image upload to Cloudinary
+   * @param {File} file - Image file to upload
+   */
+  const handleImageUpload = async (file) => {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG files!");
+      return false;
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must be smaller than 2MB!");
+      return false;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "SDN_Blog");
+      formData.append("cloud_name", "dejilsup7");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dejilsup7/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const result = await response.json();
+      setBlogFormData(prev => ({ ...prev, imageUrl: result.secure_url }));
+      message.success("Image uploaded successfully!");
+    } catch (err) {
+      console.error("Upload error:", err);
+      message.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+    return false;
   };
 
   /**
@@ -921,70 +1114,19 @@ const BlogManagement = () => {
 
       {/* Create/Edit Blog Drawer */}
       <Drawer
-        title={editingBlog ? 'Edit Blog' : 'Create New Blog'}
+        title={editingBlog ? 'Chỉnh sửa Blog' : 'Create New Blog'}
         width={800}
         open={drawerVisible}
-        onClose={() => setDrawerVisible(false)}
+        onClose={() => {
+          setDrawerVisible(false);
+          setEditingBlog(null);
+          resetBlogForm();
+        }}
         footer={null}
         style={{ zIndex: 1000 }}
       >
-        {editingBlog ? (
-          // Edit Blog Form (Simple version)
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleSubmit}
-          >
-            <Form.Item
-              name="title"
-              label="Title"
-              rules={[{ required: true, message: 'Please enter title' }]}
-            >
-              <Input placeholder="Enter blog title" />
-            </Form.Item>
-            
-            <Form.Item
-              name="author"
-              label="Author"
-              rules={[{ required: true, message: 'Please enter author' }]}
-            >
-              <Input placeholder="Enter author name" />
-            </Form.Item>
-            
-            <Form.Item
-              name="excerpt"
-              label="Excerpt"
-              rules={[{ required: true, message: 'Please enter excerpt' }]}
-            >
-              <TextArea 
-                rows={4} 
-                placeholder="Enter blog excerpt or summary"
-              />
-            </Form.Item>
-            
-            <Form.Item
-              name="status"
-              label="Status"
-              rules={[{ required: true, message: 'Please select status' }]}
-            >
-              <Select placeholder="Select status">
-                <Option value="draft">Draft</Option>
-                <Option value="published">Published</Option>
-              </Select>
-            </Form.Item>
-            
-            <Form.Item style={{ marginBottom: 0, marginTop: '32px' }}>
-              <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-                <Button onClick={() => setDrawerVisible(false)}>
-                  Cancel
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Update Blog
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
-        ) : (
+        {/* Both Create and Edit use same form now */}
+        {(editingBlog || !editingBlog) && (
           // Create Blog Form (Full version like PostBlog)
           <div style={{ padding: '0 8px' }}>
             <Form
@@ -994,90 +1136,224 @@ const BlogManagement = () => {
             >
               {/* Title */}
               <Form.Item
-                label="Tiêu đề bài viết *"
-                required
+                label={<span>Tiêu đề bài viết <span style={{ color: '#ff4d4f' }}>*</span></span>}
+                validateStatus={validationErrors.title ? 'error' : ''}
+                help={validationErrors.title}
               >
                 <Input
+                  ref={titleInputRef}
                   name="title"
                   value={blogFormData.title}
                   onChange={handleBlogInputChange}
                   placeholder="Nhập tiêu đề bài viết..."
                   size="large"
+                  status={validationErrors.title ? 'error' : ''}
                 />
               </Form.Item>
 
               {/* Excerpt */}
               <Form.Item
-                label="Tóm tắt bài viết *"
-                required
+                label={<span>Tóm tắt bài viết <span style={{ color: '#ff4d4f' }}>*</span></span>}
+                validateStatus={validationErrors.excerpt ? 'error' : ''}
+                help={validationErrors.excerpt}
               >
                 <TextArea
+                  ref={excerptInputRef}
                   name="excerpt"
                   value={blogFormData.excerpt}
                   onChange={handleBlogInputChange}
                   rows={3}
                   placeholder="Nhập tóm tắt ngắn gọn về bài viết..."
                   style={{ resize: 'none' }}
+                  status={validationErrors.excerpt ? 'error' : ''}
                 />
               </Form.Item>
 
               {/* Category */}
               <Form.Item
-                label="Danh mục *"
-                required
+                label={<span>Danh mục <span style={{ color: '#ff4d4f' }}>*</span></span>}
+                validateStatus={validationErrors.categoryId ? 'error' : ''}
+                help={validationErrors.categoryId}
               >
-                <Select
-                  name="categoryId"
-                  value={blogFormData.categoryId}
-                  onChange={(value) => setBlogFormData(prev => ({ ...prev, categoryId: value }))}
-                  placeholder="Select blog category"
-                  size="large"
-                >
-                  {categories.map(category => (
-                    <Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Option>
-                  ))}
-                </Select>
+                <div ref={categorySelectRef}>
+                  <Select
+                    name="categoryId"
+                    value={blogFormData.categoryId}
+                    onChange={(value) => {
+                      setBlogFormData(prev => ({ ...prev, categoryId: value }));
+                      if (validationErrors.categoryId) {
+                        setValidationErrors(prev => {
+                          const newErrors = { ...prev };
+                          delete newErrors.categoryId;
+                          return newErrors;
+                        });
+                      }
+                    }}
+                    placeholder="Select blog category"
+                    size="large"
+                    status={validationErrors.categoryId ? 'error' : ''}
+                  >
+                    {categories.map(category => (
+                      <Option key={category.id} value={category.id}>
+                        {category.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
               </Form.Item>
 
-              {/* Image URL */}
+              {/* Image Upload */}
               <Form.Item
-                label="Image URL"
+                label="Ảnh bìa"
               >
-                <Input
-                  name="imageUrl"
-                  value={blogFormData.imageUrl}
-                  onChange={handleBlogInputChange}
-                  placeholder="https://example.com/image.jpg"
-                  size="large"
-                />
-                {blogFormData.imageUrl && (
-                  <div style={{ marginTop: '16px' }}>
-                    <p style={{ fontSize: '14px', color: '#8c8c8c', marginBottom: '8px' }}>
-                      Xem trước ảnh:
-                    </p>
-                    <Image
-                      src={blogFormData.imageUrl}
-                      alt="Preview"
-                      style={{ maxWidth: '200px', borderRadius: '8px' }}
-                      fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1RnG4W+FgYxN"
-                    />
-                  </div>
-                )}
+                <div style={{
+                  border: '2px dashed #d9d9d9',
+                  borderRadius: '8px',
+                  padding: '24px',
+                  textAlign: 'center',
+                  transition: 'border-color 0.3s',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#40a9ff'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                >
+                  {blogFormData.imageUrl ? (
+                    <div style={{ position: 'relative' }}>
+                      <div style={{ position: 'relative', display: 'inline-block' }}>
+                        <img 
+                          src={blogFormData.imageUrl} 
+                          alt="Preview" 
+                          style={{
+                            maxWidth: '200px',
+                            maxHeight: '200px',
+                            borderRadius: '8px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            cursor: 'pointer'
+                          }}
+                          onError={(e) => e.target.style.display='none'}
+                          onDoubleClick={() => setShowImageModal(true)}
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setBlogFormData(prev => ({ ...prev, imageUrl: '' }));
+                          }}
+                          style={{
+                            position: 'absolute',
+                            top: '-8px',
+                            right: '-8px',
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            backgroundColor: '#ff4d4f',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <p style={{ marginTop: '12px', fontSize: '12px', color: '#8c8c8c' }}>
+                        Ảnh đã được tải lên • Nhấp đúp để xem lớn
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{
+                        width: '64px',
+                        height: '64px',
+                        margin: '0 auto 16px',
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <svg style={{ width: '32px', height: '32px', color: '#8c8c8c' }} fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                        </svg>
+                      </div>
+                      <p style={{ fontSize: '14px', color: '#595959', marginBottom: '8px' }}>
+                        Kéo thả ảnh vào đây hoặc click để chọn
+                      </p>
+                      <p style={{ fontSize: '12px', color: '#8c8c8c' }}>
+                        JPG, PNG tối đa 2MB
+                      </p>
+                    </div>
+                  )}
+                  
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        await handleImageUpload(file);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                  
+                  <Button
+                    type="primary"
+                    icon={<EyeOutlined />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (fileInputRef.current) {
+                        fileInputRef.current.click();
+                      }
+                    }}
+                    loading={uploading}
+                    style={{ marginTop: '16px' }}
+                  >
+                    {uploading ? 'Đang tải lên...' : (blogFormData.imageUrl ? 'Đổi ảnh' : 'Chọn ảnh')}
+                  </Button>
+                </div>
+                
+                {/* Paste URL option */}
+                <details style={{ marginTop: '12px' }}>
+                  <summary style={{
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    color: '#8c8c8c',
+                    userSelect: 'none'
+                  }}>
+                    Hoặc dán URL ảnh
+                  </summary>
+                  <Input
+                    name="imageUrl"
+                    value={blogFormData.imageUrl}
+                    onChange={handleBlogInputChange}
+                    placeholder="https://example.com/image.jpg"
+                    style={{ marginTop: '8px' }}
+                  />
+                </details>
               </Form.Item>
 
               {/* Content Editor */}
               <Form.Item
-                label="Nội dung bài viết *"
-                required
+                label={<span>Nội dung bài viết <span style={{ color: '#ff4d4f' }}>*</span></span>}
+                validateStatus={validationErrors.content ? 'error' : ''}
+                help={validationErrors.content}
               >
-                <div style={{ 
-                  border: '1px solid #d9d9d9', 
-                  borderRadius: '6px',
-                  minHeight: '300px',
-                  overflow: 'hidden'
-                }}>
+                <div 
+                  ref={contentEditorRef}
+                  style={{ 
+                    border: validationErrors.content ? '1px solid #ff4d4f' : '1px solid #d9d9d9', 
+                    borderRadius: '6px',
+                    minHeight: '300px',
+                    overflow: 'hidden'
+                  }}
+                >
                   {/* Editor Toolbar */}
                   <EditorToolbar />
                   
@@ -1107,29 +1383,59 @@ const BlogManagement = () => {
                 marginTop: '24px'
               }}>
                 <Button 
-                  onClick={() => setDrawerVisible(false)}
+                  onClick={() => {
+                    setDrawerVisible(false);
+                    setEditingBlog(null);
+                    resetBlogForm();
+                  }}
                   size="large"
                   style={{ flex: 1 }}
                 >
                   Hủy
                 </Button>
-                <Button 
-                  onClick={() => handleCreateBlogSubmit('DRAFT')}
-                  loading={createBlogLoading}
-                  size="large"
-                  style={{ flex: 1, backgroundColor: '#6c757d', borderColor: '#6c757d' }}
-                >
-                  {createBlogLoading ? 'Đang lưu...' : 'Lưu bản nháp'}
-                </Button>
-                <Button 
-                  type="primary"
-                  onClick={() => handleCreateBlogSubmit('PENDING_APPROVAL')}
-                  loading={createBlogLoading}
-                  size="large"
-                  style={{ flex: 1 }}
-                >
-                  {createBlogLoading ? 'Đang gửi...' : 'Gửi để duyệt'}
-                </Button>
+                {editingBlog ? (
+                  // Edit mode buttons
+                  <>
+                    <Button 
+                      onClick={() => handleUpdateBlog('DRAFT')}
+                      loading={createBlogLoading}
+                      size="large"
+                      style={{ flex: 1, backgroundColor: '#6c757d', borderColor: '#6c757d', color: 'white' }}
+                    >
+                      {createBlogLoading ? 'Đang lưu...' : 'Lưu bản nháp'}
+                    </Button>
+                    <Button 
+                      type="primary"
+                      onClick={() => handleUpdateBlog('PUBLISHED')}
+                      loading={createBlogLoading}
+                      size="large"
+                      style={{ flex: 1 }}
+                    >
+                      {createBlogLoading ? 'Đang cập nhật...' : 'Cập nhật & Xuất bản'}
+                    </Button>
+                  </>
+                ) : (
+                  // Create mode buttons
+                  <>
+                    <Button 
+                      onClick={() => handleCreateBlogSubmit('DRAFT')}
+                      loading={createBlogLoading}
+                      size="large"
+                      style={{ flex: 1, backgroundColor: '#6c757d', borderColor: '#6c757d', color: 'white' }}
+                    >
+                      {createBlogLoading ? 'Đang lưu...' : 'Lưu bản nháp'}
+                    </Button>
+                    <Button 
+                      type="primary"
+                      onClick={() => handleCreateBlogSubmit('PENDING_APPROVAL')}
+                      loading={createBlogLoading}
+                      size="large"
+                      style={{ flex: 1 }}
+                    >
+                      {createBlogLoading ? 'Đang gửi...' : 'Gửi để duyệt'}
+                    </Button>
+                  </>
+                )}
               </div>
             </Form>
           </div>
@@ -1350,6 +1656,36 @@ const BlogManagement = () => {
             </Space>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Image Preview Modal */}
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <EyeOutlined style={{ color: '#1890ff' }} />
+            <span>Xem ảnh</span>
+          </div>
+        }
+        open={showImageModal}
+        onCancel={() => setShowImageModal(false)}
+        footer={null}
+        width="auto"
+        centered
+        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+      >
+        <div style={{ textAlign: 'center', padding: '20px 0' }}>
+          <img 
+            src={blogFormData.imageUrl} 
+            alt="Preview" 
+            style={{ 
+              maxWidth: '100%', 
+              maxHeight: '70vh', 
+              objectFit: 'contain',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );

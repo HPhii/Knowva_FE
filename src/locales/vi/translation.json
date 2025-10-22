@@ -1096,7 +1096,69 @@
     },
     "errors": {
       "fillRequiredFields": "Vui lòng điền đầy đủ các trường bắt buộc",
-      "createFailed": "Không thể tạo bài viết blog. Vui lòng thử lại."
+      "createFailed": "Không thể tạo bài viết blog. Vui lòng thử lại.",
+      "titleRequired": "Vui lòng nhập tiêu đề blog",
+      "excerptRequired": "Vui lòng nhập mô tả ngắn",
+      "contentRequired": "Vui lòng nhập nội dung blog",
+      "categoryRequired": "Vui lòng chọn danh mục"
+    }
+  },
+  "editBlog": {
+    "title": "Chỉnh sửa blog",
+    "subtitle": "Cập nhật thông tin và nội dung blog của bạn",
+    "goBack": "Quay lại",
+    "loading": "Đang tải thông tin blog...",
+    "errorOccurred": "Có lỗi xảy ra",
+    "editor": {
+      "placeholder": "Viết nội dung blog..."
+    },
+    "form": {
+      "title": "Tiêu đề blog",
+      "titlePlaceholder": "Nhập tiêu đề blog...",
+      "excerpt": "Mô tả ngắn",
+      "excerptPlaceholder": "Mô tả ngắn gọn về nội dung blog...",
+      "category": "Danh mục",
+      "selectCategory": "Chọn danh mục",
+      "featuredImage": "Ảnh đại diện",
+      "imageUploaded": "Ảnh đã được tải lên",
+      "dragDropImage": "Kéo thả ảnh vào đây hoặc click để chọn",
+      "imageFormat": "JPG, PNG tối đa 2MB",
+      "selectImage": "Chọn ảnh",
+      "uploading": "Đang tải lên...",
+      "content": "Nội dung blog"
+    },
+    "buttons": {
+      "saving": "Đang lưu...",
+      "saveDraft": "Lưu bản nháp",
+      "updating": "Đang cập nhật...",
+      "updateAndPublish": "Cập nhật và xuất bản"
+    },
+    "validation": {
+      "titleRequired": "Vui lòng nhập tiêu đề blog",
+      "excerptRequired": "Vui lòng nhập mô tả ngắn",
+      "contentRequired": "Vui lòng nhập nội dung blog",
+      "categoryRequired": "Vui lòng chọn danh mục",
+      "fillRequired": "Vui lòng điền đầy đủ thông tin bắt buộc"
+    },
+    "success": {
+      "imageUploaded": "Upload ảnh thành công!",
+      "draftSaved": "Lưu bản nháp thành công!",
+      "blogUpdated": "Cập nhật blog thành công!"
+    },
+    "errors": {
+      "loadFailed": "Không thể tải thông tin blog. Vui lòng thử lại.",
+      "loadError": "Không thể tải thông tin blog",
+      "imageType": "Chỉ được upload file JPG/PNG!",
+      "imageSize": "Kích thước ảnh phải nhỏ hơn 2MB!",
+      "uploadFailed": "Upload ảnh thất bại",
+      "notFound": "Không tìm thấy blog này. Có thể blog đã bị xóa.",
+      "noPermission": "Bạn không có quyền chỉnh sửa blog này.",
+      "invalidData": "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.",
+      "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+      "updateFailed": "Không thể cập nhật blog. Vui lòng thử lại."
+    },
+    "imageModal": {
+      "title": "Xem ảnh"
     }
   },
   "__comment_comments": "=== Comment System Translations ===",

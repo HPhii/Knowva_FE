@@ -1050,7 +1050,69 @@
     },
     "errors": {
       "fillRequiredFields": "Please fill in all required fields",
-      "createFailed": "Failed to create blog post. Please try again."
+      "createFailed": "Failed to create blog post. Please try again.",
+      "titleRequired": "Please enter blog title",
+      "excerptRequired": "Please enter excerpt",
+      "contentRequired": "Please enter blog content",
+      "categoryRequired": "Please select a category"
+    }
+  },
+  "editBlog": {
+    "title": "Edit Blog",
+    "subtitle": "Update your blog information and content",
+    "goBack": "Go Back",
+    "loading": "Loading blog information...",
+    "errorOccurred": "An error occurred",
+    "editor": {
+      "placeholder": "Write blog content..."
+    },
+    "form": {
+      "title": "Blog Title",
+      "titlePlaceholder": "Enter blog title...",
+      "excerpt": "Short Description",
+      "excerptPlaceholder": "Brief description of blog content...",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "featuredImage": "Featured Image",
+      "imageUploaded": "Image uploaded successfully",
+      "dragDropImage": "Drag and drop image here or click to select",
+      "imageFormat": "JPG, PNG up to 2MB",
+      "selectImage": "Select Image",
+      "uploading": "Uploading...",
+      "content": "Blog Content"
+    },
+    "buttons": {
+      "saving": "Saving...",
+      "saveDraft": "Save Draft",
+      "updating": "Updating...",
+      "updateAndPublish": "Update and Publish"
+    },
+    "validation": {
+      "titleRequired": "Please enter blog title",
+      "excerptRequired": "Please enter short description",
+      "contentRequired": "Please enter blog content",
+      "categoryRequired": "Please select a category",
+      "fillRequired": "Please fill in all required information"
+    },
+    "success": {
+      "imageUploaded": "Image uploaded successfully!",
+      "draftSaved": "Draft saved successfully!",
+      "blogUpdated": "Blog updated successfully!"
+    },
+    "errors": {
+      "loadFailed": "Unable to load blog information. Please try again.",
+      "loadError": "Unable to load blog information",
+      "imageType": "Only JPG/PNG files allowed!",
+      "imageSize": "Image size must be less than 2MB!",
+      "uploadFailed": "Image upload failed",
+      "notFound": "Blog not found. It may have been deleted.",
+      "noPermission": "You don't have permission to edit this blog.",
+      "invalidData": "Invalid data. Please check again.",
+      "sessionExpired": "Session expired. Please login again.",
+      "updateFailed": "Unable to update blog. Please try again."
+    },
+    "imageModal": {
+      "title": "View Image"
     }
   },
   "__comment_comments": "=== Comment System Translations ===",

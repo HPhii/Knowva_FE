@@ -152,6 +152,7 @@ const ScratchFlashcard = () => {
                   options={[
                     { value: "PUBLIC", label: "Public" },
                     { value: "PRIVATE", label: "Private" },
+                    { value: "HIDDEN", label: "Hidden" },
                   ]}
                 />
               </Form.Item>
@@ -167,6 +168,8 @@ const ScratchFlashcard = () => {
                 }
                 rows={3}
                 placeholder="Nhập mô tả..."
+                maxLength={200}
+                showCount
               />
             </Form.Item>
 

@@ -43,10 +43,12 @@ const FlashcardCard = ({ flashcard, onView }) => {
           <div className="flex items-center">
             <FileTextOutlined className="mr-1" />
             <span>{(() => {
-              // Tính số card dựa trên ID lớn nhất trong danh sách flashcards
+              // Tính số card dựa trên ID lớn nhất trừ ID nhỏ nhất + 1
               if (flashcard.flashcards && Array.isArray(flashcard.flashcards) && flashcard.flashcards.length > 0) {
-                const maxId = Math.max(...flashcard.flashcards.map(card => card.id || 0));
-                return maxId;
+                const ids = flashcard.flashcards.map(card => card.id || 0);
+                const maxId = Math.max(...ids);
+                const minId = Math.min(...ids);
+                return maxId - minId + 1;
               }
               // Fallback về các field khác nếu không có flashcards array
               return flashcard.maxQuestion || flashcard.cardCount || 0;

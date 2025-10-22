@@ -853,29 +853,37 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
               
               {/* Image Upload - compact version */}
               <div className="flex-shrink-0">
-                <div className="w-24 h-20">
-                  <ImageUpload
-                    onImageUpload={handleImageUpload}
-                    onUploadStart={handleImageUploadStart}
-                    isUploading={isUploadingImage}
-                    disabled={isSubmitting}
-                    compact={true}
-                  />
-                </div>
-                {imageUrl && (
-                  <div className="mt-1 flex items-center space-x-1">
+                {imageUrl ? (
+                  <div className="relative w-24 h-20 group">
                     <img 
                       src={imageUrl} 
                       alt="Preview" 
-                      className="w-8 h-8 object-cover rounded"
+                      className="w-full h-full object-cover rounded-xl border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => setImageUrl('')}
+                      title="Click để thay đổi ảnh"
                     />
                     <button
                       type="button"
-                      onClick={() => setImageUrl('')}
-                      className="text-red-500 hover:text-red-700 text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImageUrl('');
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition-all opacity-0 group-hover:opacity-100"
+                      title="Xóa ảnh"
                     >
                       ✕
                     </button>
+                  </div>
+                ) : (
+                  <div className="w-24 h-20">
+                    <ImageUpload
+                      onImageUpload={handleImageUpload}
+                      onUploadStart={handleImageUploadStart}
+                      isUploading={isUploadingImage}
+                      disabled={isSubmitting}
+                      compact={true}
+                      showSuccessToast={false}
+                    />
                   </div>
                 )}
               </div>
@@ -1066,29 +1074,37 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                             
                             {/* Reply Image Upload - compact version */}
                             <div className="flex-shrink-0">
-                              <div className="w-20 h-16">
-                                <ImageUpload
-                                  onImageUpload={handleReplyImageUpload}
-                                  onUploadStart={handleReplyImageUploadStart}
-                                  isUploading={isUploadingReplyImage}
-                                  disabled={isSubmittingReply}
-                                  compact={true}
-                                />
-                              </div>
-                              {replyImageUrl && (
-                                <div className="mt-1 flex items-center space-x-1">
+                              {replyImageUrl ? (
+                                <div className="relative w-20 h-16 group">
                                   <img 
                                     src={replyImageUrl} 
                                     alt="Preview" 
-                                    className="w-6 h-6 object-cover rounded"
+                                    className="w-full h-full object-cover rounded-xl border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
+                                    onClick={() => setReplyImageUrl('')}
+                                    title="Click để thay đổi ảnh"
                                   />
                                   <button
                                     type="button"
-                                    onClick={() => setReplyImageUrl('')}
-                                    className="text-red-500 hover:text-red-700 text-xs"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setReplyImageUrl('');
+                                    }}
+                                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all opacity-0 group-hover:opacity-100"
+                                    title="Xóa ảnh"
                                   >
                                     ✕
                                   </button>
+                                </div>
+                              ) : (
+                                <div className="w-20 h-16">
+                                  <ImageUpload
+                                    onImageUpload={handleReplyImageUpload}
+                                    onUploadStart={handleReplyImageUploadStart}
+                                    isUploading={isUploadingReplyImage}
+                                    disabled={isSubmittingReply}
+                                    compact={true}
+                                    showSuccessToast={false}
+                                  />
                                 </div>
                               )}
                             </div>

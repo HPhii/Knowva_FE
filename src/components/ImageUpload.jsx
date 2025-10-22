@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const ImageUpload = ({ onImageUpload, onUploadStart, isUploading = false, disabled = false, compact = false }) => {
+const ImageUpload = ({ onImageUpload, onUploadStart, isUploading = false, disabled = false, compact = false, showSuccessToast = true }) => {
   const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
@@ -43,7 +43,9 @@ const ImageUpload = ({ onImageUpload, onUploadStart, isUploading = false, disabl
 
       const result = await response.json();
       onImageUpload(result.secure_url);
-      showToast(t("imageUploadSuccess") || "Upload ảnh thành công!", 'success');
+      if (showSuccessToast) {
+        showToast(t("imageUploadSuccess") || "Upload ảnh thành công!", 'success');
+      }
     } catch (err) {
       console.error("Upload error:", err);
       showToast(t("imageUploadError") || "Không thể upload ảnh", 'error');

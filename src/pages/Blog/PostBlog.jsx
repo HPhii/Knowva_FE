@@ -27,19 +27,35 @@ const PostBlog = () => {
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const fileInputRef = useRef();
+    
+    // Refs for form fields to enable scrolling to error
+    const titleInputRef = useRef();
+    const excerptInputRef = useRef();
+    const categorySelectRef = useRef();
+    const contentEditorRef = useRef();
     // Get categories from utility file
     const categories = getCategoriesForSelect(t);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear validation error when user starts typing
+        if (validationErrors[name]) {
+            setValidationErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+        }
     };
 
     const resetForm = () => {
         setFormData({
             title: '', excerpt: '', content: '', categoryId: '', imageUrl: '', status: 'DRAFT'
         });
+        setValidationErrors({});
         if (editor) {
             editor.commands.setContent('');
         }
@@ -101,10 +117,45 @@ const PostBlog = () => {
     };
 
     const handleSubmit = async (status) => {
-        if (!formData.title || !formData.excerpt || !formData.content || !formData.categoryId) {
+        // Validate required fields
+        const errors = {};
+        if (!formData.title?.trim()) {
+            errors.title = t('postBlog.errors.titleRequired') || 'Vui lòng nhập tiêu đề blog';
+        }
+        if (!formData.excerpt?.trim()) {
+            errors.excerpt = t('postBlog.errors.excerptRequired') || 'Vui lòng nhập mô tả ngắn';
+        }
+        if (!formData.content?.trim()) {
+            errors.content = t('postBlog.errors.contentRequired') || 'Vui lòng nhập nội dung blog';
+        }
+        if (!formData.categoryId) {
+            errors.categoryId = t('postBlog.errors.categoryRequired') || 'Vui lòng chọn danh mục';
+        }
+
+        setValidationErrors(errors);
+
+        if (Object.keys(errors).length > 0) {
             showToast(t('postBlog.errors.fillRequiredFields'), 'error');
+            
+            // Scroll to first error field
+            setTimeout(() => {
+                if (errors.title && titleInputRef.current) {
+                    titleInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    titleInputRef.current.focus();
+                } else if (errors.excerpt && excerptInputRef.current) {
+                    excerptInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    excerptInputRef.current.focus();
+                } else if (errors.categoryId && categorySelectRef.current) {
+                    categorySelectRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    categorySelectRef.current.focus();
+                } else if (errors.content && contentEditorRef.current) {
+                    contentEditorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+            
             return;
         }
+        
         setLoading(true);
         try {
             const submitData = {
@@ -153,47 +204,65 @@ const PostBlog = () => {
                         {/* === CÁC TRƯỜNG INPUT CHO BÀI VIẾT === */}
                         <div className="mb-6">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.title')} *
+                                {t('postBlog.form.title')} <span className="text-red-500">*</span>
                             </label>
                             <input
+                                ref={titleInputRef}
                                 type="text"
                                 id="title"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors ${
+                                    validationErrors.title 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
                                 placeholder={t('postBlog.form.titlePlaceholder')}
-                                required
                             />
+                            {validationErrors.title && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.title}</p>
+                            )}
                         </div>
 
                         <div className="mb-6">
                             <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.excerpt')} *
+                                {t('postBlog.form.excerpt')} <span className="text-red-500">*</span>
                             </label>
                             <textarea
+                                ref={excerptInputRef}
                                 id="excerpt"
                                 name="excerpt"
                                 value={formData.excerpt}
                                 onChange={handleInputChange}
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors resize-none ${
+                                    validationErrors.excerpt 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
                                 placeholder={t('postBlog.form.excerptPlaceholder')}
-                                required
                             />
+                            {validationErrors.excerpt && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.excerpt}</p>
+                            )}
                         </div>
 
                         <div className="mb-6">
                             <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.category')} *
+                                {t('postBlog.form.category')} <span className="text-red-500">*</span>
                             </label>
                             <select
+                                ref={categorySelectRef}
                                 id="categoryId"
                                 name="categoryId"
                                 value={formData.categoryId}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                required
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors ${
+                                    validationErrors.categoryId 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
                             >
                                 <option value="">
                                     {t('postBlog.form.selectCategory')}
@@ -204,6 +273,9 @@ const PostBlog = () => {
                                     </option>
                                 ))}
                             </select>
+                            {validationErrors.categoryId && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.categoryId}</p>
+                            )}
                         </div>
                         
                         <div className="mb-6">
@@ -308,9 +380,16 @@ const PostBlog = () => {
 
                         <div className="mb-8">
                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                {t('postBlog.form.content')} *
+                                {t('postBlog.form.content')} <span className="text-red-500">*</span>
                            </label>
-                           <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+                           <div 
+                                ref={contentEditorRef}
+                                className={`border rounded-lg focus-within:ring-2 ${
+                                    validationErrors.content 
+                                        ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500' 
+                                        : 'border-gray-300 focus-within:border-blue-500 focus-within:ring-blue-500'
+                                }`}
+                           >
                                {/* Toolbar */}
                                {editor && (
                                    <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1">
@@ -479,6 +558,9 @@ const PostBlog = () => {
                                )}
                                <EditorContent editor={editor} className="min-h-[300px] p-4 prose max-w-none focus:outline-none" />
                            </div>
+                           {validationErrors.content && (
+                               <p className="mt-1 text-sm text-red-500">{validationErrors.content}</p>
+                           )}
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">

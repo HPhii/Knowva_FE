@@ -30,7 +30,14 @@ const EditBlog = () => {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState(null);
     const [showImageModal, setShowImageModal] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const fileInputRef = useRef();
+    
+    // Refs for form fields to enable scrolling to error
+    const titleInputRef = useRef();
+    const excerptInputRef = useRef();
+    const categorySelectRef = useRef();
+    const contentEditorRef = useRef();
     
     // Get categories from utility file
     const categories = getCategoriesForSelect(t);
@@ -42,7 +49,7 @@ const EditBlog = () => {
             Link, 
             Image, 
             TextAlign.configure({ types: ['heading', 'paragraph'] }), 
-            Placeholder.configure({ placeholder: 'Viết nội dung blog...' })
+            Placeholder.configure({ placeholder: t('editBlog.editor.placeholder') || 'Viết nội dung blog...' })
         ],
         content: formData.content,
         onUpdate: ({ editor }) => {
@@ -74,8 +81,8 @@ const EditBlog = () => {
                 });
             } catch (err) {
                 console.error('Error fetching blog:', err);
-                setError('Không thể tải thông tin blog. Vui lòng thử lại.');
-                message.error('Không thể tải thông tin blog');
+                setError(t('editBlog.errors.loadFailed') || 'Không thể tải thông tin blog. Vui lòng thử lại.');
+                message.error(t('editBlog.errors.loadError') || 'Không thể tải thông tin blog');
             } finally {
                 setLoading(false);
             }
@@ -89,17 +96,25 @@ const EditBlog = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear validation error when user starts typing
+        if (validationErrors[name]) {
+            setValidationErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+        }
     };
 
     const handleImageUpload = async (file) => {
         const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
         if (!isJpgOrPng) {
-            message.error("Chỉ được upload file JPG/PNG!");
+            message.error(t('editBlog.errors.imageType') || "Chỉ được upload file JPG/PNG!");
             return false;
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error("Kích thước ảnh phải nhỏ hơn 2MB!");
+            message.error(t('editBlog.errors.imageSize') || "Kích thước ảnh phải nhỏ hơn 2MB!");
             return false;
         }
 
@@ -124,10 +139,10 @@ const EditBlog = () => {
 
             const result = await response.json();
             setFormData(prev => ({ ...prev, imageUrl: result.secure_url }));
-            message.success("Upload ảnh thành công!");
+            message.success(t('editBlog.success.imageUploaded') || "Upload ảnh thành công!");
         } catch (err) {
             console.error("Upload error:", err);
-            message.error("Upload ảnh thất bại");
+            message.error(t('editBlog.errors.uploadFailed') || "Upload ảnh thất bại");
         } finally {
             setUploading(false);
         }
@@ -135,8 +150,42 @@ const EditBlog = () => {
     };
 
     const handleSave = async (status = 'DRAFT') => {
-        if (!formData.title || !formData.excerpt || !formData.content || !formData.categoryId) {
-            message.error('Vui lòng điền đầy đủ thông tin bắt buộc');
+        // Validate required fields
+        const errors = {};
+        if (!formData.title?.trim()) {
+            errors.title = t('editBlog.validation.titleRequired') || 'Vui lòng nhập tiêu đề blog';
+        }
+        if (!formData.excerpt?.trim()) {
+            errors.excerpt = t('editBlog.validation.excerptRequired') || 'Vui lòng nhập mô tả ngắn';
+        }
+        if (!formData.content?.trim()) {
+            errors.content = t('editBlog.validation.contentRequired') || 'Vui lòng nhập nội dung blog';
+        }
+        if (!formData.categoryId) {
+            errors.categoryId = t('editBlog.validation.categoryRequired') || 'Vui lòng chọn danh mục';
+        }
+
+        setValidationErrors(errors);
+
+        if (Object.keys(errors).length > 0) {
+            message.error(t('editBlog.validation.fillRequired') || 'Vui lòng điền đầy đủ thông tin bắt buộc');
+            
+            // Scroll to first error field
+            setTimeout(() => {
+                if (errors.title && titleInputRef.current) {
+                    titleInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    titleInputRef.current.focus();
+                } else if (errors.excerpt && excerptInputRef.current) {
+                    excerptInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    excerptInputRef.current.focus();
+                } else if (errors.categoryId && categorySelectRef.current) {
+                    categorySelectRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    categorySelectRef.current.focus();
+                } else if (errors.content && contentEditorRef.current) {
+                    contentEditorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+            
             return;
         }
 
@@ -153,7 +202,10 @@ const EditBlog = () => {
             };
             
             const response = await api.put(`/blog/posts/${id}`, submitData);
-            message.success(status === 'DRAFT' ? 'Lưu bản nháp thành công!' : 'Cập nhật blog thành công!');
+            message.success(status === 'DRAFT' 
+                ? (t('editBlog.success.draftSaved') || 'Lưu bản nháp thành công!') 
+                : (t('editBlog.success.blogUpdated') || 'Cập nhật blog thành công!')
+            );
             
             if (status === 'PUBLISHED') {
                 // Navigate back to blog list or user's blog tab
@@ -161,16 +213,16 @@ const EditBlog = () => {
             }
         } catch (error) {
             if (error.response?.status === 404) {
-                message.error('Không tìm thấy blog này. Có thể blog đã bị xóa.');
+                message.error(t('editBlog.errors.notFound') || 'Không tìm thấy blog này. Có thể blog đã bị xóa.');
             } else if (error.response?.status === 403) {
-                message.error('Bạn không có quyền chỉnh sửa blog này.');
+                message.error(t('editBlog.errors.noPermission') || 'Bạn không có quyền chỉnh sửa blog này.');
             } else if (error.response?.status === 400) {
-                const errorMsg = error.response?.data?.message || 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.';
+                const errorMsg = error.response?.data?.message || t('editBlog.errors.invalidData') || 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.';
                 message.error(errorMsg);
             } else if (error.response?.status === 401) {
-                message.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                message.error(t('editBlog.errors.sessionExpired') || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
             } else {
-                message.error('Không thể cập nhật blog. Vui lòng thử lại.');
+                message.error(t('editBlog.errors.updateFailed') || 'Không thể cập nhật blog. Vui lòng thử lại.');
             }
         } finally {
             setSaving(false);
@@ -187,7 +239,7 @@ const EditBlog = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Đang tải thông tin blog...</p>
+                    <p className="text-gray-600">{t('editBlog.loading') || 'Đang tải thông tin blog...'}</p>
                 </div>
             </div>
         );
@@ -202,13 +254,13 @@ const EditBlog = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                         </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Có lỗi xảy ra</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('editBlog.errorOccurred') || 'Có lỗi xảy ra'}</h3>
                     <p className="text-gray-600 mb-4">{error}</p>
                     <button
                         onClick={() => navigate('/user/profile?tab=blogs')}
                         className="px-4 py-2 bg-blue-600 !text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
-                        Quay lại
+                        {t('editBlog.goBack') || 'Quay lại'}
                     </button>
                 </div>
             </div>
@@ -221,14 +273,14 @@ const EditBlog = () => {
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Chỉnh sửa blog</h1>
-                            <p className="text-gray-600">Cập nhật thông tin và nội dung blog của bạn</p>
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('editBlog.title') || 'Chỉnh sửa blog'}</h1>
+                            <p className="text-gray-600">{t('editBlog.subtitle') || 'Cập nhật thông tin và nội dung blog của bạn'}</p>
                         </div>
                         <button
                             onClick={() => navigate('/user/profile?tab=blogs')}
                             className="px-4 py-2 bg-gray-600 !text-white rounded-lg hover:bg-gray-700 transition-colors"
                         >
-                            Quay lại
+                            {t('editBlog.goBack') || 'Quay lại'}
                         </button>
                     </div>
                 </div>
@@ -239,63 +291,84 @@ const EditBlog = () => {
                         {/* Title */}
                         <div className="mb-6">
                             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                                Tiêu đề blog *
+                                {t('editBlog.form.title') || 'Tiêu đề blog'} <span className="text-red-500">*</span>
                             </label>
                             <input
+                                ref={titleInputRef}
                                 type="text"
                                 id="title"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                placeholder="Nhập tiêu đề blog..."
-                                required
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors ${
+                                    validationErrors.title 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
+                                placeholder={t('editBlog.form.titlePlaceholder') || 'Nhập tiêu đề blog...'}
                             />
+                            {validationErrors.title && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.title}</p>
+                            )}
                         </div>
 
                         {/* Excerpt */}
                         <div className="mb-6">
                             <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
-                                Mô tả ngắn *
+                                {t('editBlog.form.excerpt') || 'Mô tả ngắn'} <span className="text-red-500">*</span>
                             </label>
                             <textarea
+                                ref={excerptInputRef}
                                 id="excerpt"
                                 name="excerpt"
                                 value={formData.excerpt}
                                 onChange={handleInputChange}
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-                                placeholder="Mô tả ngắn gọn về nội dung blog..."
-                                required
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors resize-none ${
+                                    validationErrors.excerpt 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
+                                placeholder={t('editBlog.form.excerptPlaceholder') || 'Mô tả ngắn gọn về nội dung blog...'}
                             />
+                            {validationErrors.excerpt && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.excerpt}</p>
+                            )}
                         </div>
 
                         {/* Category */}
                         <div className="mb-6">
                             <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-2">
-                                Danh mục *
+                                {t('editBlog.form.category') || 'Danh mục'} <span className="text-red-500">*</span>
                             </label>
                             <select
+                                ref={categorySelectRef}
                                 id="categoryId"
                                 name="categoryId"
                                 value={formData.categoryId}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                required
+                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 transition-colors ${
+                                    validationErrors.categoryId 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                                }`}
                             >
-                                <option value="">Chọn danh mục</option>
+                                <option value="">{t('editBlog.form.selectCategory') || 'Chọn danh mục'}</option>
                                 {categories.map(category => (
                                     <option key={category.id} value={category.id}>
                                         {t(category.nameKey)}
                                     </option>
                                 ))}
                             </select>
+                            {validationErrors.categoryId && (
+                                <p className="mt-1 text-sm text-red-500">{validationErrors.categoryId}</p>
+                            )}
                         </div>
                         
                         {/* Image Upload */}
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Ảnh đại diện
+                                {t('editBlog.form.featuredImage') || 'Ảnh đại diện'}
                             </label>
                             
                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -318,7 +391,7 @@ const EditBlog = () => {
                                             </button>
                                         </div>
                                         <p className="text-sm text-gray-500">
-                                            Ảnh đã được tải lên
+                                            {t('editBlog.form.imageUploaded') || 'Ảnh đã được tải lên'}
                                         </p>
                                     </div>
                                 ) : (
@@ -328,10 +401,10 @@ const EditBlog = () => {
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-600 mb-2">
-                                                Kéo thả ảnh vào đây hoặc click để chọn
+                                                {t('editBlog.form.dragDropImage') || 'Kéo thả ảnh vào đây hoặc click để chọn'}
                                             </p>
                                             <p className="text-xs text-gray-500">
-                                                JPG, PNG tối đa 2MB
+                                                {t('editBlog.form.imageFormat') || 'JPG, PNG tối đa 2MB'}
                                             </p>
                                         </div>
                                     </div>
@@ -364,10 +437,10 @@ const EditBlog = () => {
                                     {uploading ? (
                                         <span className="flex items-center">
                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
-                                            Đang tải lên...
+                                            {t('editBlog.form.uploading') || 'Đang tải lên...'}
                                         </span>
                                     ) : (
-                                        'Chọn ảnh'
+                                        t('editBlog.form.selectImage') || 'Chọn ảnh'
                                     )}
                                 </button>
                             </div>
@@ -376,9 +449,16 @@ const EditBlog = () => {
                         {/* Content Editor */}
                         <div className="mb-8">
                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nội dung blog *
+                                {t('editBlog.form.content') || 'Nội dung blog'} <span className="text-red-500">*</span>
                            </label>
-                           <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+                           <div 
+                                ref={contentEditorRef}
+                                className={`border rounded-lg focus-within:ring-2 ${
+                                    validationErrors.content 
+                                        ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500' 
+                                        : 'border-gray-300 focus-within:border-blue-500 focus-within:ring-blue-500'
+                                }`}
+                           >
                                {/* Toolbar */}
                                {editor && (
                                    <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1">
@@ -489,6 +569,9 @@ const EditBlog = () => {
                                )}
                                <EditorContent editor={editor} className="min-h-[400px] p-4 prose max-w-none focus:outline-none" />
                            </div>
+                           {validationErrors.content && (
+                               <p className="mt-1 text-sm text-red-500">{validationErrors.content}</p>
+                           )}
                         </div>
 
 
@@ -502,12 +585,12 @@ const EditBlog = () => {
                                 {saving ? (
                                     <span className="flex items-center">
                                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
-                                        Đang lưu...
+                                        {t('editBlog.buttons.saving') || 'Đang lưu...'}
                                     </span>
                                 ) : (
                                     <span className="flex items-center">
                                         <SaveOutlined className="w-4 h-4 mr-2" />
-                                        Lưu bản nháp
+                                        {t('editBlog.buttons.saveDraft') || 'Lưu bản nháp'}
                                     </span>
                                 )}
                             </button>
@@ -519,12 +602,12 @@ const EditBlog = () => {
                                 {saving ? (
                                     <span className="flex items-center">
                                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 !border-white mr-2"></div>
-                                        Đang cập nhật...
+                                        {t('editBlog.buttons.updating') || 'Đang cập nhật...'}
                                     </span>
                                 ) : (
                                     <span className="flex items-center">
                                         <EyeOutlined className="w-4 h-4 mr-2" />
-                                        Cập nhật và xuất bản
+                                        {t('editBlog.buttons.updateAndPublish') || 'Cập nhật và xuất bản'}
                                     </span>
                                 )}
                             </button>
@@ -538,7 +621,7 @@ const EditBlog = () => {
                 title={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <EyeOutlined style={{ color: '#1890ff' }} />
-                        <span>Xem ảnh</span>
+                        <span>{t('editBlog.imageModal.title') || 'Xem ảnh'}</span>
                     </div>
                 }
                 open={showImageModal}

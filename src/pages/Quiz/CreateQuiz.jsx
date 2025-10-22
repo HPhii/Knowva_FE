@@ -136,7 +136,7 @@ const CreateQuiz = () => {
               <Button
                 icon={<ArrowLeftOutlined />}
                 onClick={() => navigate('/my-library')}
-                className="mr-4"
+                className="mr-4 hover:bg-gray-100 transition-all duration-200"
               >
                 {t('createQuiz.back', 'Quay lại')}
               </Button>
@@ -150,8 +150,9 @@ const CreateQuiz = () => {
               loading={saving}
               onClick={handleSave}
               size="large"
+              className="bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200"
             >
-              {t('createQuiz.save', 'Tạo Quiz')}
+              {saving ? t('createQuiz.save', 'Tạo Quiz') + '...' : t('createQuiz.save', 'Tạo Quiz')}
             </Button>
           </div>
         </div>
@@ -170,7 +171,7 @@ const CreateQuiz = () => {
           }}
         >
           {/* Basic Info */}
-          <Card title={t('createQuiz.basicInfo', 'Thông tin cơ bản')} className="mb-6">
+          <Card title={t('createQuiz.basicInfo', 'Thông tin cơ bản')} className="mb-6 shadow-sm border border-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item
                 label={t('createQuiz.titleLabel', 'Tiêu đề')}
@@ -192,11 +193,16 @@ const CreateQuiz = () => {
             <Form.Item
               label={t('createQuiz.description', 'Mô tả')}
               name="description"
-              rules={[{ required: true, message: t('createQuiz.descriptionRequired', 'Vui lòng nhập mô tả') }]}
+              rules={[
+                { required: true, message: t('createQuiz.descriptionRequired', 'Vui lòng nhập mô tả') },
+                { max: 200, message: t('createQuiz.descriptionMaxLength', 'Mô tả không được quá 200 ký tự') }
+              ]}
             >
               <Input.TextArea
                 rows={3}
                 placeholder={t('createQuiz.descriptionPlaceholder', 'Nhập mô tả quiz')}
+                maxLength={200}
+                showCount
               />
             </Form.Item>
 
@@ -269,11 +275,13 @@ const CreateQuiz = () => {
           {/* Questions */}
           <Card 
             title={t('createQuiz.questions', 'Câu hỏi')} 
+            className="shadow-sm border border-gray-200"
             extra={
               <Button 
-                type="dashed" 
+                type="primary"
                 icon={<PlusOutlined />} 
                 onClick={addQuestion}
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 {t('createQuiz.addQuestion', 'Thêm câu hỏi')}
               </Button>
@@ -281,49 +289,52 @@ const CreateQuiz = () => {
           >
             <Form.List name="questions">
               {(fields, { add, remove }) => (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {fields.map((field, questionIndex) => (
-                    <Card
+                    <div
                       key={field.key}
-                      size="small"
-                      title={t('createQuiz.questionNumber', `Câu hỏi ${questionIndex + 1}`)}
-                      extra={
-                        <Button
-                          type="text"
-                          danger
-                          icon={<DeleteOutlined />}
+                      className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-all duration-200"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <label className="text-sm font-medium text-gray-600">
+                          {t('createQuiz.questionNumber', `Câu hỏi ${questionIndex + 1}`)}
+                        </label>
+                        <button
+                          type="button"
                           onClick={() => removeQuestion(questionIndex)}
+                          className="text-red-500 hover:text-red-700 text-sm font-medium transition-all duration-200 hover:scale-105 hover:bg-red-50 px-3 py-1 rounded"
                         >
                           {t('createQuiz.delete', 'Xóa')}
-                        </Button>
-                      }
-                      className="bg-gray-50"
-                    >
+                        </button>
+                      </div>
+
                       <Form.Item
                         key={`${field.key}-questionText`}
                         name={[field.name, 'questionText']}
-                        label={t('createQuiz.questionContent', 'Nội dung câu hỏi')}
                         rules={[{ required: true, message: t('createQuiz.questionContentRequired', 'Vui lòng nhập nội dung câu hỏi') }]}
+                        className="mb-3"
                       >
                         <Input.TextArea
                           rows={2}
                           placeholder={t('createQuiz.questionContentPlaceholder', 'Nhập nội dung câu hỏi')}
+                          className="rounded-lg"
                         />
                       </Form.Item>
 
                       <Form.Item
                         key={`${field.key}-timeLimit`}
                         name={[field.name, 'timeLimit']}
-                        label={t('createQuiz.questionTimeLimit', 'Thời gian (giây)')}
+                        label={<span className="text-sm font-medium text-gray-600">{t('createQuiz.questionTimeLimit', 'Thời gian (giây)')}</span>}
                         rules={[{ required: true, message: t('createQuiz.questionTimeRequired', 'Vui lòng nhập thời gian') }]}
+                        className="mb-3"
                       >
-                        <Input type="number" placeholder="30" />
+                        <Input type="number" placeholder="30" className="rounded-lg" />
                       </Form.Item>
 
                       <div>
                         <div className="flex items-center justify-between mb-3">
                           <div>
-                            <label className="text-sm font-medium text-gray-700">{t('createQuiz.answers', 'Đáp án')}</label>
+                            <label className="text-sm font-medium text-gray-600 block">{t('createQuiz.answers', 'Đáp án')}</label>
                             <p className="text-xs text-gray-500 mt-1">
                               💡 {t('createQuiz.answerHint', 'Có thể chọn nhiều câu trả lời đúng cho mỗi câu hỏi')}
                             </p>
@@ -333,6 +344,7 @@ const CreateQuiz = () => {
                             size="small"
                             icon={<PlusOutlined />}
                             onClick={() => addAnswer(questionIndex)}
+                            className="hover:border-blue-400 hover:text-blue-600"
                           >
                             {t('createQuiz.addAnswer', 'Thêm đáp án')}
                           </Button>
@@ -340,23 +352,35 @@ const CreateQuiz = () => {
 
                         <Form.List name={[field.name, 'answers']}>
                           {(answerFields, { add: addAnswer, remove: removeAnswer }) => (
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {answerFields.map((answerField, answerIndex) => (
-                                <div key={answerField.key} className="flex items-center space-x-3">
+                                <div key={answerField.key} className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-gray-600 w-6">
+                                    {String.fromCharCode(65 + answerIndex)}.
+                                  </span>
                                   <div className="flex-1">
                                     <Form.Item
                                       key={`${answerField.key}-answerText`}
                                       name={[answerField.name, 'answerText']}
                                       rules={[{ required: true, message: t('createQuiz.answerRequired', 'Vui lòng nhập đáp án') }]}
+                                      className="mb-0"
                                     >
-                                      <Input placeholder={`${t('createQuiz.answer', 'Đáp án')} ${String.fromCharCode(65 + answerIndex)}`} />
+                                      <Input 
+                                        placeholder={`${t('createQuiz.answer', 'Đáp án')} ${String.fromCharCode(65 + answerIndex)}`} 
+                                        className="rounded-lg"
+                                      />
                                     </Form.Item>
                                   </div>
                                   
                                   <Button
                                     type={form.getFieldValue(['questions', questionIndex, 'answers', answerIndex, 'isCorrect']) ? 'primary' : 'default'}
+                                    size="small"
                                     onClick={() => toggleCorrectAnswer(questionIndex, answerIndex)}
-                                    className="min-w-[100px]"
+                                    className={`min-w-[80px] transition-all duration-300 ease-out hover:scale-105 ${
+                                      form.getFieldValue(['questions', questionIndex, 'answers', answerIndex, 'isCorrect'])
+                                        ? 'bg-green-600 hover:bg-green-700 hover:shadow-lg border-green-600'
+                                        : 'hover:bg-gray-100'
+                                    }`}
                                   >
                                     {form.getFieldValue(['questions', questionIndex, 'answers', answerIndex, 'isCorrect']) ? 
                                       t('createQuiz.correct', 'Đúng') : 
@@ -367,8 +391,10 @@ const CreateQuiz = () => {
                                   <Button
                                     type="text"
                                     danger
+                                    size="small"
                                     icon={<DeleteOutlined />}
                                     onClick={() => removeAnswer(questionIndex, answerIndex)}
+                                    className="hover:bg-red-50"
                                   />
                                 </div>
                               ))}
@@ -376,8 +402,22 @@ const CreateQuiz = () => {
                           )}
                         </Form.List>
                       </div>
-                    </Card>
+                    </div>
                   ))}
+                  
+                  {/* Add Question Button at the end */}
+                  {fields.length > 0 && (
+                    <div className="flex justify-center pt-2">
+                      <button
+                        type="button"
+                        onClick={addQuestion}
+                        className="bg-blue-600 hover:bg-blue-700 !text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+                        title="Thêm câu hỏi mới"
+                      >
+                        <span className="text-xl font-bold">+</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </Form.List>
