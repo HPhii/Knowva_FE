@@ -7,7 +7,7 @@ import ImageUpload from './ImageUpload';
 
 const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', comments = [], onAddComment, isLoading = false, onRefreshComments, userRating: propUserRating = null }) => {
   const { t } = useTranslation();
-  
+
   // Local state for form input
   const [commentText, setCommentText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -272,9 +272,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       showToast(t('comments.pleaseLogin'), 'error');
       return;
     }
-
+    
     // Get userId from localStorage
-    const accountId = localStorage.getItem('accountId');
+    const accountId = localStorage.getItem('userId');
     if (!accountId) {
       showToast(t('comments.userNotFound'), 'error');
       return;
@@ -942,7 +942,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             const commentId = comment.id || comment._id;
             const authorName = comment.userName || comment.authorName || comment.user?.name || comment.author?.name || comment.username || 'User';
             const commentContent = comment.content || comment.text || comment.message || comment.body || '';
-            const commentImage = comment.imageUrl || comment.image || comment.attachment || comment.userAvatarUrl;
+            const commentImage = comment.imageUrl || comment.image || comment.attachment ;
             const commentDate = comment.createdAt || comment.created_at || comment.timestamp || comment.date || new Date().toISOString();
             const likeCount = comment.likes || comment.likeCount || 0;
             const isLiked = comment.isLiked || comment.userLiked || false;

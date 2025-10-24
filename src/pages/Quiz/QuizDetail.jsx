@@ -92,18 +92,6 @@ const QuizDetail = () => {
       // Convert both to strings for comparison to handle number/string mismatches
       const quizUserIdStr = String(quizUserId || "");
       const currentUserIdStr = String(currentUserId || "");
-
-      console.log("Checking edit permissions:", {
-        quiz: quiz,
-        currentUser: currentUser,
-        quizUserId,
-        currentUserId,
-        quizUserIdStr,
-        currentUserIdStr,
-        canEdit: quizUserIdStr === currentUserIdStr,
-        strictEqual: quizUserId === currentUserId,
-      });
-
       setCanEdit(quizUserIdStr === currentUserIdStr && quizUserIdStr !== "");
     }
   }, [quiz, currentUser]);
@@ -160,9 +148,10 @@ const QuizDetail = () => {
     try {
       setIsLoadingComments(true);
       const response = await api.get(`/interactions/quizset/${id}/comments`);
-
+      
       // Ensure we always set an array
-      const commentsData = response.data;
+      const commentsData = response.data.content;
+      
       if (Array.isArray(commentsData)) {
         setComments(commentsData);
       } else if (commentsData && Array.isArray(commentsData.comments)) {
