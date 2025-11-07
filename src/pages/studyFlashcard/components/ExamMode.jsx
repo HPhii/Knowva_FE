@@ -24,6 +24,11 @@ const ExamMode = ({ flashcardSet }) => {
     setUserAnswer("");
   }, [flashcardSet]);
 
+  // Reset userAnswer when changing cards
+  useEffect(() => {
+    setUserAnswer("");
+  }, [currentIndex]);
+
   const handleNext = () => {
     if (currentIndex < cardsState.length - 1) {
       setCurrentIndex(currentIndex + 1);

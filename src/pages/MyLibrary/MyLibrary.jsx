@@ -13,6 +13,7 @@ import {
   Pagination,
   Modal,
   Dropdown,
+  Popconfirm,
 } from "antd";
 import {
   BookOutlined,
@@ -22,12 +23,14 @@ import {
   PlusOutlined,
   ClockCircleOutlined,
   EyeOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import api from "../../config/axios";
 import "./MyLibrary.scss";
 import { isLoggedIn } from "../../utils/auth";
 import RequireLoginModal from "../../components/RequireLoginModal";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -41,19 +44,20 @@ const MyLibrary = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showGenerateOption, setShowGenerateOption] = useState(false);
 
-  console.log("generate option: ", showGenerateOption);
+  // console.log("generate option: ", showGenerateOption);
 
   // Separate states for different data types
   const [flashcards, setFlashcards] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [tests, setTests] = useState([]);
 
+  console.log("flashcards: ", flashcards);
+
   // Pagination states for each tab
   const [flashcardsPage, setFlashcardsPage] = useState(1);
   const [quizzesPage, setQuizzesPage] = useState(1);
   const [testsPage, setTestsPage] = useState(1);
   const [cardsPerPage] = useState(6);
-
 
   // Fetch flashcards data
   const fetchFlashcards = async () => {
@@ -74,14 +78,14 @@ const MyLibrary = () => {
     try {
       const response = await api.get("/quiz-sets/my-quiz-sets");
       const quizData = response.data || [];
-      
+
       // Sort quizzes by creation date (newest first)
       const sortedQuizzes = quizData.sort((a, b) => {
         const dateA = new Date(a.createdAt || a.created_at || 0);
         const dateB = new Date(b.createdAt || b.created_at || 0);
         return dateB - dateA; // Newest first
       });
-      
+
       setQuizzes(sortedQuizzes);
     } catch (error) {
       console.error("Error fetching quizzes:", error);
@@ -141,6 +145,114 @@ const MyLibrary = () => {
 
   const toggleGenerateOption = () => {
     setShowGenerateOption((prev) => !prev);
+  };
+
+  // Handle delete flashcard
+  const handleDeleteFlashcard = async (flashcardId) => {
+    try {
+      console.log(
+        "Deleting flashcard with ID:",
+        flashcardId,
+        "Type:",
+        typeof flashcardId
+      );
+      console.log("Current flashcards count:", flashcards.length);
+
+      // Optimistic update: Remove from state immediately
+      // Convert both IDs to string for comparison to handle number/string mismatches
+      const updatedFlashcards = flashcards.filter(
+        (flashcard) => String(flashcard.id) !== String(flashcardId)
+      );
+      console.log(
+        "Updated flashcards count after filter:",
+        updatedFlashcards.length
+      );
+
+      if (updatedFlashcards.length === flashcards.length) {
+        console.warn(
+          "Warning: Flashcard not found in list. ID might not match."
+        );
+      }
+
+      setFlashcards(updatedFlashcards);
+
+      // Call API to delete
+      await api.delete(`/flashcard-sets/${flashcardId}`);
+
+      // Check if current page is empty after deletion
+      const totalPages = Math.ceil(updatedFlashcards.length / cardsPerPage);
+      if (flashcardsPage > totalPages && totalPages > 0) {
+        setFlashcardsPage(totalPages);
+      } else if (totalPages === 0) {
+        setFlashcardsPage(1);
+      }
+
+      toast.success(
+        t("myLibrary.deleteSuccess", "Delete flashcard successfully")
+      );
+
+      // Refresh flashcard list to ensure consistency
+      fetchFlashcards();
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+
+      // Revert optimistic update on error
+      fetchFlashcards();
+
+      toast.error(
+        error.response?.data?.message ||
+          t(
+            "myLibrary.deleteError",
+            "Không thể xóa flashcard. Vui lòng thử lại."
+          )
+      );
+    }
+  };
+
+  // Handle delete quiz
+  const handleDeleteQuiz = async (quizId) => {
+    try {
+      console.log("Deleting quiz with ID:", quizId, "Type:", typeof quizId);
+      console.log("Current quizzes count:", quizzes.length);
+
+      // Optimistic update: Remove from state immediately
+      const updatedQuizzes = quizzes.filter(
+        (quiz) => String(quiz.id) !== String(quizId)
+      );
+      console.log("Updated quizzes count after filter:", updatedQuizzes.length);
+
+      if (updatedQuizzes.length === quizzes.length) {
+        console.warn("Warning: Quiz not found in list. ID might not match.");
+      }
+
+      setQuizzes(updatedQuizzes);
+
+      // Call API to delete
+      await api.delete(`/quiz-sets/${quizId}`);
+
+      // Check if current page is empty after deletion
+      const totalPages = Math.ceil(updatedQuizzes.length / cardsPerPage);
+      if (quizzesPage > totalPages && totalPages > 0) {
+        setQuizzesPage(totalPages);
+      } else if (totalPages === 0) {
+        setQuizzesPage(1);
+      }
+
+      toast.success(t("myLibrary.deleteQuizSuccess", "Xóa quiz thành công"));
+
+      // Refresh quiz list to ensure consistency
+      fetchQuizzes();
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+
+      // Revert optimistic update on error
+      fetchQuizzes();
+
+      toast.error(
+        error.response?.data?.message ||
+          t("myLibrary.deleteQuizError", "Không thể xóa quiz. Vui lòng thử lại.")
+      );
+    }
   };
 
   const flashcardItems = [
@@ -217,18 +329,42 @@ const MyLibrary = () => {
             </div>
           </div>
           <div className="flex justify-end gap-2 text-white rounded-md">
-            <div
-              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
+            <button
+              type="button"
+              className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer border-none outline-none"
               onClick={() => navigate(`/flashcard/${item.id}`)}
             >
               {t("myLibrary.study", "Study")}
-            </div>
-            <div
-              className="flex items-center justify-center bg-[#FFA500] hover:bg-[#FF8C00] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer"
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center bg-[#FFA500] hover:bg-[#FF8C00] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer border-none outline-none"
               onClick={() => navigate(`/edit-flashcard/${item.id}`)}
             >
               {t("myLibrary.edit", "Edit")}
-            </div>
+            </button>
+            <Popconfirm
+              title={t("myLibrary.confirmDelete", "Xác nhận xóa")}
+              description={t(
+                "myLibrary.confirmDeleteMessage",
+                "Bạn có chắc chắn muốn xóa flashcard này?"
+              )}
+              onConfirm={() => handleDeleteFlashcard(item.id)}
+              okText={t("myLibrary.yes", "Có")}
+              cancelText={t("myLibrary.no", "Không")}
+              okType="danger"
+            >
+              <button
+                type="button"
+                className="flex items-center justify-center bg-red-600 hover:bg-red-700 hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer border-none outline-none relative z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <DeleteOutlined className="mr-1" />
+                {t("myLibrary.delete", "Delete")}
+              </button>
+            </Popconfirm>
           </div>
         </div>
       );
@@ -257,13 +393,38 @@ const MyLibrary = () => {
           </div>
         </div>
         {/* button  */}
-        <div className="flex justify-end cursor-pointer text-white rounded-md">
-          <div
-            className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px]"
-            onClick={() => navigate(`/quiz/${item.id}`, { state: { from: 'myLibrary' } })}
+        <div className="flex justify-end gap-2 cursor-pointer text-white rounded-md">
+          <button
+            type="button"
+            className="flex items-center justify-center bg-[#285AFF] hover:bg-[#234CD3] hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer border-none outline-none"
+            onClick={() =>
+              navigate(`/quiz/${item.id}`, { state: { from: "myLibrary" } })
+            }
           >
             {t("myLibrary.study", "Study")}
-          </div>
+          </button>
+          <Popconfirm
+            title={t("myLibrary.confirmDelete", "Xác nhận xóa")}
+            description={t(
+              "myLibrary.confirmDeleteQuizMessage",
+              "Bạn có chắc chắn muốn xóa quiz này?"
+            )}
+            onConfirm={() => handleDeleteQuiz(item.id)}
+            okText={t("myLibrary.yes", "Có")}
+            cancelText={t("myLibrary.no", "Không")}
+            okType="danger"
+          >
+            <button
+              type="button"
+              className="flex items-center justify-center bg-red-600 hover:bg-red-700 hover:transition-all duration-300 px-5 py-[6px] rounded-[10px] cursor-pointer border-none outline-none relative z-10"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <DeleteOutlined className="mr-1" />
+              {t("myLibrary.delete", "Delete")}
+            </button>
+          </Popconfirm>
         </div>
       </div>
     );
@@ -278,8 +439,18 @@ const MyLibrary = () => {
           onClick={() => navigate("/quizzes")}
           className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
         >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          <svg
+            className="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
           </svg>
           {t("myLibrary.createWithAI", "Tạo với AI")}
         </div>
@@ -292,8 +463,18 @@ const MyLibrary = () => {
           onClick={() => navigate("/quiz/create")}
           className="flex items-center px-2 py-1 hover:bg-gray-50 rounded"
         >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          <svg
+            className="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
           </svg>
           {t("myLibrary.createFromScratch", "Tạo từ đầu")}
         </div>

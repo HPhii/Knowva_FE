@@ -1240,7 +1240,15 @@
     "flashcardSet": "Bộ thẻ ghi nhớ",
     "quiz": "Câu hỏi",
     "test": "Bài kiểm tra",
-    "noItemsFound": "Không tìm thấy mục nào"
+    "noItemsFound": "Không tìm thấy mục nào",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "confirmDelete": "Xác nhận xóa",
+    "confirmDeleteMessage": "Bạn có chắc chắn muốn xóa flashcard này?",
+    "yes": "Có",
+    "no": "Không",
+    "deleteSuccess": "Xóa flashcard thành công",
+    "deleteError": "Không thể xóa flashcard. Vui lòng thử lại."
   },
   "admin": {
     "dashboard": "Bảng điều khiển Admin",

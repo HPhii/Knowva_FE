@@ -366,15 +366,30 @@ const StudyFlashcard = () => {
   // Handle keyboard events
   useEffect(() => {
     const handleKeyPress = (event) => {
+      // Check if user is typing in an input field (input, textarea, or contenteditable)
+      const activeElement = document.activeElement;
+      const isInputFocused =
+        activeElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.isContentEditable);
+
       if (event.code === "Space") {
-        event.preventDefault(); // Prevent page scroll
-        handleShowAnswer();
+        // Don't prevent default if user is typing in an input field
+        if (!isInputFocused) {
+          event.preventDefault(); // Prevent page scroll
+          handleShowAnswer();
+        }
       } else if (event.code === "ArrowLeft") {
-        event.preventDefault();
-        handlePreviousCard();
+        if (!isInputFocused) {
+          event.preventDefault();
+          handlePreviousCard();
+        }
       } else if (event.code === "ArrowRight") {
-        event.preventDefault();
-        handleNextCard();
+        if (!isInputFocused) {
+          event.preventDefault();
+          handleNextCard();
+        }
       }
     };
 
