@@ -290,7 +290,7 @@ const CommentSection = ({
     }
 
     // Get userId from localStorage
-    const accountId = localStorage.getItem("accountId");
+    const accountId = localStorage.getItem("userId");
     if (!accountId) {
       showToast(t("comments.userNotFound"), "error");
       return;
@@ -1007,10 +1007,7 @@ const CommentSection = ({
               comment.body ||
               "";
             const commentImage =
-              comment.imageUrl ||
-              comment.image ||
-              comment.attachment ||
-              comment.userAvatarUrl;
+              comment.imageUrl || comment.image || comment.attachment;
             const commentDate =
               comment.createdAt ||
               comment.created_at ||
