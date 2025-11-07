@@ -1,3 +1,15 @@
+/* MyLibrary Card Button Styles */
+.bg-white button {
+  &:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 /* MyLibrary Pagination Styles */
 .pagination-custom {
   .ant-pagination-item {

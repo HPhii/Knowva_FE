@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import api from '../config/axios';
-import Rating from './Rating';
-import ImageUpload from './ImageUpload';
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import api from "../config/axios";
+import Rating from "./Rating";
+import ImageUpload from "./ImageUpload";
 
-const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', comments = [], onAddComment, isLoading = false, onRefreshComments, userRating: propUserRating = null }) => {
+const CommentSection = ({
+  variant = "blog",
+  entityId,
+  entityType = "blogpost",
+  comments = [],
+  onAddComment,
+  isLoading = false,
+  onRefreshComments,
+  userRating: propUserRating = null,
+}) => {
   const { t } = useTranslation();
-  
+
   // Local state for form input
-  const [commentText, setCommentText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [commentText, setCommentText] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
-  
+
   // Reply state management
-  const [replyText, setReplyText] = useState('');
-  const [replyImageUrl, setReplyImageUrl] = useState('');
+  const [replyText, setReplyText] = useState("");
+  const [replyImageUrl, setReplyImageUrl] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [isUploadingReplyImage, setIsUploadingReplyImage] = useState(false);
@@ -27,18 +36,18 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
   // Comment edit state
   const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editCommentText, setEditCommentText] = useState('');
+  const [editCommentText, setEditCommentText] = useState("");
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const [isDeletingComment, setIsDeletingComment] = useState(false);
 
   // User rating state - use prop if provided, otherwise use local state
   const [userRating, setUserRating] = useState(propUserRating);
   const [isLoadingRating, setIsLoadingRating] = useState(false);
-  
+
   // Confirmation popup state
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
-  const [confirmMessage, setConfirmMessage] = useState('');
+  const [confirmMessage, setConfirmMessage] = useState("");
 
   // Handle image upload for main comment
   const handleImageUpload = (uploadedImageUrl) => {
@@ -76,7 +85,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     }
     setShowConfirmPopup(false);
     setConfirmAction(null);
-    setConfirmMessage('');
+    setConfirmMessage("");
     setConfirmButtonRef(null);
   };
 
@@ -84,10 +93,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   const handleCancel = () => {
     setShowConfirmPopup(false);
     setConfirmAction(null);
-    setConfirmMessage('');
+    setConfirmMessage("");
     setConfirmButtonRef(null);
   };
-
 
   // Fetch user's rating on component mount (always fetch if entityId and entityType are available)
   useEffect(() => {
@@ -118,17 +126,19 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   const fetchUserRating = async () => {
     try {
       setIsLoadingRating(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
         setUserRating(null);
         return;
       }
 
-      const response = await api.get(`interactions/${entityType}/${entityId}/rating/my`);
-      
+      const response = await api.get(
+        `interactions/${entityType}/${entityId}/rating/my`
+      );
+
       if (response.data && response.data.rating !== undefined) {
         setUserRating(response.data);
-      } else if (response.data && typeof response.data === 'number') {
+      } else if (response.data && typeof response.data === "number") {
         // Handle case where API returns just the rating number
         setUserRating({ rating: response.data });
       } else {
@@ -144,56 +154,56 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // Theme configuration for different variants
   const themes = {
     blog: {
-      title: t('comments.title'),
-      borderColor: 'border-blue-200',
-      buttonBg: 'bg-blue-600',
-      buttonHover: 'hover:bg-blue-700',
-      buttonFocus: 'focus:ring-blue-500',
-      accentColor: 'text-blue-600',
-      borderAccent: 'border-blue-200',
-      bgColor: 'bg-blue-50',
-      icon: '💬',
-      likeColor: 'text-pink-500',
-      likeHover: 'hover:text-pink-600',
-      cardBg: 'bg-blue-50/30',
-      cardHover: 'hover:bg-blue-100/50',
-      headerGradient: 'from-blue-500 to-blue-600',
-      avatarGradient: 'from-blue-500 to-blue-600'
+      title: t("comments.title"),
+      borderColor: "border-blue-200",
+      buttonBg: "bg-blue-600",
+      buttonHover: "hover:bg-blue-700",
+      buttonFocus: "focus:ring-blue-500",
+      accentColor: "text-blue-600",
+      borderAccent: "border-blue-200",
+      bgColor: "bg-blue-50",
+      icon: "💬",
+      likeColor: "text-pink-500",
+      likeHover: "hover:text-pink-600",
+      cardBg: "bg-blue-50/30",
+      cardHover: "hover:bg-blue-100/50",
+      headerGradient: "from-blue-500 to-blue-600",
+      avatarGradient: "from-blue-500 to-blue-600",
     },
     flashcard: {
-      title: t('comments.flashcardTitle'),
-      borderColor: 'border-purple-200',
-      buttonBg: 'bg-purple-600',
-      buttonHover: 'hover:bg-purple-700',
-      buttonFocus: 'focus:ring-purple-500',
-      accentColor: 'text-purple-600',
-      borderAccent: 'border-purple-200',
-      bgColor: 'bg-purple-50',
-      icon: '📚',
-      likeColor: 'text-rose-500',
-      likeHover: 'hover:text-rose-600',
-      cardBg: 'bg-purple-50/50',
-      cardHover: 'hover:bg-purple-100/60',
-      headerGradient: 'from-purple-500 to-purple-600',
-      avatarGradient: 'from-purple-500 to-purple-600'
+      title: t("comments.flashcardTitle"),
+      borderColor: "border-purple-200",
+      buttonBg: "bg-purple-600",
+      buttonHover: "hover:bg-purple-700",
+      buttonFocus: "focus:ring-purple-500",
+      accentColor: "text-purple-600",
+      borderAccent: "border-purple-200",
+      bgColor: "bg-purple-50",
+      icon: "📚",
+      likeColor: "text-rose-500",
+      likeHover: "hover:text-rose-600",
+      cardBg: "bg-purple-50/50",
+      cardHover: "hover:bg-purple-100/60",
+      headerGradient: "from-purple-500 to-purple-600",
+      avatarGradient: "from-purple-500 to-purple-600",
     },
     quizset: {
-      title: t('comments.quizTitle'),
-      borderColor: 'border-green-200',
-      buttonBg: 'bg-green-600',
-      buttonHover: 'hover:bg-green-700',
-      buttonFocus: 'focus:ring-green-500',
-      accentColor: 'text-green-600',
-      borderAccent: 'border-green-200',
-      bgColor: 'bg-green-50',
-      icon: '🧩',
-      likeColor: 'text-emerald-500',
-      likeHover: 'hover:text-emerald-600',
-      cardBg: 'bg-green-50/40',
-      cardHover: 'hover:bg-green-100/50',
-      headerGradient: 'from-green-500 to-green-600',
-      avatarGradient: 'from-green-500 to-green-600'
-    }
+      title: t("comments.quizTitle"),
+      borderColor: "border-green-200",
+      buttonBg: "bg-green-600",
+      buttonHover: "hover:bg-green-700",
+      buttonFocus: "focus:ring-green-500",
+      accentColor: "text-green-600",
+      borderAccent: "border-green-200",
+      bgColor: "bg-green-50",
+      icon: "🧩",
+      likeColor: "text-emerald-500",
+      likeHover: "hover:text-emerald-600",
+      cardBg: "bg-green-50/40",
+      cardHover: "hover:bg-green-100/50",
+      headerGradient: "from-green-500 to-green-600",
+      avatarGradient: "from-green-500 to-green-600",
+    },
   };
 
   const theme = themes[variant] || themes.blog;
@@ -207,7 +217,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
     // If comments already have replies organized, use them directly
     if (comments.length > 0 && comments[0].replies !== undefined) {
-      return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return comments.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
     }
 
     // Fallback to old logic if needed
@@ -215,7 +227,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     const replyMap = new Map();
 
     // First pass: identify parent comments and create reply map
-    comments.forEach(comment => {
+    comments.forEach((comment) => {
       if (!comment.parentId) {
         parentComments.push({ ...comment, replies: comment.replies || [] });
       } else {
@@ -228,55 +240,59 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     });
 
     // Second pass: attach replies to parent comments
-    parentComments.forEach(parent => {
+    parentComments.forEach((parent) => {
       if (replyMap.has(parent.id)) {
-        parent.replies = replyMap.get(parent.id).sort((a, b) => 
-          new Date(a.createdAt) - new Date(b.createdAt)
-        );
+        parent.replies = replyMap
+          .get(parent.id)
+          .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       }
     });
 
-    return parentComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return parentComments.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
   };
 
   const organizedComments = organizeComments(comments);
-  
+
   // Show-more pagination (compact feed)
   const COMMENTS_PER_PAGE = 6;
   const [visibleCount, setVisibleCount] = useState(COMMENTS_PER_PAGE);
-  
+
   // Reset visible count when the comment list changes
   useEffect(() => {
     setVisibleCount(COMMENTS_PER_PAGE);
   }, [comments]);
-  
+
   const displayedComments = organizedComments.slice(0, visibleCount);
   const canShowMore = visibleCount < organizedComments.length;
   const handleShowMore = () => {
-    setVisibleCount(prev => Math.min(prev + COMMENTS_PER_PAGE, organizedComments.length));
+    setVisibleCount((prev) =>
+      Math.min(prev + COMMENTS_PER_PAGE, organizedComments.length)
+    );
   };
 
   // Handle comment form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Prevent submission if comment is empty
     if (!commentText.trim()) {
-      showToast(t('comments.enterComment'), 'error');
+      showToast(t("comments.enterComment"), "error");
       return;
     }
 
     // Check if user is logged in
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      showToast(t('comments.pleaseLogin'), 'error');
+      showToast(t("comments.pleaseLogin"), "error");
       return;
     }
 
     // Get userId from localStorage
-    const accountId = localStorage.getItem('accountId');
+    const accountId = localStorage.getItem("accountId");
     if (!accountId) {
-      showToast(t('comments.userNotFound'), 'error');
+      showToast(t("comments.userNotFound"), "error");
       return;
     }
 
@@ -295,44 +311,53 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         payload.imageUrl = imageUrl.trim();
       }
 
-      const newComment = await api.post(`interactions/${entityType}/${entityId}/comment`, payload);
+      const newComment = await api.post(
+        `interactions/${entityType}/${entityId}/comment`,
+        payload
+      );
 
       // Add new comment to the list
       const commentToAdd = {
         id: newComment.data.id || newComment.data._id || Date.now(),
-        authorName: newComment.data.authorName || newComment.data.user?.name || newComment.data.author?.name || 'You',
+        authorName:
+          newComment.data.authorName ||
+          newComment.data.user?.name ||
+          newComment.data.author?.name ||
+          "You",
         content: commentText.trim(),
-        createdAt: newComment.data.createdAt || newComment.data.created_at || new Date().toISOString(),
+        createdAt:
+          newComment.data.createdAt ||
+          newComment.data.created_at ||
+          new Date().toISOString(),
         imageUrl: imageUrl.trim() || null,
-        user: newComment.data.user || { name: 'You' },
+        user: newComment.data.user || { name: "You" },
         likes: 0,
         isLiked: false,
-        replies: []
+        replies: [],
       };
 
       // Clear form
-      setCommentText('');
-      setImageUrl('');
+      setCommentText("");
+      setImageUrl("");
       setIsUploadingImage(false);
-      
+
       // Show success message
-      showToast(t('comments.commentPosted'), 'success');
-      
+      showToast(t("comments.commentPosted"), "success");
+
       // Call onAddComment to update parent's comments state
       if (onAddComment) {
         onAddComment(commentToAdd);
       }
-      
     } catch (error) {
-      let errorMessage = t('comments.errorPostingComment');
-      
+      let errorMessage = t("comments.errorPostingComment");
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -341,24 +366,24 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // Handle reply form submission
   const handleReplySubmit = async (e, parentCommentId) => {
     e.preventDefault();
-    
+
     // Prevent submission if reply is empty
     if (!replyText.trim()) {
-      showToast(t('comments.enterReply'), 'error');
+      showToast(t("comments.enterReply"), "error");
       return;
     }
 
     // Check if user is logged in
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      showToast(t('comments.pleaseLoginReply'), 'error');
+      showToast(t("comments.pleaseLoginReply"), "error");
       return;
     }
 
     // Get userId from localStorage
-    const accountId = localStorage.getItem('accountId');
+    const accountId = localStorage.getItem("accountId");
     if (!accountId) {
-      showToast(t('comments.userNotFound'), 'error');
+      showToast(t("comments.userNotFound"), "error");
       return;
     }
 
@@ -379,58 +404,66 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
       const finalPayload = {
         ...payload,
-        parentId: parentCommentId
+        parentId: parentCommentId,
       };
 
-      const newReply = await api.post(`interactions/${entityType}/${entityId}/comment`, finalPayload);
+      const newReply = await api.post(
+        `interactions/${entityType}/${entityId}/comment`,
+        finalPayload
+      );
 
       // Add new reply to the parent comment
       const replyToAdd = {
         id: newReply.data.id || newReply.data._id || Date.now(),
-        authorName: newReply.data.authorName || newReply.data.user?.name || newReply.data.author?.name || 'You',
+        authorName:
+          newReply.data.authorName ||
+          newReply.data.user?.name ||
+          newReply.data.author?.name ||
+          "You",
         content: replyText.trim(),
-        createdAt: newReply.data.createdAt || newReply.data.created_at || new Date().toISOString(),
+        createdAt:
+          newReply.data.createdAt ||
+          newReply.data.created_at ||
+          new Date().toISOString(),
         imageUrl: replyImageUrl.trim() || null,
-        user: newReply.data.user || { name: 'You' },
+        user: newReply.data.user || { name: "You" },
         parentId: parentCommentId,
         likes: 0,
-        isLiked: false
+        isLiked: false,
       };
 
       // Clear reply form
-      setReplyText('');
-      setReplyImageUrl('');
+      setReplyText("");
+      setReplyImageUrl("");
       setReplyingTo(null);
       setIsUploadingReplyImage(false);
-      
+
       // Show success message
-      showToast(t('comments.replyPosted'), 'success');
-      
+      showToast(t("comments.replyPosted"), "success");
+
       // Call onAddComment to update parent's comments state
       if (onAddComment) {
         onAddComment(replyToAdd);
       }
-      
     } catch (error) {
-      let errorMessage = t('comments.errorPostingReply');
-      
+      let errorMessage = t("comments.errorPostingReply");
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     } finally {
       setIsSubmittingReply(false);
     }
   };
 
-
   // Cancel reply
   const cancelReply = () => {
-    setReplyText('');
-    setReplyImageUrl('');
+    setReplyText("");
+    setReplyImageUrl("");
     setReplyingTo(null);
     setIsUploadingReplyImage(false);
   };
@@ -449,32 +482,31 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showToast(t('rating.pleaseLoginToRate'), 'error');
+        showToast(t("rating.pleaseLoginToRate"), "error");
         return;
       }
 
       const payload = {
-        ratingValue: tempRating
+        ratingValue: tempRating,
       };
 
       await api.put(`interactions/${entityType}/${entityId}/rating`, payload);
-      
-      setUserRating(prev => ({ ...prev, rating: tempRating }));
+
+      setUserRating((prev) => ({ ...prev, rating: tempRating }));
       setIsEditingRating(false);
-      showToast(t('rating.ratingUpdatedSuccessfully'), 'success');
-      
+      showToast(t("rating.ratingUpdatedSuccessfully"), "success");
     } catch (error) {
-      let errorMessage = t('rating.errorUpdatingRating');
-      
+      let errorMessage = t("rating.errorUpdatingRating");
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     }
   };
 
@@ -486,41 +518,39 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
   // Handle delete rating
   const handleDeleteRating = async () => {
-    showConfirmation('Bạn có chắc chắn muốn xóa đánh giá này?', async () => {
+    showConfirmation("Bạn có chắc chắn muốn xóa đánh giá này?", async () => {
       await performDeleteRating();
     });
   };
 
   // Perform actual delete rating
   const performDeleteRating = async () => {
-
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showToast(t('rating.pleaseLoginToRate'), 'error');
+        showToast(t("rating.pleaseLoginToRate"), "error");
         return;
       }
 
       await api.delete(`interactions/${entityType}/${entityId}/rating`);
-      
+
       setUserRating(null);
-      showToast(t('rating.ratingDeletedSuccessfully'), 'success');
-      
+      showToast(t("rating.ratingDeletedSuccessfully"), "success");
+
       // Reload page after 1 second
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-      
     } catch (error) {
-      let errorMessage = t('rating.errorDeletingRating');
-      
+      let errorMessage = t("rating.errorDeletingRating");
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     }
   };
 
@@ -533,7 +563,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // Handle save comment edit
   const handleSaveCommentEdit = async () => {
     if (!editCommentText.trim()) {
-      showToast('Nội dung comment không được để trống', 'error');
+      showToast("Nội dung comment không được để trống", "error");
       return;
     }
 
@@ -542,38 +572,37 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     setIsSubmittingEdit(true);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showToast('Vui lòng đăng nhập để chỉnh sửa comment', 'error');
+        showToast("Vui lòng đăng nhập để chỉnh sửa comment", "error");
         return;
       }
 
       const payload = {
-        content: editCommentText.trim()
+        content: editCommentText.trim(),
       };
 
       await api.put(`interactions/comment/${editingCommentId}`, payload);
-      
+
       // Update comment in the list
       if (onAddComment) {
         // Trigger refresh to get updated comments
         onAddComment({ id: editingCommentId, content: editCommentText.trim() });
       }
-      
+
       setEditingCommentId(null);
-      setEditCommentText('');
-      showToast('Chỉnh sửa comment thành công', 'success');
-      
+      setEditCommentText("");
+      showToast("Chỉnh sửa comment thành công", "success");
     } catch (error) {
-      let errorMessage = 'Không thể chỉnh sửa comment';
-      
+      let errorMessage = "Không thể chỉnh sửa comment";
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     } finally {
       setIsSubmittingEdit(false);
     }
@@ -582,82 +611,80 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
   // Handle cancel comment edit
   const handleCancelCommentEdit = () => {
     setEditingCommentId(null);
-    setEditCommentText('');
+    setEditCommentText("");
   };
 
   // Handle delete comment
   const handleDeleteComment = async (commentId) => {
-    showConfirmation('Bạn có chắc chắn muốn xóa comment này?', async () => {
+    showConfirmation("Bạn có chắc chắn muốn xóa comment này?", async () => {
       await performDeleteComment(commentId);
     });
   };
 
   // Perform actual delete comment
   const performDeleteComment = async (commentId) => {
-
     if (isDeletingComment) return;
 
     setIsDeletingComment(true);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        showToast('Vui lòng đăng nhập để xóa comment', 'error');
+        showToast("Vui lòng đăng nhập để xóa comment", "error");
         return;
       }
 
       await api.delete(`interactions/comment/${commentId}`);
-      
-      showToast('Xóa comment thành công', 'success');
-      
+
+      showToast("Xóa comment thành công", "success");
+
       // Reload page after 1 second to refresh comments
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-      
     } catch (error) {
-      let errorMessage = 'Không thể xóa comment';
-      
+      let errorMessage = "Không thể xóa comment";
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
-      showToast(errorMessage, 'error');
+
+      showToast(errorMessage, "error");
     } finally {
       setIsDeletingComment(false);
     }
   };
 
   // Simple toast function (can be replaced with react-toastify later)
-  const showToast = (message, type = 'info') => {
+  const showToast = (message, type = "info") => {
     // Create toast element
-    const toast = document.createElement('div');
+    const toast = document.createElement("div");
     toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all duration-300 transform translate-x-full`;
-    
+
     // Set background color based on type
-    if (type === 'success') {
-      toast.className += ' bg-green-500';
-    } else if (type === 'error') {
-      toast.className += ' bg-red-500';
+    if (type === "success") {
+      toast.className += " bg-green-500";
+    } else if (type === "error") {
+      toast.className += " bg-red-500";
     } else {
-      toast.className += ' bg-blue-500';
+      toast.className += " bg-blue-500";
     }
-    
+
     toast.textContent = message;
-    
+
     // Add to DOM
     document.body.appendChild(toast);
-    
+
     // Animate in
     setTimeout(() => {
-      toast.classList.remove('translate-x-full');
+      toast.classList.remove("translate-x-full");
     }, 100);
-    
+
     // Remove after 4 seconds
     setTimeout(() => {
-      toast.classList.add('translate-x-full');
+      toast.classList.add("translate-x-full");
       setTimeout(() => {
         if (document.body.contains(toast)) {
           document.body.removeChild(toast);
@@ -671,27 +698,32 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) {
-      return 'Just now';
+      return "Just now";
     } else if (diffInHours < 24) {
       return `${diffInHours}h ago`;
     } else if (diffInHours < 48) {
-      return 'Yesterday';
+      return "Yesterday";
     } else {
       return date.toLocaleDateString();
     }
   };
 
   // Don't render if no entityId
-  if (!entityId || entityId === 'undefined' || entityId === 'null') {
+  if (!entityId || entityId === "undefined" || entityId === "null") {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
             <span className="text-2xl">💬</span>
           </div>
-          <p className="text-slate-500 text-base">{t('comments.cannotLoad', 'Không thể tải bình luận - thiếu ID bài viết')}</p>
+          <p className="text-slate-500 text-base">
+            {t(
+              "comments.cannotLoad",
+              "Không thể tải bình luận - thiếu ID bài viết"
+            )}
+          </p>
         </div>
       </div>
     );
@@ -702,34 +734,45 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.headerGradient} flex items-center justify-center text-white text-xl font-bold shadow-lg`}>
+          <div
+            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.headerGradient} flex items-center justify-center text-white text-xl font-bold shadow-lg`}
+          >
             {theme.icon}
           </div>
           <div>
-            <h3 className="text-2xl font-bold text-slate-800">
-              {theme.title}
-            </h3>
+            <h3 className="text-2xl font-bold text-slate-800">{theme.title}</h3>
             <p className="text-slate-500 text-base">
-              {organizedComments.length} {organizedComments.length === 1 ? 'comment' : 'comments'}
+              {organizedComments.length}{" "}
+              {organizedComments.length === 1 ? "comment" : "comments"}
             </p>
           </div>
         </div>
-        
+
         {/* Refresh button */}
         {onRefreshComments && (
           <button
             onClick={onRefreshComments}
             disabled={isLoading}
             className="p-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all duration-200 disabled:opacity-50 hover:scale-105"
-            title={t('comments.refreshTooltip')}
+            title={t("comments.refreshTooltip")}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
             </svg>
           </button>
         )}
       </div>
-      
+
       {/* Rating Component */}
       {userRating && userRating.rating ? (
         // Show rating result when user has already rated
@@ -738,16 +781,16 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             <div className="text-center">
               <h4 className="text-lg font-semibold text-slate-800 flex items-center justify-center mb-2">
                 <span className="text-2xl mr-2">⭐</span>
-                {t('comments.yourRating', 'Đánh giá của bạn')}
+                {t("comments.yourRating", "Đánh giá của bạn")}
               </h4>
-              
+
               {!isEditingRating ? (
                 // Display current rating
                 <>
                   <div className="flex items-center justify-center space-x-1 mb-2">
                     {[1, 2, 3, 4, 5].map((starValue) => (
                       <span key={starValue} className="text-3xl">
-                        {starValue <= userRating.rating ? '⭐' : '☆'}
+                        {starValue <= userRating.rating ? "⭐" : "☆"}
                       </span>
                     ))}
                   </div>
@@ -765,13 +808,11 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                         onClick={() => setTempRating(starValue)}
                         className="text-3xl transition-transform duration-200 hover:scale-110"
                       >
-                        {starValue <= tempRating ? '⭐' : '☆'}
+                        {starValue <= tempRating ? "⭐" : "☆"}
                       </button>
                     ))}
                   </div>
-                  <p className="text-sm text-slate-600">
-                    {tempRating}/5 sao
-                  </p>
+                  <p className="text-sm text-slate-600">{tempRating}/5 sao</p>
                   <div className="flex items-center justify-center space-x-2">
                     <button
                       onClick={handleSaveRatingEdit}
@@ -790,7 +831,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
               )}
             </div>
           </div>
-          
+
           {/* Edit and Delete buttons in bottom right corner */}
           {!isEditingRating && (
             <div className="absolute bottom-3 right-3 flex items-center space-x-3">
@@ -816,11 +857,11 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             <div className="text-center">
               <h4 className="text-lg font-semibold text-slate-800 flex items-center justify-center mb-4">
                 <span className="text-2xl mr-2">⭐</span>
-                {t('comments.rateThisPost', 'Đánh giá bài viết này')}
+                {t("comments.rateThisPost", "Đánh giá bài viết này")}
               </h4>
-              <Rating 
-                entityId={entityId} 
-                entityType={entityType} 
+              <Rating
+                entityId={entityId}
+                entityType={entityType}
                 variant={variant}
                 userRating={userRating}
                 onRatingChange={fetchUserRating}
@@ -829,12 +870,14 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
           </div>
         </div>
       )}
-      
+
       {/* Comment Form */}
-      <div className={`mb-8 p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm`}>
+      <div
+        className={`mb-8 p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm`}
+      >
         <h4 className="text-lg font-semibold text-slate-800 mb-4 flex items-center">
           <span className="text-xl mr-2">✍️</span>
-          {t('comments.addComment', 'Thêm bình luận')}
+          {t("comments.addComment", "Thêm bình luận")}
         </h4>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -844,52 +887,44 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                 <textarea
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder={t('comments.writeComment')}
+                  placeholder={t("comments.writeComment")}
                   className={`w-full p-4 border ${theme.borderColor} rounded-xl resize-none focus:outline-none focus:ring-2 ${theme.buttonFocus} focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400`}
                   rows="3"
                   disabled={isSubmitting}
                 />
               </div>
-              
+
               {/* Image Upload - compact version */}
               <div className="flex-shrink-0">
-                {imageUrl ? (
-                  <div className="relative w-24 h-20 group">
-                    <img 
-                      src={imageUrl} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover rounded-xl border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
-                      onClick={() => setImageUrl('')}
-                      title="Click để thay đổi ảnh"
+                <div className="w-24 h-20">
+                  <ImageUpload
+                    onImageUpload={handleImageUpload}
+                    onUploadStart={handleImageUploadStart}
+                    isUploading={isUploadingImage}
+                    disabled={isSubmitting}
+                    compact={true}
+                  />
+                </div>
+                {imageUrl && (
+                  <div className="mt-1 flex items-center space-x-1">
+                    <img
+                      src={imageUrl}
+                      alt="Preview"
+                      className="w-8 h-8 object-cover rounded"
                     />
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setImageUrl('');
-                      }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition-all opacity-0 group-hover:opacity-100"
-                      title="Xóa ảnh"
+                      onClick={() => setImageUrl("")}
+                      className="text-red-500 hover:text-red-700 text-xs"
                     >
                       ✕
                     </button>
-                  </div>
-                ) : (
-                  <div className="w-24 h-20">
-                    <ImageUpload
-                      onImageUpload={handleImageUpload}
-                      onUploadStart={handleImageUploadStart}
-                      isUploading={isUploadingImage}
-                      disabled={isSubmitting}
-                      compact={true}
-                      showSuccessToast={false}
-                    />
                   </div>
                 )}
               </div>
             </div>
           </div>
-          
+
           {/* Submit Button */}
           <div className="flex justify-end">
             <button
@@ -899,16 +934,32 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
-                  <span>{t('comments.posting')}</span>
+                  <span>{t("comments.posting")}</span>
                 </>
               ) : (
                 <>
                   <span className="text-xl">✍️</span>
-                  <span>{t('comments.postComment')}</span>
+                  <span>{t("comments.postComment")}</span>
                 </>
               )}
             </button>
@@ -922,7 +973,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         {isLoading && organizedComments.length === 0 ? (
           <div className="text-center py-12">
             <div className="animate-spin w-12 h-12 border-4 border-slate-300 border-t-blue-500 rounded-full mx-auto mb-4"></div>
-            <p className="text-slate-500 text-lg">{t('comments.loadingComments')}</p>
+            <p className="text-slate-500 text-lg">
+              {t("comments.loadingComments")}
+            </p>
           </div>
         ) : organizedComments.length === 0 ? (
           <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50">
@@ -930,33 +983,57 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
               <span className="text-2xl">💭</span>
             </div>
             <h3 className="text-xl font-semibold text-slate-700 mb-2">
-              {t('comments.noComments')}
+              {t("comments.noComments")}
             </h3>
             <p className="text-slate-500 text-base">
-              {t('comments.noCommentsSubtitle')}
+              {t("comments.noCommentsSubtitle")}
             </p>
           </div>
         ) : (
           displayedComments.map((comment) => {
             // Extract comment data with fallbacks for different API structures
             const commentId = comment.id || comment._id;
-            const authorName = comment.userName || comment.authorName || comment.user?.name || comment.author?.name || comment.username || 'User';
-            const commentContent = comment.content || comment.text || comment.message || comment.body || '';
-            const commentImage = comment.imageUrl || comment.image || comment.attachment || comment.userAvatarUrl;
-            const commentDate = comment.createdAt || comment.created_at || comment.timestamp || comment.date || new Date().toISOString();
+            const authorName =
+              comment.userName ||
+              comment.authorName ||
+              comment.user?.name ||
+              comment.author?.name ||
+              comment.username ||
+              "User";
+            const commentContent =
+              comment.content ||
+              comment.text ||
+              comment.message ||
+              comment.body ||
+              "";
+            const commentImage =
+              comment.imageUrl ||
+              comment.image ||
+              comment.attachment ||
+              comment.userAvatarUrl;
+            const commentDate =
+              comment.createdAt ||
+              comment.created_at ||
+              comment.timestamp ||
+              comment.date ||
+              new Date().toISOString();
             const likeCount = comment.likes || comment.likeCount || 0;
             const isLiked = comment.isLiked || comment.userLiked || false;
-            
+
             return (
               <div key={commentId} className="space-y-4">
                 {/* Parent Comment */}
-                <div className={`p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm ${theme.cardHover} transition-all duration-300`}>
+                <div
+                  className={`p-6 rounded-2xl ${theme.cardBg} border ${theme.borderColor} shadow-sm ${theme.cardHover} transition-all duration-300`}
+                >
                   <div className="flex items-start space-x-4">
                     {/* Avatar */}
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-lg font-bold shadow-lg flex-shrink-0`}>
+                    <div
+                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-lg font-bold shadow-lg flex-shrink-0`}
+                    >
                       {authorName.charAt(0).toUpperCase()}
                     </div>
-                    
+
                     {/* Comment Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3 mb-3">
@@ -968,11 +1045,12 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                         </span>
                         {comment.replyCount > 0 && (
                           <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full font-medium">
-                            {comment.replyCount} {comment.replyCount === 1 ? 'reply' : 'replies'}
+                            {comment.replyCount}{" "}
+                            {comment.replyCount === 1 ? "reply" : "replies"}
                           </span>
                         )}
                       </div>
-                      
+
                       {editingCommentId === commentId ? (
                         // Edit comment form
                         <div className="mb-4">
@@ -992,10 +1070,12 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                             </button>
                             <button
                               onClick={handleSaveCommentEdit}
-                              disabled={!editCommentText.trim() || isSubmittingEdit}
+                              disabled={
+                                !editCommentText.trim() || isSubmittingEdit
+                              }
                               className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                             >
-                              {isSubmittingEdit ? 'Đang lưu...' : 'Lưu'}
+                              {isSubmittingEdit ? "Đang lưu..." : "Lưu"}
                             </button>
                           </div>
                         </div>
@@ -1004,16 +1084,16 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                           {commentContent}
                         </p>
                       )}
-                      
+
                       {/* Display image if exists */}
                       {commentImage && (
                         <div className="mb-4">
-                          <img 
-                            src={commentImage} 
-                            alt="Comment attachment" 
+                          <img
+                            src={commentImage}
+                            alt="Comment attachment"
                             className="max-w-xs rounded-xl shadow-sm"
                             onError={(e) => {
-                              e.target.style.display = 'none';
+                              e.target.style.display = "none";
                             }}
                           />
                         </div>
@@ -1023,7 +1103,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                       <div className="flex items-center space-x-6">
                         {/* Edit Button */}
                         <button
-                          onClick={() => handleEditComment(commentId, commentContent)}
+                          onClick={() =>
+                            handleEditComment(commentId, commentContent)
+                          }
                           className="text-xs text-blue-600 hover:text-blue-700 focus:outline-none font-medium flex items-center space-x-2 transition-all duration-200"
                         >
                           <span className="text-base">✏️</span>
@@ -1036,7 +1118,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                           className="text-xs text-blue-600 hover:text-blue-700 focus:outline-none font-medium flex items-center space-x-2 transition-all duration-200"
                         >
                           <span className="text-base">💬</span>
-                          <span>{t('comments.reply')}</span>
+                          <span>{t("comments.reply")}</span>
                         </button>
                       </div>
 
@@ -1044,11 +1126,13 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                       <div className="flex justify-end mt-2">
                         <button
                           ref={(el) => el && (el._commentId = commentId)}
-                          onClick={(e) => handleDeleteComment(commentId, e.target)}
+                          onClick={(e) =>
+                            handleDeleteComment(commentId, e.target)
+                          }
                           disabled={isDeletingComment}
                           className="text-xs text-red-600 hover:text-red-700 underline transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isDeletingComment ? 'Đang xóa...' : 'Xóa'}
+                          {isDeletingComment ? "Đang xóa..." : "Xóa"}
                         </button>
                       </div>
                     </div>
@@ -1056,7 +1140,9 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
 
                   {/* Reply form */}
                   {replyingTo === commentId && (
-                    <div className={`mt-6 p-4 rounded-xl ${theme.bgColor} border ${theme.borderColor}`}>
+                    <div
+                      className={`mt-6 p-4 rounded-xl ${theme.bgColor} border ${theme.borderColor}`}
+                    >
                       <form onSubmit={(e) => handleReplySubmit(e, commentId)}>
                         <div className="mb-3">
                           <div className="flex gap-2">
@@ -1065,52 +1151,44 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                               <textarea
                                 value={replyText}
                                 onChange={(e) => setReplyText(e.target.value)}
-                                placeholder={t('comments.writeReply')}
+                                placeholder={t("comments.writeReply")}
                                 className={`w-full p-3 border ${theme.borderColor} rounded-xl resize-none focus:outline-none focus:ring-2 ${theme.buttonFocus} focus:border-transparent transition-all duration-200 text-slate-700 placeholder-slate-400`}
                                 rows="2"
                                 disabled={isSubmittingReply}
                               />
                             </div>
-                            
+
                             {/* Reply Image Upload - compact version */}
                             <div className="flex-shrink-0">
-                              {replyImageUrl ? (
-                                <div className="relative w-20 h-16 group">
-                                  <img 
-                                    src={replyImageUrl} 
-                                    alt="Preview" 
-                                    className="w-full h-full object-cover rounded-xl border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
-                                    onClick={() => setReplyImageUrl('')}
-                                    title="Click để thay đổi ảnh"
+                              <div className="w-20 h-16">
+                                <ImageUpload
+                                  onImageUpload={handleReplyImageUpload}
+                                  onUploadStart={handleReplyImageUploadStart}
+                                  isUploading={isUploadingReplyImage}
+                                  disabled={isSubmittingReply}
+                                  compact={true}
+                                />
+                              </div>
+                              {replyImageUrl && (
+                                <div className="mt-1 flex items-center space-x-1">
+                                  <img
+                                    src={replyImageUrl}
+                                    alt="Preview"
+                                    className="w-6 h-6 object-cover rounded"
                                   />
                                   <button
                                     type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setReplyImageUrl('');
-                                    }}
-                                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all opacity-0 group-hover:opacity-100"
-                                    title="Xóa ảnh"
+                                    onClick={() => setReplyImageUrl("")}
+                                    className="text-red-500 hover:text-red-700 text-xs"
                                   >
                                     ✕
                                   </button>
-                                </div>
-                              ) : (
-                                <div className="w-20 h-16">
-                                  <ImageUpload
-                                    onImageUpload={handleReplyImageUpload}
-                                    onUploadStart={handleReplyImageUploadStart}
-                                    isUploading={isUploadingReplyImage}
-                                    disabled={isSubmittingReply}
-                                    compact={true}
-                                    showSuccessToast={false}
-                                  />
                                 </div>
                               )}
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Reply Submit/Cancel Buttons */}
                         <div className="flex justify-end space-x-3">
                           <button
@@ -1118,7 +1196,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                             onClick={cancelReply}
                             className="px-4 py-2 text-slate-600 border border-slate-300 rounded-xl hover:bg-slate-50 transition-all duration-200 font-medium text-sm"
                           >
-                            {t('comments.cancel')}
+                            {t("comments.cancel")}
                           </button>
                           <button
                             type="submit"
@@ -1127,16 +1205,32 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                           >
                             {isSubmittingReply ? (
                               <>
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <svg
+                                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
                                 </svg>
-                                {t('comments.sending')}
+                                {t("comments.sending")}
                               </>
                             ) : (
                               <>
                                 <span>💬</span>
-                                <span>{t('comments.sendReply')}</span>
+                                <span>{t("comments.sendReply")}</span>
                               </>
                             )}
                           </button>
@@ -1151,19 +1245,44 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                   <div className="ml-8 space-y-3">
                     {comment.replies.map((reply) => {
                       const replyId = reply.id || reply._id;
-                      const replyAuthorName = reply.userName || reply.authorName || reply.user?.name || reply.author?.name || reply.username || 'User';
-                      const replyContent = reply.content || reply.text || reply.message || reply.body || '';
-                      const replyImage = reply.imageUrl || reply.image || reply.attachment || reply.userAvatarUrl;
-                      const replyDate = reply.createdAt || reply.created_at || reply.timestamp || reply.date || new Date().toISOString();
-                      
+                      const replyAuthorName =
+                        reply.userName ||
+                        reply.authorName ||
+                        reply.user?.name ||
+                        reply.author?.name ||
+                        reply.username ||
+                        "User";
+                      const replyContent =
+                        reply.content ||
+                        reply.text ||
+                        reply.message ||
+                        reply.body ||
+                        "";
+                      const replyImage =
+                        reply.imageUrl ||
+                        reply.image ||
+                        reply.attachment ||
+                        reply.userAvatarUrl;
+                      const replyDate =
+                        reply.createdAt ||
+                        reply.created_at ||
+                        reply.timestamp ||
+                        reply.date ||
+                        new Date().toISOString();
+
                       return (
-                        <div key={replyId} className={`p-4 rounded-xl border-l-4 ${theme.borderAccent} ${theme.bgColor} ${theme.cardHover} transition-all duration-300`}>
+                        <div
+                          key={replyId}
+                          className={`p-4 rounded-xl border-l-4 ${theme.borderAccent} ${theme.bgColor} ${theme.cardHover} transition-all duration-300`}
+                        >
                           <div className="flex items-start space-x-3">
                             {/* Reply Avatar */}
-                            <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0`}>
+                            <div
+                              className={`w-8 h-8 rounded-xl bg-gradient-to-br ${theme.avatarGradient} flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0`}
+                            >
                               {replyAuthorName.charAt(0).toUpperCase()}
                             </div>
-                            
+
                             {/* Reply Content */}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center space-x-2 mb-2">
@@ -1174,23 +1293,23 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                                   {formatDate(replyDate)}
                                 </span>
                                 <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded-full font-medium">
-                                  {t('comments.replyingTo')}
+                                  {t("comments.replyingTo")}
                                 </span>
                               </div>
-                              
+
                               <p className="text-slate-600 text-xs leading-relaxed mb-2">
                                 {replyContent}
                               </p>
-                              
+
                               {/* Display reply image if exists */}
                               {replyImage && (
                                 <div className="mb-2">
-                                  <img 
-                                    src={replyImage} 
-                                    alt="Reply attachment" 
+                                  <img
+                                    src={replyImage}
+                                    alt="Reply attachment"
                                     className="max-w-xs rounded-xl shadow-sm"
                                     onError={(e) => {
-                                      e.target.style.display = 'none';
+                                      e.target.style.display = "none";
                                     }}
                                   />
                                 </div>
@@ -1203,7 +1322,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
                                   disabled={isDeletingComment}
                                   className="text-xs text-red-600 hover:text-red-700 underline transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  {isDeletingComment ? 'Đang xóa...' : 'Xóa'}
+                                  {isDeletingComment ? "Đang xóa..." : "Xóa"}
                                 </button>
                               </div>
                             </div>
@@ -1224,7 +1343,7 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
               onClick={handleShowMore}
               className="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all"
             >
-              {t('comments.showMore', 'Show more')}
+              {t("comments.showMore", "Show more")}
             </button>
           </div>
         )}
@@ -1235,12 +1354,12 @@ const CommentSection = ({ variant = 'blog', entityId, entityType = 'blogpost', c
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 min-w-[200px] max-w-[300px] mx-4">
             <div className="flex items-center mb-3">
-              <ExclamationCircleOutlined style={{ color: '#ff4d4f', marginRight: '8px' }} />
+              <ExclamationCircleOutlined
+                style={{ color: "#ff4d4f", marginRight: "8px" }}
+              />
               <span className="font-medium text-gray-900">Xác nhận</span>
             </div>
-            <p className="text-sm text-gray-700 mb-4">
-              {confirmMessage}
-            </p>
+            <p className="text-sm text-gray-700 mb-4">{confirmMessage}</p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={handleCancel}

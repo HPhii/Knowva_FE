@@ -1194,7 +1194,15 @@
     "flashcardSet": "Flashcard Set",
     "quiz": "Quiz",
     "test": "Test",
-    "noItemsFound": "No items found"
+    "noItemsFound": "No items found",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirmDelete": "Confirm Delete",
+    "confirmDeleteMessage": "Are you sure you want to delete this flashcard?",
+    "yes": "Yes",
+    "no": "No",
+    "deleteSuccess": "Delete flashcard successfully",
+    "deleteError": "Failed to delete flashcard. Please try again."
   },
   "admin": {
     "dashboard": "Admin Dashboard",
@@ -1409,7 +1417,7 @@
       "all": "All",
       "mathematics": "Mathematics",
       "literature": "Literature",
-      "physics": "Physics", 
+      "physics": "Physics",
       "chemistry": "Chemistry",
       "biology": "Biology",
       "computerScience": "Computer Science",
