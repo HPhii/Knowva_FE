@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal } from "antd";
 import api from "../../config/axios";
 import FailImage from "../../assets/images/Fail.png";
 import BetterImage from "../../assets/images/better.png";
@@ -15,6 +16,7 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
   const [score, setScore] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [showTimeUpModal, setShowTimeUpModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
 
   // Shuffle questions and answers when component mounts
@@ -71,8 +73,14 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
     }
   };
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmitClick = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmSubmit = useCallback(async () => {
     if (hasSubmitted) return; // Prevent multiple submissions
+    
+    setShowConfirmModal(false);
     
     try {
       setIsSubmitting(true);
@@ -91,6 +99,7 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
     } catch (err) {
       console.error("Error submitting quiz:", err);
       alert("Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.");
+      setHasSubmitted(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +138,33 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
 
   const handleTimeUpConfirm = () => {
     setShowTimeUpModal(false);
-    handleSubmit();
+    // Call handleConfirmSubmit directly without showing confirm modal
+    if (hasSubmitted) return;
+    
+    const submitQuiz = async () => {
+      try {
+        setIsSubmitting(true);
+        setHasSubmitted(true);
+        
+        const submitData = Object.entries(answers).map(([questionId, selectedAnswerId]) => ({
+          questionId: Number(questionId),
+          selectedAnswerId: Number(selectedAnswerId)
+        }));
+        
+        const response = await api.post(`/quiz-attempts/${attemptId}/submit`, submitData);
+        
+        setScore(response.data);
+        setShowResults(true);
+      } catch (err) {
+        console.error("Error submitting quiz:", err);
+        alert("Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.");
+        setHasSubmitted(false);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+    
+    submitQuiz();
   };
 
   // Show loading if questions haven't been shuffled yet
@@ -299,7 +334,7 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between">
@@ -326,121 +361,179 @@ const QuizAttempt = ({ quiz, attemptId, onBack, onComplete }) => {
           </div>
         </div>
 
-        {/* Question */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              {currentQuestion.questionText}
-            </h2>
-            <div className="text-sm text-gray-500">
-              Thời gian: {currentQuestion.timeLimit || 30} giây
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Question Section */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  {currentQuestion.questionText}
+                </h2>
+                <div className="text-sm text-gray-500">
+                  Thời gian: {currentQuestion.timeLimit || 30} giây
+                </div>
+              </div>
+
+              {/* Answers */}
+              <div className={`${
+                currentQuestion.answers.length % 2 === 0 
+                  ? 'grid grid-cols-1 md:grid-cols-2 gap-3' 
+                  : 'space-y-3'
+              }`}>
+                {currentQuestion.answers.map((answer, index) => (
+                  <button
+                    key={answer.id || index}
+                    onClick={() => handleAnswerSelect(currentQuestion.id, answer.id)}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                      answers[currentQuestion.id] === answer.id
+                        ? 'border-blue-500 bg-blue-50 text-blue-900'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 font-bold text-sm ${
+                        answers[currentQuestion.id] === answer.id
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {String.fromCharCode(65 + index)}
+                      </div>
+                      <span className="font-medium">{answer.answerText}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Answers */}
-          <div className={`${
-            currentQuestion.answers.length % 2 === 0 
-              ? 'grid grid-cols-1 md:grid-cols-2 gap-3' 
-              : 'space-y-3'
-          }`}>
-            {currentQuestion.answers.map((answer, index) => (
-              <button
-                key={answer.id || index}
-                onClick={() => handleAnswerSelect(currentQuestion.id, answer.id)}
-                className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                  answers[currentQuestion.id] === answer.id
-                    ? 'border-blue-500 bg-blue-50 text-blue-900'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                }`}
-              >
-                <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 font-bold text-sm ${
-                    answers[currentQuestion.id] === answer.id
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    {String.fromCharCode(65 + index)}
-                  </div>
-                  <span className="font-medium">{answer.answerText}</span>
-                </div>
-              </button>
-            ))}
+          {/* Question List Container */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Danh sách câu hỏi</h3>
+              <div className="grid grid-cols-5 gap-3">
+                {shuffledQuestions.map((question, index) => (
+                  <button
+                    key={question.id || index}
+                    onClick={() => setCurrentQuestionIndex(index)}
+                    style={index === currentQuestionIndex ? {} : { backgroundColor: '#555555' }}
+                    className={`w-10 h-10 rounded-full text-sm font-medium transition-colors ${
+                      index === currentQuestionIndex
+                        ? 'bg-blue-500 !text-white ring-2 ring-blue-300'
+                        : '!text-white'
+                    }`}
+                    title={`Câu hỏi ${index + 1}`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className="px-6 py-3 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 rounded-lg font-medium transition-colors"
-          >
-            Câu trước
-          </button>
-
-          <div className="flex items-center space-x-2">
-            {shuffledQuestions.map((question, index) => (
+        {/* Navigation - Fixed Position */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
               <button
-                key={question.id || index}
-                onClick={() => setCurrentQuestionIndex(index)}
-                className={`w-10 h-10 rounded-full text-sm font-medium transition-colors ${
-                  index === currentQuestionIndex
-                    ? 'bg-blue-500 text-white'
-                    : getAnswerStatus(question.id) === 'answered'
-                    ? 'bg-green-100 text-green-600'
-                    : 'bg-gray-100 text-gray-600'
-                }`}
+                onClick={handlePrevious}
+                disabled={currentQuestionIndex === 0}
+                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 rounded-lg font-medium transition-colors"
               >
-                {index + 1}
+                Câu trước
               </button>
-            ))}
-          </div>
 
-          {currentQuestionIndex === shuffledQuestions.length - 1 ? (
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-lg font-medium transition-colors"
-            >
-              {isSubmitting ? 'Đang nộp...' : 'Nộp bài'}
-            </button>
-          ) : (
-            <button
-              onClick={handleNext}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-            >
-              Câu tiếp
-            </button>
-          )}
+              {currentQuestionIndex === shuffledQuestions.length - 1 ? (
+                <button
+                  onClick={handleSubmitClick}
+                  disabled={isSubmitting}
+                  className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 !text-white rounded-lg font-medium transition-colors"
+                >
+                  {isSubmitting ? 'Đang nộp...' : 'Nộp bài'}
+                </button>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 !text-white rounded-lg font-medium transition-colors"
+                >
+                  Câu tiếp
+                </button>
+              )}
+            </div>
+          </div>
         </div>
+        
+        {/* Spacer for fixed navigation */}
+        <div className="h-20"></div>
       </div>
 
       {/* Time Up Modal */}
-      {showTimeUpModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full mx-4">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Hết thời gian!</h2>
-              <p className="text-gray-600 mb-6">Thời gian làm bài của bạn đã hết. Bạn có muốn nộp bài không?</p>
-              
-              <div className="flex space-x-3">
-                <button
-                  onClick={handleTimeUpConfirm}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors"
-                >
-                  Nộp bài
-                </button>
-              </div>
-            </div>
+      <Modal
+        open={showTimeUpModal}
+        onCancel={() => setShowTimeUpModal(false)}
+        footer={null}
+        centered
+        width={500}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Hết thời gian!</h2>
+          <p className="text-gray-600 mb-6">Thời gian làm bài của bạn đã hết. Bạn có muốn nộp bài không?</p>
+          
+          <div className="flex space-x-3">
+            <button
+              onClick={handleTimeUpConfirm}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors"
+            >
+              Nộp bài
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
+
+      {/* Confirm Submit Modal */}
+      <Modal
+        open={showConfirmModal}
+        onCancel={() => setShowConfirmModal(false)}
+        footer={null}
+        centered
+        width={500}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Xác nhận nộp bài</h2>
+          <p className="text-gray-600 mb-6">
+            Bạn có chắc chắn muốn nộp bài không? Sau khi nộp bài, bạn sẽ không thể thay đổi câu trả lời.
+          </p>
+          
+          <div className="flex space-x-3">
+            <button
+              onClick={() => setShowConfirmModal(false)}
+              className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-medium transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={handleConfirmSubmit}
+              disabled={isSubmitting}
+              className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 !text-white py-3 px-6 rounded-lg font-medium transition-colors"
+            >
+              {isSubmitting ? 'Đang nộp...' : 'Xác nhận nộp bài'}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
